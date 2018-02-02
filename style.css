@@ -3,12 +3,19 @@ html, body {
     margin: 0;
 }
 
-.brand-logo {
+
+
+
+nav .brand-logo {
     margin-left: 20px;
+    font-size: 1.5rem;
 }
 .nav-wrapper {
     background-color: #222222;
 }
+
+
+
 
 .png {
     position:absolute;
@@ -16,6 +23,9 @@ html, body {
     z-index:0;
     width: 500px;
 }
+
+
+
 
 .bar:hover {
     opacity: 0.4;
@@ -29,7 +39,10 @@ html, body {
      visibility:hidden;
  }
 
- .tab a.active {
+
+
+
+.tab a.active {
   /* color:rgb(252, 234, 37)!important; */
   /* background-color:#ffffff!important; */
 }

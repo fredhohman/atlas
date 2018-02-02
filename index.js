@@ -197,5 +197,19 @@ d3.select('#layers')
         return 'images/layer' + d + '.png'
     })
 
-window.onload = function () {
-};
+
+    
+// multiple backgrounds, but kills performance
+// var overviewImage = ''
+// for (var layer in layers.reverse()) {
+//     overviewImage += 'url(images/layer' + String(layers[layer]) + '.png), '
+// }
+// console.log(overviewImage)
+// overviewImage = overviewImage.substring(0, overviewImage.length - 2);
+// d3.select("#overview-image")
+//     .style('background-image', overviewImage)
+
+
+
+// window.onload = function () {
+// };
