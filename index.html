@@ -1,26 +1,156 @@
 <!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>graph playground</title>
 
-  <style>
-    .domain {
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+  <link rel="stylesheet" href="style.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 
 </head>
+
 <body>
 
-  <select id="layer-select"></select>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">Graph Playground</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li>
+          <a href="#">
+            <i class="material-icons right">info</i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-  <br>
+<div class="row" style="background-color: #333333; margin-bottom:0px">
+    <!-- <img src="images/astro.png" style="width:100%; max-width: 800px; display: block; margin: auto;"> -->
+    <div style="height: 500px; background-image: url('images/astro.png'); background-size: 1200px; background-repeat: no-repeat; background-position: center;"></div>
+</div>
+<div class="row" id="graph-ribbon">
 
-  <svg width="1000" height="1000"></svg>
+</div>
+
+<div class="row">
+
+    <div class="col s12 m4">
+      <div class="card">
+        <div class="card-tabs">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab">
+              <a class="active" href="#test1">Node Link</a>
+            </li>
+            <li class="tab">
+              <a href="#test3">Force Directed</a>
+            </li>
+            <li class="tab">
+              <a href="#test2">Contour</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-image waves-effect waves-block waves-light">
+          <img src="images/layer1.png">
+        </div>
+        <div class="card-content">
+          <span class="card-title activator grey-text text-darken-4">Layer 1
+            <i class="material-icons right">more_vert</i>
+          </span>
+          <p>
+            <a href="#">This is a link</a>
+          </p>
+        </div>
+        <div class="card-reveal">
+          <span class="card-title grey-text text-darken-4">Card Title
+            <i class="material-icons right">close</i>
+          </span>
+          <p>n: 300, m: 23003</p>
+        </div>
+      </div>
+    </div>
+    <div class="col s12 m4">
+      <div class="card">
+        <div class="card-tabs">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab">
+              <a class="active" href="#test1">Node Link</a>
+            </li>
+            <li class="tab">
+              <a href="#test3">Force Directed</a>
+            </li>
+            <li class="tab">
+              <a href="#test2">Contour</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-image waves-effect waves-block waves-light">
+          <img src="images/layer18.png">
+        </div>
+        <div class="card-content">
+          <span class="card-title activator grey-text text-darken-4">Layer 18
+            <i class="material-icons right">more_vert</i>
+          </span>
+          <p>
+            <a href="#">This is a link</a>
+          </p>
+        </div>
+        <div class="card-reveal">
+          <span class="card-title grey-text text-darken-4">Card Title
+            <i class="material-icons right">close</i>
+          </span>
+          <p>n: 300, m: 23003</p>
+        </div>
+      </div>
+    </div>
+    <div class="col s12 m4">
+      <div class="card">
+        <div class="card-tabs">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab">
+              <a class="active" href="#test1">Node Link</a>
+            </li>
+            <li class="tab">
+              <a href="#test3">Force Directed</a>
+            </li>
+            <li class="tab">
+              <a href="#test2">Contour</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-image waves-effect waves-block waves-light">
+          <img src="images/layer52.png">
+        </div>
+        <div class="card-content">
+          <span class="card-title activator grey-text text-darken-4">Layer 52
+            <i class="material-icons right">more_vert</i>
+          </span>
+          <p>
+            <a href="#">This is a link</a>
+          </p>
+        </div>
+        <div class="card-reveal">
+          <span class="card-title grey-text text-darken-4">Card Title
+            <i class="material-icons right">close</i>
+          </span>
+          <p>n: 300, m: 23003</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="row" id='layers'>
+</div>
 
   <script src="bundle.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
 
 </body>
+
 </html>

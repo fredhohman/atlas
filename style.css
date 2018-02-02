@@ -1,0 +1,30 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+.brand-logo {
+    margin-left: 20px;
+}
+.nav-wrapper {
+    background-color: #222222;
+}
+
+.png {
+    position:absolute;
+    top:1500px;
+    z-index:0;
+    width: 500px;
+}
+
+.bar:hover {
+    opacity: 0.4;
+}
+
+.axis--x .tick line {
+  visibility: hidden;
+}
+
+ .axis--x path{
+     visibility:hidden;
+ }
