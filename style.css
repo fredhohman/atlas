@@ -28,3 +28,18 @@ html, body {
  .axis--x path{
      visibility:hidden;
  }
+
+ .tab a.active {
+  /* color:rgb(252, 234, 37)!important; */
+  /* background-color:#ffffff!important; */
+}
+.tabs .tab a:hover {
+  /* background-color: #bcaaa4!important; */
+  color:#222222!important;
+}
+.tabs .tab a {
+  color: #444444!important;
+}
+.tabs .indicator{
+  background-color:#444444!important;
+}
