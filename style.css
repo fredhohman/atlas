@@ -2,6 +2,7 @@ html, body {
     padding: 0;
     margin: 0;
     height: 100%;
+    font-family: Roboto;
 }
 
 .wrapper {
@@ -12,19 +13,30 @@ html, body {
 }
 
 #header {
-  background: tomato;
-  height: 64px;
+  background: #222222;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 200;
   display: flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 64px;
   justify-content: center;
   flex-direction: column;
+  padding-left: 20px;
 }
 
 #nav {
-  background: steelblue;
-  height: 150px;
+  background: #fafafa;
+  color: #212121;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 150px;
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(0,0,0,.14)
 }
 
 #middle {
@@ -34,29 +46,41 @@ html, body {
 }
 
 #overview {
-  background: gold;
+  /* background: gold; */
   flex: 1;
+  background-image: url('images/astro.png');
+  background-size: 700px;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
 }
 
 #ribbon {
   text-align: left;
-  background: deepskyblue;
+  /* background: #fafafa; */
   flex-grow: 0;
   flex-shrink: 0;
   flex-basis: 150px;
+  border-left: 1px solid rgba(0,0,0,.14);
+  border-right: 1px solid rgba(0,0,0,.14);
 }
 
 #layers {
-  background: hotpink;
+  /* background: hotpink; */
   flex: 1;
+  text-align: center;
 }
 
 #footer {
-  background: lightgreen;
-  height: 80px;
+  background: #fafafa;
   display: flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 64px;
   justify-content: center;
   flex-direction: column;
+  padding-left: 20px;
+  border-top: 1px solid rgba(0,0,0,.14);
 }
 
 
