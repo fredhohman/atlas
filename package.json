@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/fredhohman/graph-playground.git"
   },
-  "author": "",
+  "author": "Fred Hohman",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/fredhohman/graph-playground/issues"

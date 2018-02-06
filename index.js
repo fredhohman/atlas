@@ -1,4 +1,5 @@
 // index.js
+// var draggableRibbon = require('draggable-ribbon.js')
 import * as contour from 'd3-contour';
 import * as d3 from 'd3';
 import $ from "jquery";
@@ -16,13 +17,13 @@ d3.json('data/moreno_names.json', function(error, data) {
     window.data = data
     window.d3 = d3
 
-    // set nav
+    // set nav data
     var navFormat = d3.format(',')
     d3.select("#vertices-value").text(navFormat(data.vertices))
     d3.select("#edges-value").text(navFormat(data.edges))
 
     // ribbon
-    var ribbonMargin = { top: 20, right: 10, bottom: 60, left: 30 };
+    var ribbonMargin = { top: 20, right: 10, bottom: 60, left: 35 };
     var ribbonWidth = document.getElementById("ribbon").offsetWidth - ribbonMargin.left - ribbonMargin.right
     var ribbonHeight = document.getElementById("ribbon").offsetHeight - ribbonMargin.top - ribbonMargin.bottom
     // var aspectRatio = '32:2';
@@ -76,6 +77,7 @@ d3.json('data/moreno_names.json', function(error, data) {
           .call(d3.axisLeft(y))
           .selectAll('.tick text')
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
+          .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
 
 
 
