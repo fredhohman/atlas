@@ -11,10 +11,17 @@ d3.json('data/moreno_names.json', function(error, data) {
         return console.error(error);        
     }
     
+    // some globals for debugging
     console.log(data)
     window.data = data
     window.d3 = d3
 
+    // set nav
+    var navFormat = d3.format(',')
+    d3.select("#vertices-value").text(navFormat(data.vertices))
+    d3.select("#edges-value").text(navFormat(data.edges))
+
+    // ribbon
     var ribbonMargin = { top: 20, right: 10, bottom: 60, left: 30 };
     var ribbonWidth = document.getElementById("ribbon").offsetWidth - ribbonMargin.left - ribbonMargin.right
     var ribbonHeight = document.getElementById("ribbon").offsetHeight - ribbonMargin.top - ribbonMargin.bottom
@@ -69,6 +76,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .call(d3.axisLeft(y))
           .selectAll('.tick text')
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
+
+
 
 })
 
