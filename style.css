@@ -13,7 +13,10 @@ html, body {
 
 #header {
   background: tomato;
-  height: 100px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 #middle {
@@ -42,7 +45,10 @@ html, body {
 
 #footer {
   background: lightgreen;
-  height: 100px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 
