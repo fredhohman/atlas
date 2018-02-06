@@ -13,7 +13,15 @@ html, body {
 
 #header {
   background: tomato;
-  height: 80px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#nav {
+  background: steelblue;
+  height: 150px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -35,7 +43,7 @@ html, body {
   background: deepskyblue;
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: 200px;
+  flex-basis: 150px;
 }
 
 #layers {
@@ -53,13 +61,13 @@ html, body {
 
 
 
-nav .brand-logo {
+/* nav .brand-logo {
     margin-left: 20px;
     font-size: 1.5rem;
 }
 .nav-wrapper {
     background-color: #222222;
-}
+} */
 
 
 
