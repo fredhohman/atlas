@@ -5,6 +5,7 @@ html, body {
     font-family: Roboto;
 }
 
+/* flexbox */
 .wrapper {
   display: flex;  
   flex-flow: column;
@@ -46,18 +47,17 @@ html, body {
 }
 
 #overview {
-  /* background: gold; */
   flex: 1;
-  background-image: url('images/astro.png');
+  background-image: url('images/moreno_names.png');
   background-size: 700px;
   background-repeat: no-repeat;
   background-position: center;
   text-align: center;
+  padding: 10px;
 }
 
 #ribbon {
   text-align: left;
-  /* background: #fafafa; */
   flex-grow: 0;
   flex-shrink: 0;
   flex-basis: 150px;
@@ -66,9 +66,9 @@ html, body {
 }
 
 #layers {
-  /* background: hotpink; */
   flex: 1;
   text-align: center;
+  padding: 10px;
 }
 
 #footer {
@@ -93,6 +93,32 @@ html, body {
     background-color: #222222;
 } */
 
+h1 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+#graph-description {
+    font-size: 14px;
+    color: #444444;
+    font-weight: 400;
+    width: 600px;
+}
+
+#vertices, #edges {
+    margin-bottom: 5px;
+    float: left;
+    font-weight: 500;
+    color: #222222;
+}
+
+#vertices {
+    padding-right: 10px;
+}
+
+#vertices-value, #edges-value {
+    font-weight: 400;
+}
 
 
 
@@ -105,19 +131,31 @@ html, body {
 
 
 
-
+/* ribbon */
 .bar:hover {
     opacity: 0.4;
 }
 
-.axis--x .tick line {
+.y-axis .tick line {
   visibility: hidden;
 }
 
- .axis--x path{
-     visibility:hidden;
- }
+.y-axis path{
+    visibility: hidden;
+}
 
+.y-axis .tick text {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+ .x-axis .tick line, .x-axis path {
+     stroke: #222222;
+}
+
+ .x-axis text, .y-axis text {
+     fill: #222222;
+}
 
 
 

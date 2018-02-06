@@ -4,6 +4,95 @@ import * as d3 from 'd3';
 import $ from "jquery";
 import { geoStereographic } from 'd3';
 
+
+d3.json('data/moreno_names.json', function(error, data) {
+
+    if (error) {
+        return console.error(error);        
+    }
+    
+    console.log(data)
+    window.data = data
+    window.d3 = d3
+
+    var ribbonMargin = { top: 20, right: 10, bottom: 60, left: 30 };
+    var ribbonWidth = document.getElementById("ribbon").offsetWidth - ribbonMargin.left - ribbonMargin.right
+    var ribbonHeight = document.getElementById("ribbon").offsetHeight - ribbonMargin.top - ribbonMargin.bottom
+    // var aspectRatio = '32:2';
+    // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
+
+    var ribbon = d3.select("#ribbon").append("svg")
+        .attr("width", ribbonWidth + ribbonMargin.left + ribbonMargin.right)
+        .attr("height", ribbonHeight + ribbonMargin.top + ribbonMargin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + ribbonMargin.left + "," + ribbonMargin.top + ")");
+
+    // background for debugging
+    // ribbon.append('rect')
+    //         .attr('width', ribbonWidth)
+    //         .attr('height', ribbonHeight)
+    //         .style('fill', '#eeeeee');
+
+    var ribbonTextColor = '#222222'
+    var x = d3.scaleLinear().range([0, ribbonWidth]);
+    var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.3);
+    var ribbonColor = d3.scaleLinear()
+                        .domain(d3.extent(data.layers, function(d) { return d.peel }))
+                        .interpolate(d3.interpolateHcl)
+                        .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
+
+    x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
+    y.domain(data.layers.map(function(d){ return d.peel }))
+    y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1))
+
+    ribbon.selectAll('.bar')
+          .data(data.layers)
+        .enter().append('rect')
+          .attr('class', "bar")
+          .attr('width', function (d) { return x(d.edges) })
+          .attr('y', function(d) { return y(d.peel) })
+          .attr('height', y.bandwidth())
+          .style('fill', function(d) { return ribbonColor(d.peel) });
+
+    ribbon.append('g')
+          .attr('transform', "translate(0," + ribbonHeight + ")")
+          .attr('class', 'x-axis')
+          .call(d3.axisBottom(x).ticks(3))
+
+    ribbon.append("text")
+          .attr("transform", "translate(" + ((ribbonWidth/ 2) - ribbonMargin.right) + " ," + (ribbonHeight + ribbonMargin.top + 20) + ")")
+          .style("text-anchor", "middle")
+          .text('edges')
+
+    ribbon.append('g')
+          .attr('class', 'y-axis')
+          .call(d3.axisLeft(y))
+          .selectAll('.tick text')
+          .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
+
+})
+
+
+
+
+
+
+// d3.select('#layers')
+//     .data(layers)
+//     .enter()
+//     .append('img')
+//     .classed('png', true)
+//     .attr('src', function (d) {
+//         return 'images/layer' + d + '.png'
+//     })
+
+
+
+
+
+
+
+
 //  single layer
 // var layer = 6;
 
@@ -13,7 +102,7 @@ import { geoStereographic } from 'd3';
 // names
 // var layers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15];
 
-var layers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,32,35,36,37,38,39,40,41,42,43,45,46,48,51,52,55,56]
+// var layers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,32,35,36,37,38,39,40,41,42,43,45,46,48,51,52,55,56]
 
 // jazz
 // var layers = [1, 2, 3, 4, 5, 10, 20, 29];
@@ -119,83 +208,6 @@ var layers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
 
 // }
 
-var graphRibbonMargin = { top: 20, right: 10, bottom: 20, left: 10 };
-var graphRibbonWidth = 1500// - graphRibbonMargin.left - graphRibbonMargin.right,
-var graphRibbonHeight = 120// - graphRibbonMargin.top - graphRibbonMargin.bottom;
-var aspectRatio = '32:2';
-var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
-
-// var svg = d3.select("body").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var graphRibbon = d3.select('#graph-ribbon').append('svg').attr('width', '100%').attr('height', graphRibbonHeight).style('background-color', '#eeeeee').append('g');
-
-var graphRibbonScale = d3.scaleLinear().domain(d3.extent(layers)).range([0,graphRibbonWidth])
-
-var graphRibbonColorScale = d3.scaleLinear().domain(d3.extent(layers)).interpolate(d3.interpolateHcl).range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
-
-// graphRibbon.selectAll('.layer-title')
-//            .data(layers)
-//            .enter()
-//            .append('text')
-//            .text(function(d){return d})
-//            .attr('x', function(d){ return graphRibbonScale(d)})
-//            .attr('y', graphRibbonHeight/2)
-        //    .style('fill', function(d){ return graphRibbonColorScale(d)})
-
-
-var svg = d3.select("svg"),
-    margin = {top: 25, right: 40, bottom: 40, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom;
-
-var x = d3.scaleBand().rangeRound([0, graphRibbonWidth]).padding(0.1),
-    y = d3.scaleLinear().rangeRound([height, 0]);
-
-var barg = graphRibbon.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  x.domain(layers)
-  y.domain([0, d3.max(layers)]);
-
-  barg.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-  barg.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(3))
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "0.71em")
-      .attr("text-anchor", "end")
-      .text("Frequency");
-
-  barg.selectAll(".bar")
-    .data(layers)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d); })
-      .attr("y", function(d) { return y(d); })
-      .attr("width", x.bandwidth())
-      .attr("height", function(d) { return height - y(d); })
-      .style("fill", function(d) { return graphRibbonColorScale(d) })
-
-
-
-d3.select('#layers')
-    .data(layers)
-    .enter()
-    .append('img')
-    .classed('png', true)
-    .attr('src', function (d) {
-        return 'images/layer' + d + '.png'
-    })
 
 
     

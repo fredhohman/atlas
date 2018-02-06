@@ -38,11 +38,28 @@
 
   <div class="wrapper">
     <header id="header">Graph Playground</header>
-    <nav id=nav>Graph, n, m</nav>
+    <nav id=nav>
+      <div>
+        <h1 id="graph-name">
+          Bible
+        </h1>
+        <div id="vertices">
+          vertices: <span id="vertices-value">1000</span>
+        </div>
+        <div id="edges">
+          edges: <span id="edges-value">10000</span>
+        </div>
+      </div>
+      <span id="graph-description">
+        This undirected network contains nouns (places and names) of the King James Version of the Bible and information about their
+        co-occurrences. A node represents one of the above noun types and an edge indicates that two nouns appeared together
+        in the same Bible verse. The edge multiplicity denotes how often two nouns occured together.
+      </span>
+    </nav>
     <div id=middle>
       <div id="overview">Overview</div>
-      <article id="ribbon">
-      </article>
+      <div id="ribbon">
+      </div>
       <div id="layers">Layers</div>
     </div>
     <footer id="footer">Footer</footer>
