@@ -24,7 +24,7 @@ d3.json('data/moreno_names.json', function(error, data) {
 
     var ribbonMargin = { top: 60, right: 10, bottom: 40, left: 35 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
-    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom
+    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 4 // -4 is a bug, shrinks svg so scroll bar doesn't appear
     // var aspectRatio = '32:2';
     // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
 
@@ -123,13 +123,22 @@ d3.json('data/moreno_names.json', function(error, data) {
         var layersDiv = document.getElementById('layers');
         var delta = event.clientX - startX;
         layersDiv.style.width = (startWidth - delta) + "px";
+
+        // fix bug here where dragging ribbon more left causes right div to keep growing
+        // if (document.getElementById('overview').clientWidth > 250) {
+        //     console.log('good')
+        //     layersDiv.style.width = (startWidth - delta) + "px";
+        // } else {
+        //     console.log('wall')
+        //     // layersDiv.style.width = layersDiv.style.width;
+        // }
     }
 
     // add another ribbon chart
     ribbon.append('circle')
           .attr('cx', (ribbonWidth / 2) - ribbonMargin.right)
           .attr('cy', ribbonHeight + 10)
-          .attr('r', 15)
+          .attr('r', 10)
           .attr('stroke-width', 3)
           .style('stroke', ribbonTextColor)
           .attr('fill', 'red')
