@@ -23,7 +23,7 @@ function endDrag() {
 
 function drag(event) {
     console.log('drag')
-    var splitter = getSplitter();
+    // var splitter = getSplitter();
     var panel = document.getElementById('layers');
     var delta = event.clientX - startX;
     // panel.style.width = (currentWidth - (event.clientX - currentLeft)) + "px";
@@ -37,6 +37,7 @@ function getSplitter() {
 
 var con = document.getElementById('main');
 var splitter = document.getElementById('ribbon');
+console.log(splitter)
 var glass = document.getElementById('glass');
 splitter.addEventListener('mousedown', startDrag, false);
 glass.addEventListener('mouseup', endDrag, false);
