@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import tip from 'd3-tip';
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -49,6 +50,11 @@ d3.json('data/moreno_names.json', function(error, data) {
     y.domain(data.layers.map(function(d){ return d.peel }))
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1))
 
+    var tooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.edges; });
+    ribbon.call(tooltip)
+
+    window.tooltip = tooltip
+
     ribbon.selectAll('.bar')
           .data(data.layers)
         .enter().append('rect')
@@ -57,6 +63,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
           .style('fill', function(d) { return ribbonColor(d.peel) })
+          .on('mouseover', tooltip.show)
+          .on('mouseout', tooltip.hide)
           .on('click', function(d) {console.log(d) });
 
     ribbon.append('g')
