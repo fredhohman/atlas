@@ -7,8 +7,9 @@ function startDrag() {
     console.log('down')
     var panel = document.getElementById('layers');
     console.log(panel.offsetWidth)
-    panel.style.flex = 'none';
     startWidth = panel.offsetWidth;
+    panel.style.flex = 'none';
+    panel.style.width = startWidth + 'px';
     console.log(startWidth)
     startX = event.clientX;
     glass.style = 'display: block;';
