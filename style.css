@@ -3,6 +3,7 @@ html, body {
     margin: 0;
     height: 100%;
     font-family: Roboto;
+    box-sizing: border-box; 
 }
 
 /* flexbox */
@@ -48,7 +49,7 @@ html, body {
 
 #overview {
   flex: 1;
-  background-image: url('images/moreno_names.png');
+  background-image: url('images/moreno_names/moreno_names.png');
   background-size: 700px;
   background-repeat: no-repeat;
   background-position: center;
@@ -72,6 +73,7 @@ html, body {
   width: 300px;
   box-sizing: border-box; /* fixes sudden translate/pop from dragging the ribbon  */
   min-width: 200px;
+  overflow: auto; /* scroll bar when adding more cards than available height*/
 }
 
 #footer {
@@ -248,4 +250,21 @@ h2 {
   margin: -4px 0 0 0;
   top: 50%;
   left: -8px;
+}
+
+
+/* layer cards */
+.card {
+    /* width, margin, padding must sum to 100% */
+    border: 1px solid rgba(0,0,0,.14);
+    height: 300px;
+    width: 88%;
+    /* background-color: slategray; */
+    margin: 4%;
+    padding: 2%;
+}
+
+h3 {
+    padding: 0px;
+    margin: 0px;
 }

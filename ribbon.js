@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import tip from 'd3-tip';
+import addCard from './index.js';
+
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -50,6 +52,11 @@ d3.json('data/moreno_names.json', function(error, data) {
     y.domain(data.layers.map(function(d){ return d.peel }))
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1))
 
+    function addRibbonSVG() {
+        // is this a good idea...
+    }
+    addRibbonSVG();
+
     var tooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.edges; });
     ribbon.call(tooltip)
 
@@ -63,7 +70,7 @@ d3.json('data/moreno_names.json', function(error, data) {
           .style('fill', function(d) { return ribbonColor(d.peel) })
           .on('mouseover', tooltip.show)
           .on('mouseout', tooltip.hide)
-          .on('click', function(d) {console.log(d) });
+          .on('click', function(d) {return addCard(d) });
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
@@ -118,6 +125,7 @@ d3.json('data/moreno_names.json', function(error, data) {
         layersDiv.style.width = (startWidth - delta) + "px";
     }
 
+    // add another ribbon chart
     ribbon.append('circle')
           .attr('cx', (ribbonWidth / 2) - ribbonMargin.right)
           .attr('cy', ribbonHeight + 10)
@@ -130,9 +138,10 @@ d3.json('data/moreno_names.json', function(error, data) {
     function addRibbon() {
         console.log('add ribbon')
         var ribbonDivWidth = document.getElementById('ribbon').clientWidth
-        console.log(ribbonDivWidth)
+
         d3.select('#ribbon')
           .style('flex-basis', 2*ribbonDivWidth + 'px')
+
     }
 
 })

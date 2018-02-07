@@ -6,7 +6,21 @@ import { geoStereographic } from 'd3';
 
 
 
+export default function addCard(d) {
+    console.log('add card', d)
 
+    d3.select('#layers')
+        .append('div')
+        .attr('class', 'card')
+        .append('h3')
+        .attr('class', 'card-title')
+        .text('Layer' + d.peel)
+        .append('img')
+        .attr('src', 'images/moreno_names/layer' + d.peel +'.png')
+        .attr('width', '200px')
+        .style('display', 'block')
+
+}
 
 
 
