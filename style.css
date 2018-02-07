@@ -68,6 +68,7 @@ html, body {
 #layers {
   flex: 1;
   padding: 10px;
+  box-sizing: border-box;
   width: 700px;
   min-width: 200px;
 }
