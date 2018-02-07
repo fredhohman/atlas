@@ -6,6 +6,12 @@ html, body {
     box-sizing: border-box; 
 }
 
+/* material icons sizing */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
 /* flexbox */
 .wrapper {
   display: flex;  
@@ -298,4 +304,35 @@ h3 {
     height: 270px;
     background-color: blue;
     box-sizing: border-box; 
+}
+
+#no-card-message {
+    display: flex;
+    align-items: center;
+    height: 70vh;
+    color: #bbbbbb;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.bounce {
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateX(20px);
+  }
+  60% {
+    transform: translateX(10px);
+  }
+}
+
+.bounce-padding {
+    padding-left: 15px;
 }

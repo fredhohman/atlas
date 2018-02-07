@@ -5,6 +5,9 @@ import $ from "jquery";
 import { geoStereographic } from 'd3';
 
 
+let numOfCardsUp = 0;
+window.numOfCardsUp = numOfCardsUp;
+
 d3.json('data/moreno_names.json', function (error, data) {
 
     if (error) {
@@ -32,6 +35,8 @@ d3.select('#header-text-span').on('click', reloadPage).style('cursor', 'pointer'
 
 export default function addCard(d) {
     console.log('add card', d)
+    numOfCardsUp += 1;
+    cardMessage();
 
     var layers = d3.select('#layers')
         .append('div')
@@ -65,9 +70,19 @@ export default function addCard(d) {
 
 function closeCard(d) {
     console.log('close card')
+    numOfCardsUp -= 1;
     d3.select('#card-' + d.peel).remove();
+    cardMessage();
 }
 
+function cardMessage() {
+    console.log('card message', numOfCardsUp)
+    if (numOfCardsUp === 0) {
+        d3.select('#no-card-message').style('display', 'flex')
+    } else {
+        d3.select('#no-card-message').style('display', 'none')
+    }
+}
 
 // d3.select('#layers')
 //     .data(layers)
