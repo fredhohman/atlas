@@ -5,6 +5,24 @@ import $ from "jquery";
 import { geoStereographic } from 'd3';
 
 
+d3.json('data/moreno_names.json', function (error, data) {
+
+    if (error) {
+        return console.error(error);
+    }
+
+    // some globals for console debugging
+    console.log(data)
+    window.data = data
+    window.d3 = d3
+
+    // set nav data
+    var navNumFormat = d3.format(',');
+    d3.select("#graph-name").text(data.name);
+    d3.select("#vertices-value").text(navNumFormat(data.vertices));
+    d3.select("#edges-value").text(navNumFormat(data.edges));
+    d3.select("#graph-description").text(data.description);
+})
 
 function reloadPage() {
     window.location.reload();

@@ -11,17 +11,11 @@ d3.json('data/moreno_names.json', function(error, data) {
     if (error) {
         return console.error(error);        
     }
-    
     // some globals for console debugging
     console.log(data)
     window.data = data
     window.d3 = d3
-
-    // set nav data
-    var navFormat = d3.format(',')
-    d3.select("#vertices-value").text(navFormat(data.vertices))
-    d3.select("#edges-value").text(navFormat(data.edges))
-
+    
     var ribbonMargin = { top: 60, right: 10, bottom: 40, left: 35 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
     var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 4 // -4 is a bug, shrinks svg so scroll bar doesn't appear
