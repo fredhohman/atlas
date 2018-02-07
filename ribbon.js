@@ -20,9 +20,9 @@ d3.json('data/moreno_names.json', function(error, data) {
     d3.select("#vertices-value").text(navFormat(data.vertices))
     d3.select("#edges-value").text(navFormat(data.edges))
 
-    var ribbonMargin = { top: 60, right: 10, bottom: 10, left: 35 };
-    var ribbonWidth = document.getElementById("ribbon").offsetWidth - ribbonMargin.left - ribbonMargin.right
-    var ribbonHeight = document.getElementById("ribbon").offsetHeight - ribbonMargin.top - ribbonMargin.bottom
+    var ribbonMargin = { top: 60, right: 10, bottom: 40, left: 35 };
+    var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
+    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom
     // var aspectRatio = '32:2';
     // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
 
@@ -116,6 +116,23 @@ d3.json('data/moreno_names.json', function(error, data) {
         var layersDiv = document.getElementById('layers');
         var delta = event.clientX - startX;
         layersDiv.style.width = (startWidth - delta) + "px";
+    }
+
+    ribbon.append('circle')
+          .attr('cx', (ribbonWidth / 2) - ribbonMargin.right)
+          .attr('cy', ribbonHeight + 10)
+          .attr('r', 15)
+          .attr('stroke-width', 3)
+          .style('stroke', ribbonTextColor)
+          .attr('fill', 'red')
+          .on('click', addRibbon);
+
+    function addRibbon() {
+        console.log('add ribbon')
+        var ribbonDivWidth = document.getElementById('ribbon').clientWidth
+        console.log(ribbonDivWidth)
+        d3.select('#ribbon')
+          .style('flex-basis', 2*ribbonDivWidth + 'px')
     }
 
 })
