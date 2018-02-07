@@ -54,6 +54,7 @@ html, body {
   background-position: center;
   padding: 10px;
   min-width: 200px;
+  text-align: right;
 }
 
 #ribbon {
@@ -66,9 +67,9 @@ html, body {
 }
 
 #layers {
-  flex: 1;
+  /* flex: 1; */
   padding: 10px;
-  width: 700px;
+  width: 300px;
   min-width: 200px;
 }
 
@@ -198,7 +199,7 @@ h1 {
 
 
 
-#ribbon {
+#ribbonDrag {
   /* width: 20px; */
   cursor: col-resize;
 }
