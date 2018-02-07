@@ -28,7 +28,7 @@ function reloadPage() {
     window.location.reload();
 }
 
-d3.select('#header-text').on('click', reloadPage).style('cursor', 'pointer')
+d3.select('#header-text-span').on('click', reloadPage).style('cursor', 'pointer')
 
 export default function addCard(d) {
     console.log('add card', d)

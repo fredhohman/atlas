@@ -91,23 +91,23 @@ html, body {
 
 
 /* header*/
-#header-wrapper {
-    display:block;
+/* #header-wrapper {
+    display: inline-block;
     float: left;
     padding: 0;
     margin: 0;
-}
+} */
 
 #header-text {
-    display: float;
-    float: left;
-    width: 200px;
+    /* display: inline-block;
+    float: left; */
+    /* width: 200px; */
 }
 
-#header-icon {
+/* #header-icon {
     float: right;
     display: float;
-}
+} */
 
 /* nav .brand-logo {
     margin-left: 20px;
