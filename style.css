@@ -65,6 +65,7 @@ html, body {
   flex-basis: 150px;
   border-left: 1px solid rgba(0,0,0,.14);
   border-right: 1px solid rgba(0,0,0,.14);
+  overflow: auto; /* scroll bar when resizing browser height after load */
 }
 
 #layers {
@@ -201,7 +202,7 @@ h1 {
 }
 
 
-
+/* dragging ribbon */
 #ribbonDrag {
   /* width: 20px; */
   cursor: col-resize;
@@ -267,4 +268,34 @@ h2 {
 h3 {
     padding: 0px;
     margin: 0px;
+}
+
+/* height for .card-title-wrapper + (.card-text-wrapper OR .card-image-wrapper) = .card height */
+.card-title-wrapper {
+    height: 30px;
+    width: 50%;
+    float: left;
+}
+
+.card-icon-wrapper {
+    height: 30px;
+    width: 50%;
+    float: left;
+    text-align: right;
+}
+
+.card-text-wrapper {
+    float: left;
+    width: 40%;
+    height: 270px;
+    background-color: red;
+    box-sizing: border-box; 
+}
+
+.card-image-wrapper {
+    float: left;
+    width: 60%;
+    height: 270px;
+    background-color: blue;
+    box-sizing: border-box; 
 }

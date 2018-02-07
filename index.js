@@ -6,22 +6,49 @@ import { geoStereographic } from 'd3';
 
 
 
+function reloadPage() {
+    window.location.reload();
+}
+
+d3.select('#header-text').on('click', reloadPage).style('cursor', 'pointer')
+
 export default function addCard(d) {
     console.log('add card', d)
 
-    d3.select('#layers')
+    var layers = d3.select('#layers')
         .append('div')
         .attr('class', 'card')
-        .append('h3')
-        .attr('class', 'card-title')
-        .text('Layer' + d.peel)
-        .append('img')
-        .attr('src', 'images/moreno_names/layer' + d.peel +'.png')
-        .attr('width', '200px')
-        .style('display', 'block')
+        .attr('id', 'card-' + d.peel)
+
+    layers.append('div')
+          .attr('class', 'card-title-wrapper')
+          .append('h3')
+          .attr('class', 'card-title')
+          .text('Layer ' + d.peel)
+
+    layers.append('div')
+        .attr('class', 'card-icon-wrapper')
+        .append("i").attr('class', 'material-icons').text('close').style('cursor', 'pointer')
+        .on('click', function() { closeCard(d) } )
+
+    layers.append('div')
+        .attr('class', 'card-text-wrapper')
+        .text()
+
+    layers.append('div')
+          .attr('class', 'card-image-wrapper')
+          .append('img')
+          .attr('src', 'images/moreno_names/layer' + d.peel +'.png')
+        //   .attr('width', '100%')
+          .style('display', 'block')
+          .style('max-height', '100%')
 
 }
 
+function closeCard(d) {
+    console.log('close card')
+    d3.select('#card-' + d.peel).remove();
+}
 
 
 // d3.select('#layers')
