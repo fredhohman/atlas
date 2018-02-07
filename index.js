@@ -1,87 +1,10 @@
 // index.js
-// var draggableRibbon = require('draggable-ribbon.js')
 import * as contour from 'd3-contour';
 import * as d3 from 'd3';
 import $ from "jquery";
 import { geoStereographic } from 'd3';
 
 
-d3.json('data/moreno_names.json', function(error, data) {
-
-    if (error) {
-        return console.error(error);        
-    }
-    
-    // some globals for debugging
-    console.log(data)
-    window.data = data
-    window.d3 = d3
-
-    // set nav data
-    var navFormat = d3.format(',')
-    d3.select("#vertices-value").text(navFormat(data.vertices))
-    d3.select("#edges-value").text(navFormat(data.edges))
-
-    // ribbon
-    var ribbonMargin = { top: 20, right: 10, bottom: 60, left: 35 };
-    var ribbonWidth = document.getElementById("ribbon").offsetWidth - ribbonMargin.left - ribbonMargin.right
-    var ribbonHeight = document.getElementById("ribbon").offsetHeight - ribbonMargin.top - ribbonMargin.bottom
-    // var aspectRatio = '32:2';
-    // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
-
-    var ribbon = d3.select("#ribbon").append("svg")
-        .attr("width", ribbonWidth + ribbonMargin.left + ribbonMargin.right)
-        .attr("height", ribbonHeight + ribbonMargin.top + ribbonMargin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + ribbonMargin.left + "," + ribbonMargin.top + ")");
-
-    // background for debugging
-    // ribbon.append('rect')
-    //         .attr('width', ribbonWidth)
-    //         .attr('height', ribbonHeight)
-    //         .style('fill', '#eeeeee');
-
-    var ribbonTextColor = '#222222'
-    var x = d3.scaleLinear().range([0, ribbonWidth]);
-    var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.3);
-    var ribbonColor = d3.scaleLinear()
-                        .domain(d3.extent(data.layers, function(d) { return d.peel }))
-                        .interpolate(d3.interpolateHcl)
-                        .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
-
-    x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
-    y.domain(data.layers.map(function(d){ return d.peel }))
-    y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1))
-
-    ribbon.selectAll('.bar')
-          .data(data.layers)
-        .enter().append('rect')
-          .attr('class', "bar")
-          .attr('width', function (d) { return x(d.edges) })
-          .attr('y', function(d) { return y(d.peel) })
-          .attr('height', y.bandwidth())
-          .style('fill', function(d) { return ribbonColor(d.peel) });
-
-    ribbon.append('g')
-          .attr('transform', "translate(0," + ribbonHeight + ")")
-          .attr('class', 'x-axis')
-          .call(d3.axisBottom(x).ticks(3))
-
-    ribbon.append("text")
-          .attr("transform", "translate(" + ((ribbonWidth/ 2) - ribbonMargin.right) + " ," + (ribbonHeight + ribbonMargin.top + 20) + ")")
-          .style("text-anchor", "middle")
-          .text('edges')
-
-    ribbon.append('g')
-          .attr('class', 'y-axis')
-          .call(d3.axisLeft(y))
-          .selectAll('.tick text')
-          .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
-          .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
-
-
-
-})
 
 
 

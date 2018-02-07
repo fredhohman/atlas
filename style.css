@@ -67,9 +67,10 @@ html, body {
 }
 
 #layers {
-  /* flex: 1; */
+  flex: 1;
   padding: 10px;
   width: 300px;
+  box-sizing: border-box; /* fixes sudden translate/pop from dragging the ribbon  */
   min-width: 200px;
 }
 
