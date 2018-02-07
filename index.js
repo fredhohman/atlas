@@ -10,7 +10,6 @@ import { geoStereographic } from 'd3';
 
 
 
-
 // d3.select('#layers')
 //     .data(layers)
 //     .enter()

@@ -20,7 +20,7 @@ d3.json('data/moreno_names.json', function(error, data) {
     d3.select("#vertices-value").text(navFormat(data.vertices))
     d3.select("#edges-value").text(navFormat(data.edges))
 
-    var ribbonMargin = { top: 20, right: 10, bottom: 60, left: 35 };
+    var ribbonMargin = { top: 60, right: 10, bottom: 10, left: 35 };
     var ribbonWidth = document.getElementById("ribbon").offsetWidth - ribbonMargin.left - ribbonMargin.right
     var ribbonHeight = document.getElementById("ribbon").offsetHeight - ribbonMargin.top - ribbonMargin.bottom
     // var aspectRatio = '32:2';
@@ -53,8 +53,6 @@ d3.json('data/moreno_names.json', function(error, data) {
     var tooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.edges; });
     ribbon.call(tooltip)
 
-    window.tooltip = tooltip
-
     ribbon.selectAll('.bar')
           .data(data.layers)
         .enter().append('rect')
@@ -68,12 +66,12 @@ d3.json('data/moreno_names.json', function(error, data) {
           .on('click', function(d) {console.log(d) });
 
     ribbon.append('g')
-          .attr('transform', "translate(0," + ribbonHeight + ")")
+          .attr('transform', "translate(0," + 0 + ")")
           .attr('class', 'x-axis')
-          .call(d3.axisBottom(x).ticks(3))
+          .call(d3.axisTop(x).ticks(3))
 
     ribbon.append("text")
-          .attr("transform", "translate(" + ((ribbonWidth/ 2) - ribbonMargin.right) + " ," + (ribbonHeight + ribbonMargin.top + 20) + ")")
+          .attr("transform", "translate(" + ((ribbonWidth/ 2) - ribbonMargin.right) + " ," + (-1 * ribbonMargin.top/2) + ")")
           .style("text-anchor", "middle")
           .text('edges')
           .attr('id', 'ribbonDrag')
