@@ -69,7 +69,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .on('mouseover', tooltip.show)
           .on('mouseout', tooltip.hide)
           .on('click', function(d) { return addCard(d) })
-          .on('mouseover', function(d) { return showLayerInOverview(d) });
+          .on('mouseover', function(d) { return showLayerInOverview(d) })
+          .on('mouseout', hideLayerInOverview)
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
@@ -166,4 +167,10 @@ function showLayerInOverview(d) {
     console.log('show layer in overview')
     d3.select('#overview')
       .style('background-image', "url(images/moreno_names/layer" + d.peel + ".png), " + "url(images/moreno_names/moreno_names-bw.png")
+}
+
+function hideLayerInOverview(d) {
+    console.log('hide layer in overview')
+    d3.select('#overview')
+        .style('background-image', "url(images/moreno_names/moreno_names-bw.png")
 }
