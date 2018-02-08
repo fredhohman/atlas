@@ -346,3 +346,8 @@ h3 {
 .bounce-padding {
     padding-left: 15px;
 }
+
+.add-ribbon-icon-wrapper {
+    text-align: center;
+    padding-bottom: 10px;
+}

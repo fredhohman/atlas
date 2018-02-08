@@ -16,9 +16,9 @@ d3.json('data/moreno_names.json', function(error, data) {
     window.data = data
     window.d3 = d3
     
-    var ribbonMargin = { top: 60, right: 10, bottom: 40, left: 35 };
+    var ribbonMargin = { top: 60, right: 10, bottom: 0, left: 35 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
-    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 4 // -4 is a bug, shrinks svg so scroll bar doesn't appear
+    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 55 // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
     // var aspectRatio = '32:2';
     // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
 
@@ -37,19 +37,23 @@ d3.json('data/moreno_names.json', function(error, data) {
     var ribbonTextColor = '#222222'
     var x = d3.scaleLinear().range([0, ribbonWidth]);
     var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.3);
-    var ribbonColor = d3.scaleLinear()
-                        .domain(d3.extent(data.layers, function(d) { return d.peel }))
-                        .interpolate(d3.interpolateHcl)
-                        .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
 
     x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
     y.domain(data.layers.map(function(d){ return d.peel }))
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1))
+    var ribbonColor = d3.scaleLinear()
+        .domain(d3.extent(data.layers, function (d) { return d.peel }))
+        .interpolate(d3.interpolateHcl)
+        .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
+
+    // save color palette from data once and bind to window, little checky
+    window.ribbonColor = ribbonColor;
+
 
     function addRibbonSVG() {
         // is this a good idea...
     }
-    addRibbonSVG();
+    // addRibbonSVG();
 
     var tooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.edges; });
     ribbon.call(tooltip)
@@ -129,14 +133,22 @@ d3.json('data/moreno_names.json', function(error, data) {
     }
 
     // add another ribbon chart
-    ribbon.append('circle')
-          .attr('cx', (ribbonWidth / 2) - ribbonMargin.right)
-          .attr('cy', ribbonHeight + 10)
-          .attr('r', 10)
-          .attr('stroke-width', 3)
-          .style('stroke', ribbonTextColor)
-          .attr('fill', 'red')
-          .on('click', addRibbon);
+    d3.select('#ribbon')
+      .append('div')
+      .attr('class', 'add-ribbon-icon-wrapper')
+      .append("i").attr('class', 'material-icons md-36')
+      .text('add_circle')
+      .style('cursor', 'pointer')
+      .on('click', addRibbon)
+      
+    // ribbon.append('circle')
+    //       .attr('cx', (ribbonWidth / 2) - ribbonMargin.right)
+    //       .attr('cy', ribbonHeight + 10)
+    //       .attr('r', 10)
+    //       .attr('stroke-width', 3)
+    //       .style('stroke', ribbonTextColor)
+    //       .attr('fill', 'red')
+    //       .on('click', addRibbon);
 
     function addRibbon() {
         console.log('add ribbon')

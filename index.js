@@ -45,6 +45,7 @@ export default function addCard(d) {
                    .append('div')
                    .attr('class', 'card')
                    .attr('id', 'card-' + d.peel)
+                   .style('border', function() { return '3px solid ' + ribbonColor(d.peel) })
 
     layers.append('div')
           .attr('class', 'card-title-wrapper')
