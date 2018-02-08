@@ -138,7 +138,7 @@ d3.json('data/moreno_names.json', function(error, data) {
     d3.select('#ribbon')
       .append('div')
       .attr('class', 'add-ribbon-icon-wrapper')
-      .append("i").attr('class', 'material-icons md-36')
+        .append("i").attr('class', 'material-icons md-36 md-dark')
       .text('add_circle')
       .style('cursor', 'pointer')
       .on('click', addRibbon)

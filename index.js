@@ -57,7 +57,10 @@ export default function addCard(d) {
 
     layers.append('div')
           .attr('class', 'card-icon-wrapper')
-          .append("i").attr('class', 'material-icons').text('close').style('cursor', 'pointer')
+          .append("i")
+          .attr('class', 'material-icons md-dark')
+          .text('close')
+          .style('cursor', 'pointer')
           .on('click', function() { closeCard(d) } )
 
     var cardTextValueFormat = d3.format(",.3f")

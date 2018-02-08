@@ -12,6 +12,10 @@ html, body {
 .material-icons.md-36 { font-size: 36px; }
 .material-icons.md-48 { font-size: 48px; }
 
+/* material icons colors */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark:hover { color: rgba(0, 0, 0, 0.26); }
+
 /* flexbox */
 .wrapper {
   display: flex;  
