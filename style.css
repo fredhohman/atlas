@@ -167,6 +167,7 @@ h1 {
 /* ribbon */
 .bar:hover {
     opacity: 0.4;
+    cursor: pointer;
 }
 
 .y-axis .tick line {
@@ -292,24 +293,33 @@ h3 {
 
 .card-text-wrapper {
     float: left;
-    width: 40%;
+    width: 50%;
     height: 270px;
-    background-color: red;
+    /* background-color: red; */
     box-sizing: border-box; 
 }
 
 .card-image-wrapper {
     float: left;
-    width: 60%;
+    width: 50%;
     height: 270px;
-    background-color: blue;
+    /* background-color: blue; */
     box-sizing: border-box; 
+}
+
+.card-text-item {
+    display: block;
+    padding-bottom: 5px;
+    font-weight: 700;
+}
+.card-text-item-value {
+    font-weight: 400;
 }
 
 #no-card-message {
     display: flex;
     align-items: center;
-    height: 70vh;
+    height: 75vh;
     color: #bbbbbb;
     font-weight: 400;
     font-size: 20px;

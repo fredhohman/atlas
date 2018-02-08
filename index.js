@@ -19,6 +19,7 @@ d3.json('data/moreno_names.json', function (error, data) {
     window.data = data
     window.d3 = d3
 
+
     // set nav data
     var navNumFormat = d3.format(',');
     d3.select("#graph-name").text(data.name);
@@ -31,7 +32,9 @@ function reloadPage() {
     window.location.reload();
 }
 
-d3.select('#header-text-span').on('click', reloadPage).style('cursor', 'pointer')
+d3.select('#header-text-span')
+  .on('click', reloadPage)
+  .style('cursor', 'pointer')
 
 export default function addCard(d) {
     console.log('add card', d)
@@ -39,9 +42,9 @@ export default function addCard(d) {
     cardMessage();
 
     var layers = d3.select('#layers')
-        .append('div')
-        .attr('class', 'card')
-        .attr('id', 'card-' + d.peel)
+                   .append('div')
+                   .attr('class', 'card')
+                   .attr('id', 'card-' + d.peel)
 
     layers.append('div')
           .attr('class', 'card-title-wrapper')
@@ -50,13 +53,9 @@ export default function addCard(d) {
           .text('Layer ' + d.peel)
 
     layers.append('div')
-        .attr('class', 'card-icon-wrapper')
-        .append("i").attr('class', 'material-icons').text('close').style('cursor', 'pointer')
-        .on('click', function() { closeCard(d) } )
-
-    layers.append('div')
-        .attr('class', 'card-text-wrapper')
-        .text()
+          .attr('class', 'card-icon-wrapper')
+          .append("i").attr('class', 'material-icons').text('close').style('cursor', 'pointer')
+          .on('click', function() { closeCard(d) } )
 
     layers.append('div')
           .attr('class', 'card-image-wrapper')
@@ -65,6 +64,46 @@ export default function addCard(d) {
         //   .attr('width', '100%')
           .style('display', 'block')
           .style('max-height', '100%')
+
+    var cardTextValueFormat = d3.format(",.3f")
+
+    var cardText = layers.append('div')
+                         .attr('class', 'card-text-wrapper')
+
+    cardText.append('span')
+            .attr('class', 'card-text-item')
+            .text('vertices: ')
+            .append('span')
+            .attr('class', 'card-text-item-value')
+            .text(d.vertices)
+
+    cardText.append('span')
+            .attr('class', 'card-text-item')
+            .text('edges: ')
+            .append('span')
+            .attr('class', 'card-text-item-value')
+            .text(d.edges)
+
+    cardText.append('span')
+            .attr('class', 'card-text-item')
+            .text('components: ')
+            .append('span')
+            .attr('class', 'card-text-item-value')
+            .text(d.components)
+
+    cardText.append('span')
+            .attr('class', 'card-text-item')
+            .text('clustering: ')
+            .append('span')
+            .attr('class', 'card-text-item-value')
+            .text(cardTextValueFormat(d.clustering))
+
+    cardText.append('span')
+            .attr('class', 'card-text-item')
+            .text('clones: ')
+            .append('span')
+            .attr('class', 'card-text-item-value')
+            .text(cardTextValueFormat(d.clones))
 
 }
 
@@ -83,15 +122,6 @@ function cardMessage() {
         d3.select('#no-card-message').style('display', 'none')
     }
 }
-
-// d3.select('#layers')
-//     .data(layers)
-//     .enter()
-//     .append('img')
-//     .classed('png', true)
-//     .attr('src', function (d) {
-//         return 'images/layer' + d + '.png'
-//     })
 
 
 
@@ -228,7 +258,3 @@ function cardMessage() {
 // d3.select("#overview-image")
 //     .style('background-image', overviewImage)
 
-
-
-// window.onload = function () {
-// };
