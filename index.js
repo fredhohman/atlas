@@ -43,9 +43,11 @@ export default function addCard(d) {
 
     var layers = d3.select('#layers')
                    .append('div')
-                   .attr('class', 'card')
+                   .attr('class', 'card-border-wrapper')
                    .attr('id', 'card-' + d.peel)
-                   .style('border', function() { return '3px solid ' + ribbonColor(d.peel) })
+                   .append('div')
+                   .attr('class', 'card')
+                   .style('border-left', function() { return '5px solid ' + ribbonColor(d.peel) })
 
     layers.append('div')
           .attr('class', 'card-title-wrapper')
@@ -57,14 +59,6 @@ export default function addCard(d) {
           .attr('class', 'card-icon-wrapper')
           .append("i").attr('class', 'material-icons').text('close').style('cursor', 'pointer')
           .on('click', function() { closeCard(d) } )
-
-    layers.append('div')
-          .attr('class', 'card-image-wrapper')
-          .append('img')
-          .attr('src', 'images/moreno_names/layer' + d.peel +'.png')
-        //   .attr('width', '100%')
-          .style('display', 'block')
-          .style('max-height', '100%')
 
     var cardTextValueFormat = d3.format(",.3f")
 
@@ -105,6 +99,15 @@ export default function addCard(d) {
             .append('span')
             .attr('class', 'card-text-item-value')
             .text(cardTextValueFormat(d.clones))
+
+    layers.append('div')
+        .attr('class', 'card-image-wrapper')
+        .append('img')
+        .attr('src', 'images/moreno_names/layer' + d.peel + '.png')
+        //   .attr('width', '100%')
+        .style('display', 'block')
+        .style('max-height', '100%')
+        .style('margin', 'auto')
 
 }
 

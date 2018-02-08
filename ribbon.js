@@ -46,7 +46,7 @@ d3.json('data/moreno_names.json', function(error, data) {
         .interpolate(d3.interpolateHcl)
         .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
 
-    // save color palette from data once and bind to window, little checky
+    // save color palette from data once and bind to window, little cheecky
     window.ribbonColor = ribbonColor;
 
 
