@@ -341,12 +341,16 @@ h3 {
     flex: 1;
     /* float: left; */
     color: #222222;
-    background-color: green;
+    /* background-color: green; */
 }
 
 .card-tabs {
-    font-weight: 500;
-    font-size: 16px;
+    /* font-weight: 500; */
+    /* font-size: 16px; */
+}
+
+.tabcontent {
+    display: none;
 }
 
 .card-icon-wrapper {
@@ -372,7 +376,7 @@ h3 {
     flex-shrink: 0;
     flex-basis: 150px;
     height: 270px;
-    background-color: red;
+    /* background-color: red; */
     box-sizing: border-box; 
 }
 
@@ -381,7 +385,7 @@ h3 {
     /* width: 70%; */
     flex: 4;
     height: 270px;
-    background-color: blue;
+    /* background-color: blue; */
     box-sizing: border-box;
     text-align: center;
 }

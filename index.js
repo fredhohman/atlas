@@ -57,11 +57,42 @@ export default function addCard(d) {
           .attr('class', 'card-title')
           .text('Layer ' + d.peel)
 
-    cardTop.append('div')
-          .attr('class', 'card-tabs-wrapper')
-          .append('h3')
-          .attr('class', 'card-tabs')
-          .text('Tabs')
+    var tabs = cardTop.append('div')
+          .attr('class', 'card-tabs-wrapper tab')
+
+    function changeTab(evt, cityName) {
+        
+        var i, tabcontent, tablinks;
+
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+
+    }    
+
+    var originalLayerImg = tabs.append('button')
+        .attr('class', 'card-tabs tablinks')
+        .text('Original')
+        .on('click', function() { changeTab(event, 'original-layer-image') })
+
+    var forceDirectedLayerImg = tabs.append('button')
+        .attr('class', 'card-tabs tablinks')
+        .text('Force directed')
+        .on('click', function () { changeTab(event, 'force-directed-layer-image') })
+
+    var contourLayerImg = tabs.append('button')
+        .attr('class', 'card-tabs tablinks')
+        .text('Contour')
+        .on('click', function () { changeTab(event, 'contour-layer-image') })
 
     cardTop.append('div')
           .attr('class', 'card-icon-wrapper')
@@ -113,13 +144,47 @@ export default function addCard(d) {
             .attr('class', 'card-text-item-value')
             .text(cardTextValueFormat(d.clones))
 
+    // tabs.append('div')
+    //     .attr('id', 'original-layer-image')
+    //     .attr('class', 'tabcontent')
+    //     .text('original')
+
+    // tabs.append('div')
+    //     .attr('id', 'force-directed-layer-image')
+    //     .attr('class', 'tabcontent')
+    //     .text('force')
+
     cardBottom.append('div')
-        .attr('class', 'card-image-wrapper')
+        .attr('id', 'original-layer-image')
+        .attr('class', 'card-image-wrapper tabcontent')
+        // .text('original')
         .append('img')
         .attr('src', 'images/moreno_names/layer' + d.peel + '.png')
         //   .attr('width', '100%')
         .style('display', 'block')
-        .style('max-height', '100%')
+        .style('max-height', '270px')
+        .style('margin', 'auto')
+
+    cardBottom.append('div')
+        .attr('id', 'force-directed-layer-image')
+        .attr('class', 'card-image-wrapper tabcontent')
+        // .text('force')
+        .append('img')
+        .attr('src', 'images/moreno_names/layer-' + d.peel + '.png')
+        //   .attr('width', '100%')
+        .style('display', 'block')
+        .style('max-height', '270px')
+        .style('margin', 'auto')
+
+    cardBottom.append('div')
+        .attr('id', 'contour-layer-image')
+        .attr('class', 'card-image-wrapper tabcontent')
+        // .text('force')
+        .append('img')
+        .attr('src', 'images/moreno_names/contour-shaded-layer-' + d.peel + '.png')
+        //   .attr('width', '100%')
+        .style('display', 'block')
+        .style('max-height', '270px')
         .style('margin', 'auto')
 
 }
