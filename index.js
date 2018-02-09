@@ -60,39 +60,41 @@ export default function addCard(d) {
     var tabs = cardTop.append('div')
           .attr('class', 'card-tabs-wrapper tab')
 
-    function changeTab(evt, cityName) {
-        
-        var i, tabcontent, tablinks;
+    function changeTab(evt, cardName, peel) {
+        console.log("change tab")
+        console.log(evt, peel)
 
-        tabcontent = document.getElementsByClassName("tabcontent");
+        var i, tabcontent, tablinks;
+        
+        tabcontent = document.getElementById("card-" + peel).getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
         }
 
-        tablinks = document.getElementsByClassName("tablinks");
+        tablinks = document.getElementById("card-" + peel).getElementsByClassName("tablinks");
         for (i = 0; i < tablinks.length; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
 
-        document.getElementById(cityName).style.display = "block";
+        document.getElementById(cardName).style.display = "block";
         evt.currentTarget.className += " active";
 
     }    
 
     var originalLayerImg = tabs.append('button')
-        .attr('class', 'card-tabs tablinks')
+        .attr('class', 'card-tabs tablinks active') // set initial view
         .text('Original')
-        .on('click', function() { changeTab(event, 'original-layer-image') })
+        .on('click', function () { changeTab(event, 'original-layer-image-' + d.peel, d.peel) })
 
     var forceDirectedLayerImg = tabs.append('button')
         .attr('class', 'card-tabs tablinks')
         .text('Force directed')
-        .on('click', function () { changeTab(event, 'force-directed-layer-image') })
+        .on('click', function () { changeTab(event, 'force-directed-layer-image-' + d.peel, d.peel) })
 
     var contourLayerImg = tabs.append('button')
         .attr('class', 'card-tabs tablinks')
         .text('Contour')
-        .on('click', function () { changeTab(event, 'contour-layer-image') })
+        .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
 
     cardTop.append('div')
           .attr('class', 'card-icon-wrapper')
@@ -144,20 +146,9 @@ export default function addCard(d) {
             .attr('class', 'card-text-item-value')
             .text(cardTextValueFormat(d.clones))
 
-    // tabs.append('div')
-    //     .attr('id', 'original-layer-image')
-    //     .attr('class', 'tabcontent')
-    //     .text('original')
-
-    // tabs.append('div')
-    //     .attr('id', 'force-directed-layer-image')
-    //     .attr('class', 'tabcontent')
-    //     .text('force')
-
     cardBottom.append('div')
-        .attr('id', 'original-layer-image')
+        .attr('id', 'original-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
-        // .text('original')
         .append('img')
         .attr('src', 'images/moreno_names/layer' + d.peel + '.png')
         //   .attr('width', '100%')
@@ -166,9 +157,8 @@ export default function addCard(d) {
         .style('margin', 'auto')
 
     cardBottom.append('div')
-        .attr('id', 'force-directed-layer-image')
+        .attr('id', 'force-directed-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
-        // .text('force')
         .append('img')
         .attr('src', 'images/moreno_names/layer-' + d.peel + '.png')
         //   .attr('width', '100%')
@@ -177,15 +167,17 @@ export default function addCard(d) {
         .style('margin', 'auto')
 
     cardBottom.append('div')
-        .attr('id', 'contour-layer-image')
+        .attr('id', 'contour-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
-        // .text('force')
         .append('img')
         .attr('src', 'images/moreno_names/contour-shaded-layer-' + d.peel + '.png')
         //   .attr('width', '100%')
         .style('display', 'block')
         .style('max-height', '270px')
         .style('margin', 'auto')
+
+    // set initial view
+    d3.select('#original-layer-image-' + d.peel).style('display', 'block')
 
 }
 
