@@ -66,11 +66,9 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
           .style('fill', function(d) { return ribbonColor(d.peel) })
-          .on('mouseover', tooltip.show)
-          .on('mouseout', tooltip.hide)
+          .on('mouseover', function (d) { tooltip.show(d); showLayerInOverview(d) } )
+          .on('mouseout', function (d) { tooltip.hide(); hideLayerInOverview() })
           .on('click', function(d) { return addCard(d) })
-          .on('mouseover', function(d) { return showLayerInOverview(d) })
-          .on('mouseout', hideLayerInOverview)
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")

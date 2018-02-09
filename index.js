@@ -49,13 +49,21 @@ export default function addCard(d) {
                    .attr('class', 'card')
                    .style('border-left', function() { return '5px solid ' + ribbonColor(d.peel) })
 
-    layers.append('div')
+    var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
+
+    cardTop.append('div')
           .attr('class', 'card-title-wrapper')
           .append('h3')
           .attr('class', 'card-title')
           .text('Layer ' + d.peel)
 
-    layers.append('div')
+    cardTop.append('div')
+          .attr('class', 'card-tabs-wrapper')
+          .append('h3')
+          .attr('class', 'card-tabs')
+          .text('Tabs')
+
+    cardTop.append('div')
           .attr('class', 'card-icon-wrapper')
           .append("i")
           .attr('class', 'material-icons md-dark')
@@ -65,7 +73,9 @@ export default function addCard(d) {
 
     var cardTextValueFormat = d3.format(",.3f")
 
-    var cardText = layers.append('div')
+    var cardBottom = layers.append('div').attr('class', 'card-bottom-wrapper')
+
+    var cardText = cardBottom.append('div')
                          .attr('class', 'card-text-wrapper')
 
     cardText.append('span')
@@ -103,7 +113,7 @@ export default function addCard(d) {
             .attr('class', 'card-text-item-value')
             .text(cardTextValueFormat(d.clones))
 
-    layers.append('div')
+    cardBottom.append('div')
         .attr('class', 'card-image-wrapper')
         .append('img')
         .attr('src', 'images/moreno_names/layer' + d.peel + '.png')

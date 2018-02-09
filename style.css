@@ -83,7 +83,7 @@ html, body {
   padding: 10px;
   width: 300px;
   box-sizing: border-box; /* fixes sudden translate/pop from dragging the ribbon  */
-  min-width: 200px;
+  min-width: 400px;
   overflow: auto; /* scroll bar when adding more cards than available height*/
 }
 
@@ -92,7 +92,8 @@ html, body {
   display: flex;
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: 64px;
+  /* flex-basis: 64px; */
+  flex-basis: 32px;
   justify-content: center;
   flex-direction: column;
   padding-left: 20px;
@@ -279,6 +280,8 @@ h2 {
     /* margin: 4%; */
     padding: 2%;
     position: relative;
+    display: flex;
+    flex-flow: column;
 }
 
 .card-border-wrapper {
@@ -309,34 +312,76 @@ h3 {
     margin: 0px;
 }
 
+.card-top-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
 /* height for .card-title-wrapper + (.card-text-wrapper OR .card-image-wrapper) = .card height */
 .card-title-wrapper {
     height: 30px;
-    width: 50%;
-    float: left;
+    /* width: 30%; */
+    /* float: left; */
     color: #222222;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 150px;
+}
+
+.card-title {
+    /* flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 150px; */
+}
+
+.card-tabs-wrapper {
+    height: 30px;
+    /* width: 60%; */
+    flex: 1;
+    /* float: left; */
+    color: #222222;
+    background-color: green;
+}
+
+.card-tabs {
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .card-icon-wrapper {
     height: 30px;
-    width: 50%;
-    float: left;
+    /* width: 10%; */
+    /* float: left; */
     text-align: right;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 50px;
+}
+
+.card-bottom-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
 }
 
 .card-text-wrapper {
     float: left;
-    width: 30%;
+    /* width: 150px; */
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 150px;
     height: 270px;
-    /* background-color: red; */
+    background-color: red;
     box-sizing: border-box; 
 }
 
 .card-image-wrapper {
     float: left;
-    width: 70%;
+    /* width: 70%; */
+    flex: 4;
     height: 270px;
-    /* background-color: blue; */
+    background-color: blue;
     box-sizing: border-box;
     text-align: center;
 }
