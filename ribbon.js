@@ -19,7 +19,7 @@ d3.json('data/moreno_names.json', function(error, data) {
     
     var ribbonMargin = { top: 60, right: 45, bottom: 0, left: 45 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
-    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 55 // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
+    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 5 // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
     // var aspectRatio = '32:2';
     // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
 
@@ -191,13 +191,13 @@ d3.json('data/moreno_names.json', function(error, data) {
     }
 
     // add another ribbon chart
-    d3.select('#ribbon')
-      .append('div')
-      .attr('class', 'add-ribbon-icon-wrapper')
-        .append("i").attr('class', 'material-icons md-36 md-dark')
-      .text('add_circle')
-      .style('cursor', 'pointer')
-      .on('click', addRibbon)
+    // d3.select('#ribbon')
+    //   .append('div')
+    //   .attr('class', 'add-ribbon-icon-wrapper')
+    //     .append("i").attr('class', 'material-icons md-36 md-dark')
+    //   .text('add_circle')
+    //   .style('cursor', 'pointer')
+    //   .on('click', addRibbon)
       
     // ribbon.append('circle')
     //       .attr('cx', (ribbonWidth / 2) - ribbonMargin.right)
@@ -208,14 +208,14 @@ d3.json('data/moreno_names.json', function(error, data) {
     //       .attr('fill', 'red')
     //       .on('click', addRibbon);
 
-    function addRibbon() {
-        console.log('add ribbon')
-        var ribbonDivWidth = document.getElementById('ribbon').clientWidth
+    // function addRibbon() {
+    //     console.log('add ribbon')
+    //     var ribbonDivWidth = document.getElementById('ribbon').clientWidth
 
-        d3.select('#ribbon')
-          .style('flex-basis', 2*ribbonDivWidth + 'px')
+    //     d3.select('#ribbon')
+    //       .style('flex-basis', 2*ribbonDivWidth + 'px')
 
-    }
+    // }
 
 })
 
