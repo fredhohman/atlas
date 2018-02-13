@@ -170,8 +170,13 @@ h1 {
 
 
 /* ribbon */
-.bar:hover {
+.bullet:hover {
     opacity: 0.4;
+    cursor: pointer;
+}
+
+.bullet-inner:hover {
+    /* opacity: 0.4; */
     cursor: pointer;
 }
 
@@ -245,7 +250,8 @@ h2 {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
+  /* background: rgba(0, 0, 0, 0.8); */
+  background: #222222;
   color: #ffffff;
   border-radius: 2px;
 }

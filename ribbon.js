@@ -36,17 +36,19 @@ d3.json('data/moreno_names.json', function(error, data) {
 
     var ribbonTextColor = '#222222'
     var x = d3.scaleLinear().range([0, ribbonWidth]);
+    // var xInner = d3.scaleLinear().range([0, ribbonWidth]);
     var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.3);
 
     x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
-    y.domain(data.layers.map(function(d){ return d.peel }))
-    y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1))
+    // xInner.domain([0, d3.max(data.layers, function(d) { return d.nodes })])
+    // y.domain(data.layers.map(function (d) { return d.peel })) // no spaces in ribbon y-axis
+    y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1)) // spaces in ribbon y-axis
     var ribbonColor = d3.scaleLinear()
         .domain(d3.extent(data.layers, function (d) { return d.peel }))
         .interpolate(d3.interpolateHcl)
         .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
 
-    // save color palette from data once and bind to window, little cheecky
+    // save color palette from data once and bind to window, little cheeky
     window.ribbonColor = ribbonColor;
 
 
@@ -55,20 +57,38 @@ d3.json('data/moreno_names.json', function(error, data) {
     }
     // addRibbonSVG();
 
-    var tooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.edges; });
-    ribbon.call(tooltip)
+    var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.edges; });
+    ribbon.call(bulletTooltip)
 
-    ribbon.selectAll('.bar')
+    var bulletInnerTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.vertices; });
+    ribbon.call(bulletInnerTooltip)
+
+    ribbon.selectAll('.bullet')
           .data(data.layers)
         .enter().append('rect')
-          .attr('class', "bar")
+          .attr('class', "bullet")
           .attr('width', function (d) { return x(d.edges) })
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
           .style('fill', function(d) { return ribbonColor(d.peel) })
-          .on('mouseover', function (d) { tooltip.show(d); showLayerInOverview(d) } )
-          .on('mouseout', function (d) { tooltip.hide(); hideLayerInOverview() })
+          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) } )
+          .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function(d) { return addCard(d) })
+
+    ribbon.selectAll('.bullet-inner')
+          .data(data.layers)
+        .enter().append('rect')
+          .attr('class', 'bullet-inner')
+          .attr('width', function(d) { return x(d.vertices) })
+          .attr('y', function(d) { return y(d.peel) + (y.bandwidth()/3)  })
+          .attr('height', y.bandwidth()/3)
+          .style('fill', '#eeeeee')
+          .on('mouseover', function (d) { bulletInnerTooltip.show(d); showLayerInOverview(d) })
+          .on('mouseout', function (d) { bulletInnerTooltip.hide(); hideLayerInOverview() })
+          .on('click', function (d) { return addCard(d) })
+
+
+
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
