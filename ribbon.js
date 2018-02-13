@@ -1,7 +1,10 @@
 import * as d3 from 'd3';
+import * as d3ScaleChromatic from 'd3-scale-chromatic';
+var f = require('d3-scale-chromatic');
 import tip from 'd3-tip';
 import addCard from './index.js';
 
+window.d3ScaleChromatic = d3ScaleChromatic
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -36,20 +39,23 @@ d3.json('data/moreno_names.json', function(error, data) {
 
     var ribbonTextColor = '#222222'
     var x = d3.scaleLinear().range([0, ribbonWidth]);
-    // var xInner = d3.scaleLinear().range([0, ribbonWidth]);
     var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.3);
 
     x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
-    // xInner.domain([0, d3.max(data.layers, function(d) { return d.nodes })])
     // y.domain(data.layers.map(function (d) { return d.peel })) // no spaces in ribbon y-axis
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1)) // spaces in ribbon y-axis
-    var ribbonColor = d3.scaleLinear()
+    // color bullet by graph layer
+    var ribbonColorPeel = d3.scaleLinear()
         .domain(d3.extent(data.layers, function (d) { return d.peel }))
         .interpolate(d3.interpolateHcl)
         .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
 
+    // color bullet by clustering coefficient
+    var ribbonColorClustering = d3.scaleSequential(d3ScaleChromatic.interpolateBlues)
+        .domain([0,1])
+
     // save color palette from data once and bind to window, little cheeky
-    window.ribbonColor = ribbonColor;
+    window.ribbonColorPeel = ribbonColorPeel;
 
 
     function addRibbonSVG() {
@@ -74,7 +80,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('width', function (d) { return x(d.edges) })
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
-          .style('fill', function(d) { return ribbonColor(d.peel) })
+        //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
+          .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
           .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) } )
           .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function(d) { return addCard(d) })
@@ -105,8 +112,6 @@ d3.json('data/moreno_names.json', function(error, data) {
           .on('mouseover', function (d) { bulletTick.show(d); showLayerInOverview(d) })
           .on('mouseout', function (d) { bulletTick.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
-
-
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
