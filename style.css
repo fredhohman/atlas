@@ -180,6 +180,10 @@ h1 {
     cursor: pointer;
 }
 
+.bullet-tick {
+    cursor: pointer;
+}
+
 .y-axis .tick line {
   visibility: hidden;
 }
