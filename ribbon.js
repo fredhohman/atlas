@@ -1,10 +1,8 @@
 import * as d3 from 'd3';
 import * as d3ScaleChromatic from 'd3-scale-chromatic';
-var f = require('d3-scale-chromatic');
 import tip from 'd3-tip';
 import addCard from './index.js';
 
-window.d3ScaleChromatic = d3ScaleChromatic
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -19,7 +17,7 @@ d3.json('data/moreno_names.json', function(error, data) {
     window.data = data
     window.d3 = d3
     
-    var ribbonMargin = { top: 60, right: 10, bottom: 0, left: 35 };
+    var ribbonMargin = { top: 60, right: 45, bottom: 0, left: 45 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
     var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 55 // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
     // var aspectRatio = '32:2';
@@ -119,7 +117,7 @@ d3.json('data/moreno_names.json', function(error, data) {
           .call(d3.axisTop(x).ticks(3))
 
     ribbon.append("text")
-          .attr("transform", "translate(" + ((ribbonWidth/ 2) - ribbonMargin.right) + " ," + (-1 * ribbonMargin.top/2) + ")")
+          .attr("transform", "translate(" + ((ribbonWidth/ 2)) + " ," + (-1 * ribbonMargin.top/2) + ")")
           .style("text-anchor", "middle")
           .text('edges')
           .attr('id', 'ribbonDrag')
@@ -130,6 +128,23 @@ d3.json('data/moreno_names.json', function(error, data) {
           .selectAll('.tick text')
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
           .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
+
+    var componentsData = {}
+    for (const layer in data.layers) {
+        if (data.layers.hasOwnProperty(layer)) {
+            componentsData[data.layers[layer].peel] = data.layers[layer].components                       
+        }
+    }
+
+    ribbon.append('g')
+        .attr('class', 'component-axis')
+        .attr("transform", "translate(" + ribbonWidth + " ,0)")
+        .call(d3.axisRight(y))
+        .selectAll('.tick text')
+        .style('fill', function (d) { return data.peels.includes(d) ? '#222222' : '#cccccc' })
+        .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
+        // .attr('text-anchor', 'end')
+        .text(function (d, i) { return componentsData[d] })
 
     // draggable ribbon
     let startX = 0, startWidth;
