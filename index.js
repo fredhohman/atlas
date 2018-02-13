@@ -96,6 +96,11 @@ export default function addCard(d) {
         .text('Contour')
         .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
 
+    var contourLayerImg = tabs.append('button')
+        .attr('class', 'card-tabs tablinks')
+        .text('Interactive')
+        .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawGraph(d) })
+
     cardTop.append('div')
           .attr('class', 'card-icon-wrapper')
           .append("i")
@@ -176,6 +181,30 @@ export default function addCard(d) {
         .style('max-height', '270px')
         .style('margin', 'auto')
 
+    var interactiveNodeLinkDiv = cardBottom.append('div')
+        .attr('id', 'interactive-node-link-' + d.peel)
+        .attr('class', 'card-image-wrapper tabcontent')
+        .text('interactive')
+        // .append('img')
+        // .attr('src', 'images/moreno_names/interactive-node-link-' + d.peel + '.png')
+        //   .attr('width', '100%')
+        // .style('display', 'block')
+        // .style('max-height', '270px')
+        // .style('margin', 'auto')
+
+    function drawGraph(d) {
+        console.log('draw graph', d)
+
+
+
+
+
+
+
+
+    }
+
+
     // set initial view
     d3.select('#original-layer-image-' + d.peel).style('display', 'block')
 
@@ -196,7 +225,6 @@ function cardMessage() {
         d3.select('#no-card-message').style('display', 'none')
     }
 }
-
 
 
 

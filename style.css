@@ -343,6 +343,7 @@ h3 {
     color: #222222;
     /* background-color: green; */
     text-align: center;
+    z-index: 1000;
 }
 
 .card-tabs {
