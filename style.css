@@ -72,7 +72,7 @@ html, body {
   text-align: left;
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: 150px;
+  flex-basis: 200px;
   border-left: 1px solid rgba(0,0,0,.14);
   border-right: 1px solid rgba(0,0,0,.14);
   overflow: auto; /* scroll bar when resizing browser height after load */
@@ -184,15 +184,20 @@ h1 {
     cursor: pointer;
 }
 
-.y-axis .tick line {
+.y-axis .tick line, .component-axis .tick line {
   visibility: hidden;
 }
 
-.y-axis path{
+.y-axis path, .component-axis path {
     visibility: hidden;
 }
 
 .y-axis .tick text {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.component-axis .tick text{
     font-size: 14px;
     font-weight: 400;
 }
