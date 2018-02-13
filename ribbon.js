@@ -17,9 +17,11 @@ d3.json('data/moreno_names.json', function(error, data) {
     window.data = data
     window.d3 = d3
     
-    var ribbonMargin = { top: 60, right: 45, bottom: 0, left: 45 };
+    var ribbonMargin = { top: 30, right: 45, bottom: 0, left: 45 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
-    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom - 5 // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
+    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom
+                     - document.getElementsByClassName('ribbon-title')[0].clientHeight - 20 
+                     // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
     // var aspectRatio = '32:2';
     // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
 
@@ -116,11 +118,13 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('class', 'x-axis')
           .call(d3.axisTop(x).ticks(3))
 
-    ribbon.append("text")
-          .attr("transform", "translate(" + ((ribbonWidth/ 2)) + " ," + (-1 * ribbonMargin.top/2) + ")")
-          .style("text-anchor", "middle")
-          .text('edges')
-          .attr('id', 'ribbonDrag')
+    // ribbon.append("text")
+    //       .attr("transform", "translate(" + ((ribbonWidth/ 2)) + " ," + (-1 * ribbonMargin.top/2) + ")")
+    //       .style("text-anchor", "middle")
+    //       .text('edges')
+    //       .attr('id', 'ribbonDrag')
+
+    d3.select('.ribbon-title').attr('id', 'ribbonDrag')
 
     ribbon.append('g')
           .attr('class', 'y-axis')
@@ -150,6 +154,7 @@ d3.json('data/moreno_names.json', function(error, data) {
     let startX = 0, startWidth;
 
     var ribbonDrag = document.getElementById('ribbonDrag');
+    console.log(ribbonDrag)
     var glass = document.getElementById('glass');
     ribbonDrag.addEventListener('mousedown', startDrag, false);
     glass.addEventListener('mouseup', endDrag, false);

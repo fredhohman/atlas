@@ -76,6 +76,8 @@ html, body {
   border-left: 1px solid rgba(0,0,0,.14);
   border-right: 1px solid rgba(0,0,0,.14);
   overflow: auto; /* scroll bar when resizing browser height after load */
+  padding-top: 10px;
+  text-align: center;
 }
 
 #layers {
@@ -171,7 +173,7 @@ h1 {
 
 /* ribbon */
 .bullet:hover {
-    opacity: 0.4;
+    /* opacity: 0.4; */
     cursor: pointer;
 }
 
@@ -229,10 +231,14 @@ h1 {
 
 
 /* dragging ribbon */
-#ribbonDrag {
+.ribbonDrag {
   /* width: 20px; */
   cursor: col-resize;
 }
+.ribbon-title {
+    cursor: col-resize;
+}
+
 #glass {
   height: 100%;
   width: 100%;
