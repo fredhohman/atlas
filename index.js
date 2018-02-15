@@ -69,6 +69,7 @@ export default function addCard(d) {
         tabcontent = document.getElementById("card-" + peel).getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
+            removeLayerGraph(peel)
         }
 
         tablinks = document.getElementById("card-" + peel).getElementsByClassName("tablinks");
@@ -99,7 +100,7 @@ export default function addCard(d) {
     var contourLayerImg = tabs.append('button')
         .attr('class', 'card-tabs tablinks')
         .text('Interactive')
-        .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawGraph(d) })
+        .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
 
     cardTop.append('div')
           .attr('class', 'card-icon-wrapper')
@@ -184,7 +185,7 @@ export default function addCard(d) {
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
-        .text('interactive')
+        // .text('interactive')
         // .append('img')
         // .attr('src', 'images/moreno_names/interactive-node-link-' + d.peel + '.png')
         //   .attr('width', '100%')
@@ -192,17 +193,145 @@ export default function addCard(d) {
         // .style('max-height', '270px')
         // .style('margin', 'auto')
 
-    function drawGraph(d) {
+    function drawLayerGraph(d) {
         console.log('draw graph', d)
 
+        var graphLayerMargin = { top: 0, right: 0, bottom: 0, left: 0 };
+        var graphLayerWidth = document.getElementById("interactive-node-link-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right
+        var graphLayerHeight = document.getElementById("interactive-node-link-" + d.peel).clientHeight - graphLayerMargin.top - graphLayerMargin.bottom
+
+        var graphLayerSVG = d3.select("#interactive-node-link-" + d.peel)
+                              .append('svg')
+                              .attr('id', "interactive-node-link-" + d.peel + '-svg')
+                              .attr("width", graphLayerWidth)
+                              .attr("height", graphLayerHeight);
+
+        d3.json('data/names-decomp-layer-' + d.peel + '-data.json', function (error, graphLayerData) {
+
+            if (error) {
+                return console.error(error);
+            }
+
+            // globals for debugging
+            window.graphLayerData = graphLayerData
+
+            //set up the simulation and add forces  
+            var simulation = d3.forceSimulation()
+                               .nodes(graphLayerData.nodes);
+
+            var linkForce = d3.forceLink(graphLayerData.links)
+                               .id(function (d) { return d.id; });
+
+            var chargeForce = d3.forceManyBody()
+                                 .strength(-40);
+
+            var center_force = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);  
+
+            simulation
+                .force("chargeForce", chargeForce)
+                .force("center_force", center_force)
+                .force("links", linkForce);
+
+            //add tick instructions: 
+            simulation.on("tick", tickActions);
+
+            //add encompassing group for the zoom 
+            var g = graphLayerSVG.append("g")
+                .attr("class", "everything");
+
+            //draw lines for the links 
+            var link = g.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(graphLayerData.links)
+                .enter().append("line")
+                .attr("x1", function (d) { return d.source.x + graphLayerWidth / 2; })
+                .attr("y1", function (d) { return d.source.y + graphLayerHeight / 2; })
+                .attr("x2", function (d) { return d.target.x + graphLayerWidth / 2; })
+                .attr("y2", function (d) { return d.target.y + graphLayerHeight / 2; })
+                .attr("stroke-width", 0.4)
+                //   .style("stroke", function(d) { ribbonColorPeel(1) })
+                .style("stroke", function (d) { return ribbonColorPeel(d.p) })
+                .style("stroke-opacity", 0.6)
+
+            //draw circles for the nodes 
+            var node = g.append("g")
+                .attr("class", "nodes")
+                .selectAll("circle")
+                .data(graphLayerData.nodes)
+                .enter()
+                .append("circle")
+                .attr("r", 4)
+                .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
+                .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
+                .attr("fill", '#cccccc');
 
 
+            //add drag capabilities  
+            var drag_handler = d3.drag()
+                .on("start", drag_start)
+                .on("drag", drag_drag)
+                .on("end", drag_end);
+
+            drag_handler(node);
 
 
+            //add zoom capabilities 
+            var zoom_handler = d3.zoom()
+                .on("zoom", zoom_actions);
+
+            zoom_handler(graphLayerSVG);
+
+            /** Functions **/
+            //Drag functions 
+            //d is the node 
+            function drag_start(d) {
+                if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            //make sure you can't drag the circle outside the box
+            function drag_drag(d) {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            }
+
+            function drag_end(d) {
+                if (!d3.event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            //Zoom functions 
+            function zoom_actions() {
+                g.attr("transform", d3.event.transform)
+            }
+
+            function tickActions() {
+                //update circle positions each tick of the simulation 
+                node
+                    .attr("cx", function (d) { return d.x; })
+                    .attr("cy", function (d) { return d.y; });
+
+                //update link positions 
+                link
+                    .attr("x1", function (d) { return d.source.x; })
+                    .attr("y1", function (d) { return d.source.y; })
+                    .attr("x2", function (d) { return d.target.x; })
+                    .attr("y2", function (d) { return d.target.y; });
+            }
 
 
+        })
 
     }
+
+    function removeLayerGraph(peel) {
+        console.log('remove interactive node link for layer ' + peel)
+        d3.select("#interactive-node-link-" + peel + '-svg').remove()
+    }
+
 
 
     // set initial view
