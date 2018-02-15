@@ -185,13 +185,6 @@ export default function addCard(d) {
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
-        // .text('interactive')
-        // .append('img')
-        // .attr('src', 'images/moreno_names/interactive-node-link-' + d.peel + '.png')
-        //   .attr('width', '100%')
-        // .style('display', 'block')
-        // .style('max-height', '270px')
-        // .style('margin', 'auto')
 
     function drawLayerGraph(d) {
         console.log('draw graph', d)
@@ -225,11 +218,11 @@ export default function addCard(d) {
             var chargeForce = d3.forceManyBody()
                                  .strength(-40);
 
-            var center_force = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);  
+            var centerForce = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);  
 
             simulation
                 .force("chargeForce", chargeForce)
-                .force("center_force", center_force)
+                .force("centerForce", centerForce)
                 .force("links", linkForce);
 
             //add tick instructions: 
@@ -240,7 +233,7 @@ export default function addCard(d) {
                 .attr("class", "everything");
 
             //draw lines for the links 
-            var link = g.append("g")
+            var linkSVGs = g.append("g")
                 .attr("class", "links")
                 .selectAll("line")
                 .data(graphLayerData.links)
@@ -250,54 +243,53 @@ export default function addCard(d) {
                 .attr("x2", function (d) { return d.target.x + graphLayerWidth / 2; })
                 .attr("y2", function (d) { return d.target.y + graphLayerHeight / 2; })
                 .attr("stroke-width", 0.4)
-                //   .style("stroke", function(d) { ribbonColorPeel(1) })
-                .style("stroke", function (d) { return ribbonColorPeel(d.p) })
+                .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
                 .style("stroke-opacity", 0.6)
 
             //draw circles for the nodes 
-            var node = g.append("g")
+            var nodeSVGs = g.append("g")
                 .attr("class", "nodes")
                 .selectAll("circle")
                 .data(graphLayerData.nodes)
                 .enter()
                 .append("circle")
-                .attr("r", 4)
+                .attr("r", 3)
                 .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
                 .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
-                .attr("fill", '#cccccc');
+                .attr("fill", function () { return ribbonColorPeel(d.peel) }); // hacky, referring to original d passed into drawLayerGraph
 
 
             //add drag capabilities  
-            var drag_handler = d3.drag()
-                .on("start", drag_start)
-                .on("drag", drag_drag)
-                .on("end", drag_end);
+            var dragHandler = d3.drag()
+                .on("start", dragStart)
+                .on("drag", dragDrag)
+                .on("end", dragEnd);
 
-            drag_handler(node);
+            dragHandler(nodeSVGs);
 
 
             //add zoom capabilities 
-            var zoom_handler = d3.zoom()
+            var zoomHandler = d3.zoom()
                 .on("zoom", zoom_actions);
 
-            zoom_handler(graphLayerSVG);
+            zoomHandler(graphLayerSVG);
 
             /** Functions **/
             //Drag functions 
             //d is the node 
-            function drag_start(d) {
+            function dragStart(d) {
                 if (!d3.event.active) simulation.alphaTarget(0.3).restart();
                 d.fx = d.x;
                 d.fy = d.y;
             }
 
             //make sure you can't drag the circle outside the box
-            function drag_drag(d) {
+            function dragDrag(d) {
                 d.fx = d3.event.x;
                 d.fy = d3.event.y;
             }
 
-            function drag_end(d) {
+            function dragEnd(d) {
                 if (!d3.event.active) simulation.alphaTarget(0);
                 d.fx = null;
                 d.fy = null;
@@ -308,14 +300,61 @@ export default function addCard(d) {
                 g.attr("transform", d3.event.transform)
             }
 
+
+            function getNeighbors(node) {
+                return graphLayerData.links.reduce((neighbors, link) => {
+                    if (link.target.id === node.id) {
+                        neighbors.push(link.source.id)
+                    } else if (link.source.id === node.id) {
+                        neighbors.push(link.target.id)
+                    }
+
+                    return neighbors
+                }, [node.id])
+            }
+
+            function isNeighborLink(node, link) {
+                return link.target.id === node.id || link.source.id === node.id
+            }
+
+            function getNodeColor(node, neighbors) {
+                if (Array.isArray(neighbors) && neighbors.indexOf(node.id) > -1) {
+                    return ribbonColorPeel(d.peel);
+                }
+                return 'rgba(221,221,221,0.3)';
+            }
+            // function getTextColor(node, neighbors) {
+            //     return neighbors.indexOf(node.id) ? 'green' : 'black'
+            // }
+            function getLinkColor(node, link) {
+                return isNeighborLink(node, link) ? ribbonColorPeel(d.peel) : 'rgba(221,221,221,0.3)';
+            }
+
+            function selectNode(selectedNode) {
+                const neighbors = getNeighbors(selectedNode)
+
+                nodeSVGs
+                    .attr('fill', function(node) {return getNodeColor(node, neighbors) })
+                // textElements
+                    // .attr('fill', node => getTextColor(node, neighbors))
+                linkSVGs
+                    .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
+            }
+
+            nodeSVGs.on('mouseover', selectNode)
+            nodeSVGs.on('mouseout', function() {
+                nodeSVGs.attr('fill', ribbonColorPeel(d.peel)) // hacky, referring to original d passed into drawLayerGraph
+                linkSVGs.attr('stroke', ribbonColorPeel(d.peel)) // hacky, referring to original d passed into drawLayerGraph
+            })
+
             function tickActions() {
                 //update circle positions each tick of the simulation 
-                node
+                nodeSVGs
                     .attr("cx", function (d) { return d.x; })
                     .attr("cy", function (d) { return d.y; });
 
                 //update link positions 
-                link
+                linkSVGs
                     .attr("x1", function (d) { return d.source.x; })
                     .attr("y1", function (d) { return d.source.y; })
                     .attr("x2", function (d) { return d.target.x; })
@@ -324,6 +363,7 @@ export default function addCard(d) {
 
 
         })
+    
 
     }
 
