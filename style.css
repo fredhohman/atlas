@@ -202,6 +202,7 @@ h1 {
 .component-axis .tick text{
     font-size: 14px;
     font-weight: 400;
+    fill: #aaaaaa !important;
 }
 
  .x-axis .tick line, .x-axis path {

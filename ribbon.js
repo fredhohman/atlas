@@ -12,6 +12,7 @@ d3.json('data/moreno_names.json', function(error, data) {
     if (error) {
         return console.error(error);        
     }
+    
     // some globals for console debugging
     console.log(data)
     window.data = data
@@ -93,7 +94,7 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('width', function(d) { return x(d.vertices) })
           .attr('y', function(d) { return y(d.peel) + (y.bandwidth()/3) })
           .attr('height', y.bandwidth()/3)
-          .style('fill', '#222222')
+          .style('fill', '#444444')
           .on('mouseover', function (d) { bulletInnerTooltip.show(d); showLayerInOverview(d) })
           .on('mouseout', function (d) { bulletInnerTooltip.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
@@ -103,12 +104,12 @@ d3.json('data/moreno_names.json', function(error, data) {
           .data(data.layers)
         .enter().append('rect')
           .attr('class', 'bullet-tick')
-          .attr('width', '2px')
+          .attr('width', '2')
         .attr('y', function (d) { return y(d.peel) + (y.bandwidth() / 3) - tickOffset/2 })
            // convert clone percentage to actual count
           .attr('x', function (d) { return x(Math.round(d.vertices * d.clones)) })
           .attr('height', y.bandwidth()/3 + tickOffset)
-          .style('fill', '#222222')
+          .style('fill', '#444444')
           .on('mouseover', function (d) { bulletTick.show(d); showLayerInOverview(d) })
           .on('mouseout', function (d) { bulletTick.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
