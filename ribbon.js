@@ -64,15 +64,19 @@ d3.json('data/moreno_names.json', function(error, data) {
     }
     // addRibbonSVG();
 
-    var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.edges; });
+    var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
+        return 'e: <span class="tooltip-number">' + d.edges + '</span></br>'
+        + 'v: <span class="tooltip-number">' + d.vertices + '</span></br>'
+        + 'c: <span class="tooltip-number">' + Math.round(d.vertices * d.clones) + '</span>';
+    });
     ribbon.call(bulletTooltip)
 
-    var bulletInnerTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.vertices; });
-    ribbon.call(bulletInnerTooltip)
+    // var bulletInnerTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.vertices; });
+    // ribbon.call(bulletInnerTooltip)
 
-    // convert clone percentage to actual count
-    var bulletTick = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return Math.round(d.vertices * d.clones); });
-    ribbon.call(bulletTick)
+    // // convert clone percentage to actual count
+    // var bulletTick = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return Math.round(d.vertices * d.clones); });
+    // ribbon.call(bulletTick)
 
     ribbon.selectAll('.bullet')
           .data(data.layers)
@@ -95,8 +99,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('y', function(d) { return y(d.peel) + (y.bandwidth()/3) })
           .attr('height', y.bandwidth()/3)
           .style('fill', '#444444')
-          .on('mouseover', function (d) { bulletInnerTooltip.show(d); showLayerInOverview(d) })
-          .on('mouseout', function (d) { bulletInnerTooltip.hide(); hideLayerInOverview() })
+          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
+          .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
 
     var tickOffset = 10;
@@ -110,8 +114,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('x', function (d) { return x(Math.round(d.vertices * d.clones)) })
           .attr('height', y.bandwidth()/3 + tickOffset)
           .style('fill', '#444444')
-          .on('mouseover', function (d) { bulletTick.show(d); showLayerInOverview(d) })
-          .on('mouseout', function (d) { bulletTick.hide(); hideLayerInOverview() })
+          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
+          .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
 
     ribbon.append('g')

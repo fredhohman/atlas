@@ -265,8 +265,8 @@ h2 {
 /* d3-tip for ribbon */
 .d3-tip {
   line-height: 1;
-  font-weight: bold;
-  padding: 12px;
+  font-weight: 600;
+  padding: 11px;
   /* background: rgba(0, 0, 0, 0.8); */
   background: #222222;
   color: #ffffff;
@@ -288,6 +288,9 @@ h2 {
   left: -8px;
 }
 
+.tooltip-number {
+    font-weight: 300;
+}
 
 /* layer cards */
 .card {
