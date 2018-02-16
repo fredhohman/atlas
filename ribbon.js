@@ -12,7 +12,7 @@ d3.json('data/moreno_names.json', function(error, data) {
     if (error) {
         return console.error(error);        
     }
-    
+
     // some globals for console debugging
     console.log(data)
     window.data = data
@@ -134,6 +134,14 @@ d3.json('data/moreno_names.json', function(error, data) {
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
           .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
 
+    d3.select('.y-axis').selectAll(".tick text").on("click", function (d, i) {
+        console.log('tick clicked', d, i)
+
+        // d3.select(this).style('fill', 'red')
+        var obj = data.layers.find(function (obj) { return obj.peel === d; });
+        addCard(obj);
+    });
+
     var componentsData = {}
     for (const layer in data.layers) {
         if (data.layers.hasOwnProperty(layer)) {
@@ -185,6 +193,9 @@ d3.json('data/moreno_names.json', function(error, data) {
         var layersDiv = document.getElementById('layers');
         var delta = event.clientX - startX;
         layersDiv.style.width = (startWidth - delta) + "px";
+        // layersDiv.style.height = 500 + "px";
+        d3.selectAll('.interactive-node-link').attr('width', '100%') // a little hacky but works for now
+        console.log('drag')
 
         // fix bug here where dragging ribbon more left causes right div to keep growing
         // if (document.getElementById('overview').clientWidth > 250) {
@@ -195,33 +206,6 @@ d3.json('data/moreno_names.json', function(error, data) {
         //     // layersDiv.style.width = layersDiv.style.width;
         // }
     }
-
-    // add another ribbon chart
-    // d3.select('#ribbon')
-    //   .append('div')
-    //   .attr('class', 'add-ribbon-icon-wrapper')
-    //     .append("i").attr('class', 'material-icons md-36 md-dark')
-    //   .text('add_circle')
-    //   .style('cursor', 'pointer')
-    //   .on('click', addRibbon)
-      
-    // ribbon.append('circle')
-    //       .attr('cx', (ribbonWidth / 2) - ribbonMargin.right)
-    //       .attr('cy', ribbonHeight + 10)
-    //       .attr('r', 10)
-    //       .attr('stroke-width', 3)
-    //       .style('stroke', ribbonTextColor)
-    //       .attr('fill', 'red')
-    //       .on('click', addRibbon);
-
-    // function addRibbon() {
-    //     console.log('add ribbon')
-    //     var ribbonDivWidth = document.getElementById('ribbon').clientWidth
-
-    //     d3.select('#ribbon')
-    //       .style('flex-basis', 2*ribbonDivWidth + 'px')
-
-    // }
 
 })
 

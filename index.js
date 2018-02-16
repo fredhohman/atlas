@@ -196,8 +196,10 @@ export default function addCard(d) {
         var graphLayerSVG = d3.select("#interactive-node-link-" + d.peel)
                               .append('svg')
                               .attr('id', "interactive-node-link-" + d.peel + '-svg')
+                              .attr('class', 'interactive-node-link')
                               .attr("width", graphLayerWidth)
-                              .attr("height", graphLayerHeight);
+                              .attr("height", graphLayerHeight)
+                            //   .style('background-color', '#cccccc')
 
         d3.json('data/names-decomp-layer-' + d.peel + '-data.json', function (error, graphLayerData) {
 
@@ -242,9 +244,9 @@ export default function addCard(d) {
                 .attr("y1", function (d) { return d.source.y + graphLayerHeight / 2; })
                 .attr("x2", function (d) { return d.target.x + graphLayerWidth / 2; })
                 .attr("y2", function (d) { return d.target.y + graphLayerHeight / 2; })
-                .attr("stroke-width", 0.4)
+                .attr("stroke-width", 0.6)
                 .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
-                .style("stroke-opacity", 0.6)
+                .style("stroke-opacity", 0.75)
 
             //draw circles for the nodes 
             var nodeSVGs = g.append("g")
@@ -257,7 +259,6 @@ export default function addCard(d) {
                 .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
                 .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }); // hacky, referring to original d passed into drawLayerGraph
-
 
             //add drag capabilities  
             var dragHandler = d3.drag()
@@ -360,19 +361,13 @@ export default function addCard(d) {
                     .attr("x2", function (d) { return d.target.x; })
                     .attr("y2", function (d) { return d.target.y; });
             }
-
-
         })
-    
-
     }
 
     function removeLayerGraph(peel) {
         console.log('remove interactive node link for layer ' + peel)
         d3.select("#interactive-node-link-" + peel + '-svg').remove()
     }
-
-
 
     // set initial view
     d3.select('#original-layer-image-' + d.peel).style('display', 'block')
@@ -383,6 +378,7 @@ function closeCard(d) {
     console.log('close card')
     numOfCardsUp -= 1;
     d3.select('#card-' + d.peel).remove();
+    console.log(document.getElementsByClassName('y-axis'))
     cardMessage();
 }
 
