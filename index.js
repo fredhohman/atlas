@@ -117,6 +117,8 @@ export default function addCard(d) {
     var cardText = cardBottom.append('div')
                          .attr('class', 'card-text-wrapper')
 
+    // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
+
     cardText.append('span')
             .attr('class', 'card-text-item')
             .text('vertices: ')
@@ -133,6 +135,13 @@ export default function addCard(d) {
 
     cardText.append('span')
             .attr('class', 'card-text-item')
+            .text('clones: ')
+            .append('span')
+            .attr('class', 'card-text-item-value')
+            .text(Math.round(d.vertices * d.clones))
+
+    cardText.append('span')
+            .attr('class', 'card-text-item')
             .text('components: ')
             .append('span')
             .attr('class', 'card-text-item-value')
@@ -145,13 +154,6 @@ export default function addCard(d) {
             .attr('class', 'card-text-item-value')
             .text(cardTextValueFormat(d.clustering))
 
-    cardText.append('span')
-            .attr('class', 'card-text-item')
-            .text('clones: ')
-            .append('span')
-            .attr('class', 'card-text-item-value')
-            .text(cardTextValueFormat(d.clones))
-
     cardBottom.append('div')
         .attr('id', 'original-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
@@ -159,7 +161,7 @@ export default function addCard(d) {
         .attr('src', 'images/moreno_names/layer' + d.peel + '.png')
         //   .attr('width', '100%')
         .style('display', 'block')
-        .style('max-height', '270px')
+        .style('max-height', '100%')
         .style('margin', 'auto')
 
     cardBottom.append('div')
@@ -169,7 +171,7 @@ export default function addCard(d) {
         .attr('src', 'images/moreno_names/layer-' + d.peel + '.png')
         //   .attr('width', '100%')
         .style('display', 'block')
-        .style('max-height', '270px')
+        .style('max-height', '100%')
         .style('margin', 'auto')
 
     cardBottom.append('div')
@@ -179,7 +181,7 @@ export default function addCard(d) {
         .attr('src', 'images/moreno_names/contour-shaded-layer-' + d.peel + '.png')
         //   .attr('width', '100%')
         .style('display', 'block')
-        .style('max-height', '270px')
+        .style('max-height', '100%')
         .style('margin', 'auto')
 
     var interactiveNodeLinkDiv = cardBottom.append('div')
