@@ -3,6 +3,7 @@ import * as contour from 'd3-contour';
 import * as d3 from 'd3';
 import $ from "jquery";
 import { geoStereographic } from 'd3';
+import tip from 'd3-tip';
 
 
 let numOfCardsUp = 0;
@@ -119,19 +120,20 @@ export default function addCard(d) {
 
     // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
 
+
+    cardText.append('span')
+        .attr('class', 'card-text-item')
+        .text('edges: ')
+        .append('span')
+        .attr('class', 'card-text-item-value')
+        .text(d.edges)
+
     cardText.append('span')
             .attr('class', 'card-text-item')
             .text('vertices: ')
             .append('span')
             .attr('class', 'card-text-item-value')
             .text(d.vertices)
-
-    cardText.append('span')
-            .attr('class', 'card-text-item')
-            .text('edges: ')
-            .append('span')
-            .attr('class', 'card-text-item-value')
-            .text(d.edges)
 
     cardText.append('span')
             .attr('class', 'card-text-item')
@@ -153,6 +155,16 @@ export default function addCard(d) {
             .append('span')
             .attr('class', 'card-text-item-value')
             .text(cardTextValueFormat(d.clustering))
+
+    // cardText.append('span')
+    //         .style('display', 'inline-block')
+    //         .append('button')
+    //         .attr('id', 'toggle-clones')
+    //         .attr('type', 'button')
+    //         .text('toggle clones')
+    var cloneToggle = cardText.append('label').attr('class', 'switch')
+    cloneToggle.append('input').attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
+    cloneToggle.append('span').attr('class', 'slider round')
 
     cardBottom.append('div')
         .attr('id', 'original-layer-image-' + d.peel)
@@ -250,6 +262,11 @@ export default function addCard(d) {
                 .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
                 .style("stroke-opacity", 0.75)
 
+            var cloneTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
+                return '<span class="tooltip-number">' + d.peels.join(', ') + '</span>'
+            });
+            g.call(cloneTooltip)
+
             //draw circles for the nodes 
             var nodeSVGs = g.append("g")
                 .attr("class", "nodes")
@@ -260,8 +277,8 @@ export default function addCard(d) {
                 .attr("r", 3)
                 .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
                 .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
-                .attr("fill", function () { return ribbonColorPeel(d.peel) }); // hacky, referring to original d passed into drawLayerGraph
-
+                .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
+            
             //add drag capabilities  
             var dragHandler = d3.drag()
                 .on("start", dragStart)
@@ -303,7 +320,6 @@ export default function addCard(d) {
                 g.attr("transform", d3.event.transform)
             }
 
-
             function getNeighbors(node) {
                 return graphLayerData.links.reduce((neighbors, link) => {
                     if (link.target.id === node.id) {
@@ -344,11 +360,45 @@ export default function addCard(d) {
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
             }
 
-            nodeSVGs.on('mouseover', selectNode)
-            nodeSVGs.on('mouseout', function() {
-                nodeSVGs.attr('fill', ribbonColorPeel(d.peel)) // hacky, referring to original d passed into drawLayerGraph
-                linkSVGs.attr('stroke', ribbonColorPeel(d.peel)) // hacky, referring to original d passed into drawLayerGraph
+            nodeSVGs.on('mouseover', function(d) {
+                selectNode(d);
+                if (d.peels.length > 1) {
+                    cloneTooltip.show(d);   
+                }
             })
+            nodeSVGs.on('mouseout', function() {
+                nodeSVGs.attr('fill', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
+                linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
+                cloneTooltip.hide();
+            })
+
+            function toggleClones() {
+                console.log('toggle clones')
+
+                if (d3.select(this).property('checked')) {
+
+                    // style clones
+                    nodeSVGs.attr('class', function (d) {
+                            if (d.peels.length > 1) {
+                                return 'clone'
+                            }
+                    })
+                    nodeSVGs.attr('r', function (d) {
+                        if (d.peels.length > 1) {
+                            return 3.5
+                        } else {
+                            return 2.5
+                        }
+                    })
+
+                } else {
+                    // default node styling
+                    nodeSVGs.attr('class', function (d) { return ribbonColorPeel(d.peel) })
+                    nodeSVGs.attr('r', 3)
+                }
+
+            }
+            d3.selectAll('.clone-toggle').on('click', toggleClones)
 
             function tickActions() {
                 //update circle positions each tick of the simulation 
