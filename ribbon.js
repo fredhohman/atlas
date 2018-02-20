@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
-import addCard from './index.js';
+import addCard from './card.js';
 
 
 // draggable ribbon 
