@@ -3,12 +3,12 @@
 import * as d3 from 'd3';
 // import { geoStereographic } from 'd3';
 import tip from 'd3-tip';
-import {dataPath} from './index.js'
+import { dataPath, dataPathJSON } from './index.js'
 
 let numOfCardsUp = 0;
 window.numOfCardsUp = numOfCardsUp;
 
-d3.json(dataPath + 'moreno_names.json', function (error, data) {
+d3.json(dataPathJSON, function (error, data) {
 
     if (error) {
         return console.error(error);
@@ -384,7 +384,7 @@ export default function addCard(d) {
                         })
                         .on('click', function (datum) {
                             console.log('clicked', datum)
-                            d3.json(dataPath + 'moreno_names.json', function (error, tempData) {
+                            d3.json(dataPathJSON, function (error, tempData) {
                                 var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
                                 addCard(obj);
                             })
