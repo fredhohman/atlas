@@ -487,28 +487,6 @@ function cardMessage() {
 
 
 
-// accordion
-var acc = document.getElementsByClassName("accordion");
-var i;
-
-for (i = 0; i < acc.length; i++) {
-    console.log(acc)
-    acc[i].addEventListener("click", function () {
-        console.log(this)
-        this.classList.toggle("active");
-        // var panel = this.nextElementSibling;
-        // console.log(panel)
-        var panel = document.getElementsByClassName("panel")[0];
-        console.log(panel)
-        if (panel.style.display === "block") {
-            panel.style.display = "none";
-        } else {
-            panel.style.display = "block";
-        }
-    });
-}
-
-
 
 
 
