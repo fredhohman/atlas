@@ -217,7 +217,7 @@ export default function addCard(d) {
             .attr("height", graphLayerHeight)
         //   .style('background-color', '#cccccc')
 
-        d3.json('data/names-decomp-layer-' + d.peel + '-data.json', function (error, graphLayerData) {
+        d3.json(dataPath + 'names-decomp-layer-' + d.peel + '-data.json', function (error, graphLayerData) {
 
             if (error) {
                 return console.error(error);
