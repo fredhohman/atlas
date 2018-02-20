@@ -86,8 +86,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
           .style('fill', function(d) { return ribbonColorPeel(d.peel) })
-        //   .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
-          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) } )
+          .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
+        //   .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) } )
           .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function(d) { return addCard(d) })
 
@@ -219,6 +219,62 @@ d3.json('data/moreno_names.json', function(error, data) {
         // }
     }
 
+    // ribbon checkboxes
+    d3.selectAll('.ribbon-checkbox').on('click', function () {
+
+        console.log('checkbox clicked')
+        var clickedCheckbox = d3.select(this).attr('id').split('-')[0]
+        var clickedCheckboxBoolean = d3.select(this).property('checked')
+        console.log(clickedCheckbox, clickedCheckboxBoolean)
+
+        switch (clickedCheckbox) {
+
+            case 'edges':
+                if (clickedCheckboxBoolean) {
+                    d3.selectAll('.bullet').style('opacity', 1)
+                } else {
+                    d3.selectAll('.bullet').style('opacity', 0)
+                }
+                break;
+
+            case 'nodes':
+                if (clickedCheckboxBoolean) {
+                    d3.selectAll('.bullet-inner').style('opacity', 1)
+                } else {
+                    d3.selectAll('.bullet-inner').style('opacity', 0)
+                }
+                break;
+
+            case 'clones':
+                if (clickedCheckboxBoolean) {
+                    d3.selectAll('.bullet-tick').style('opacity', 1)
+                } else {
+                    d3.selectAll('.bullet-tick').style('opacity', 0)
+                }
+                break;
+
+            case 'components':
+                if (clickedCheckboxBoolean) {
+                    d3.selectAll('.component-axis').style('opacity', 1)
+                } else {
+                    d3.selectAll('.component-axis').style('opacity', 0)
+                }
+                break;
+
+            case 'clustering':
+                if (clickedCheckboxBoolean) {
+                    d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorClustering(d.clustering) })
+                } else {
+                    d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorPeel(d.peel) })
+                }
+                break;
+
+            default:
+                console.log('no checkbox switch cases found, breaking by default')
+                break;
+        }
+    })
+
 })
 
 function showLayerInOverview(d) {
@@ -232,3 +288,4 @@ function hideLayerInOverview(d) {
     d3.select('#overview')
         .style('background-image', "url(images/moreno_names/moreno_names-bw.png")
 }
+
