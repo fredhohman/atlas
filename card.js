@@ -1,7 +1,6 @@
 // card.js
-import * as contour from 'd3-contour';
+// import * as contour from 'd3-contour';
 import * as d3 from 'd3';
-// import $ from "jquery";
 // import { geoStereographic } from 'd3';
 import tip from 'd3-tip';
 
