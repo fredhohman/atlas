@@ -7,4 +7,6 @@ console.log('index.js loaded')
 const dataDirName = 'moreno_names'
 export const dataPath = 'data/' + dataDirName + '/'
 export const dataPathJSON = 'data/' + dataDirName + '/' + dataDirName + '.json'
-// export const dataPath = 'data/ca-AstroPh/'
+export function dataPathLayerJSON(peel) {
+    return 'data/' + dataDirName + '/' + dataDirName + '-layer-' + peel + '-data.json'
+}

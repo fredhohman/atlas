@@ -3,7 +3,7 @@
 import * as d3 from 'd3';
 // import { geoStereographic } from 'd3';
 import tip from 'd3-tip';
-import { dataPath, dataPathJSON } from './index.js'
+import { dataPath, dataPathJSON, dataPathLayerJSON } from './index.js'
 
 let numOfCardsUp = 0;
 window.numOfCardsUp = numOfCardsUp;
@@ -217,7 +217,7 @@ export default function addCard(d) {
             .attr("height", graphLayerHeight)
         //   .style('background-color', '#cccccc')
 
-        d3.json(dataPath + 'names-decomp-layer-' + d.peel + '-data.json', function (error, graphLayerData) {
+        d3.json(dataPathLayerJSON(d.peel), function (error, graphLayerData) {
 
             if (error) {
                 return console.error(error);
@@ -271,7 +271,7 @@ export default function addCard(d) {
             g.call(cloneTooltip)
             window.cloneTooltip = cloneTooltip
 
-            //draw circles for the nodes 
+            // draw circles for the nodes 
             var nodeSVGs = g.append("g")
                 .attr("class", "nodes")
                 .selectAll("circle")
@@ -283,28 +283,28 @@ export default function addCard(d) {
                 .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
 
-            //add drag capabilities  
+            // add drag capabilities  
             var dragHandler = d3.drag()
                 .on("start", dragStart)
                 .on("drag", dragDrag)
                 .on("end", dragEnd);
             dragHandler(nodeSVGs);
 
-            //add zoom capabilities 
+            // add zoom capabilities 
             var zoomHandler = d3.zoom()
                 .on("zoom", zoom_actions);
             zoomHandler(graphLayerSVG);
 
-            /** Functions **/
-            //Drag functions 
-            //d is the node 
+            // Functions
+            // drag functions 
+            // d is the node 
             function dragStart(d) {
                 if (!d3.event.active) simulation.alphaTarget(0.3).restart();
                 d.fx = d.x;
                 d.fy = d.y;
             }
 
-            //make sure you can't drag the circle outside the box
+            // make sure you can't drag the circle outside the box
             function dragDrag(d) {
                 d.fx = d3.event.x;
                 d.fy = d3.event.y;
@@ -316,7 +316,7 @@ export default function addCard(d) {
                 d.fy = null;
             }
 
-            //Zoom functions 
+            // zoom functions
             function zoom_actions() {
                 g.attr("transform", d3.event.transform)
             }
