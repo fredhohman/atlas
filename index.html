@@ -57,7 +57,32 @@
           <h2>Overview</h2>
         </div>
         <div id="ribbon">
-          <h2 class="ribbon-title">Ribbon</h2>
+          <!-- <h2 class="ribbon-title">Ribbon</h2> -->
+          <!-- <h2 class="ribbon-title"><i class="material-icons md-24">drag_handle</i></h2> -->
+          <h2 class="ribbon-title">
+
+            <div class="drag-left">
+              <i class="material-icons md-24">keyboard_arrow_left</i>
+            </div>
+          
+            <button class="accordion">
+              <i class="material-icons md-24">menu</i>
+            </button>
+          
+            <div class="drag-right">
+              <i class="material-icons md-24">keyboard_arrow_right</i>
+            </div>
+          
+            <!-- <i class="material-icons md-24 drag-right">keyboard_arrow_right</i> -->
+          </h2>
+          <div class="panel">
+            <input type="checkbox" id="edges-checkbox" class="ribbon-checkbox"><span class="checkbox-text">edges</span>
+            <input type="checkbox" id="nodes-checkbox" class="ribbon-checkbox"><span class="checkbox-text">nodes</span>
+            <input type="checkbox" id="clones-checkbox" class="ribbon-checkbox"><span class="checkbox-text">clones</span>
+            <input type="checkbox" id="components-checkbox" class="ribbon-checkbox"><span class="checkbox-text">components</span>
+            <input type="checkbox" id="clustering-checkbox" class="ribbon-checkbox"><span class="checkbox-text">clustering</span>
+          </div>
+
         </div>
         <div id="layers">
           <h2>Layers</h2>

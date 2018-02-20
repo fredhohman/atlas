@@ -129,7 +129,9 @@ d3.json('data/moreno_names.json', function(error, data) {
     //       .text('edges')
     //       .attr('id', 'ribbonDrag')
 
-    d3.select('.ribbon-title').attr('id', 'ribbonDrag')
+    // d3.select('.ribbon-title').attr('id', 'ribbonDrag')
+    d3.select('.drag-left').attr('id', 'ribbonDragLeft')
+    d3.select('.drag-right').attr('id', 'ribbonDragRight')
 
     ribbon.append('g')
           .attr('class', 'y-axis')
@@ -166,10 +168,16 @@ d3.json('data/moreno_names.json', function(error, data) {
     // draggable ribbon
     let startX = 0, startWidth;
 
-    var ribbonDrag = document.getElementById('ribbonDrag');
-    console.log(ribbonDrag)
+    var ribbonDragLeft = document.getElementById('ribbonDragLeft');
+    console.log(ribbonDragLeft)
     var glass = document.getElementById('glass');
-    ribbonDrag.addEventListener('mousedown', startDrag, false);
+    ribbonDragLeft.addEventListener('mousedown', startDrag, false);
+    glass.addEventListener('mouseup', endDrag, false);
+
+    var ribbonDragRight = document.getElementById('ribbonDragRight');
+    console.log(ribbonDragRight)
+    var glass = document.getElementById('glass');
+    ribbonDragRight.addEventListener('mousedown', startDrag, false);
     glass.addEventListener('mouseup', endDrag, false);
 
     function startDrag() {
