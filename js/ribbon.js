@@ -144,13 +144,19 @@ d3.json(dataPathJSON, function(error, data) {
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
           .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
 
-    d3.select('.y-axis').selectAll(".tick text").on("click", function (d, i) {
-        console.log('tick clicked', d, i)
+    d3.select('.y-axis').selectAll(".tick text")
+        .on("click", function (d, i) {
+            console.log('tick clicked', d, i)
 
-        // d3.select(this).style('fill', 'red')
-        var obj = data.layers.find(function (obj) { return obj.peel === d; });
-        addCard(obj);
-    });
+            // d3.select(this).style('fill', 'red')
+            var obj = data.layers.find(function (obj) { return obj.peel === d; });
+            addCard(obj);
+        })
+        .on('mouseover', function (d) {
+            var obj = data.layers.find(function (obj) { return obj.peel === d; });
+            showLayerInOverview(obj)
+        })
+        .on("mouseout", hideLayerInOverview())
 
     var componentsData = {}
     for (const layer in data.layers) {

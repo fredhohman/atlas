@@ -22,6 +22,6 @@ export function imagePathLayerContour(peel) {
     return 'data/' + dataDirName + '/images/' + 'contour-shaded-layer-' + peel + '.png'
 }
 export function imagePathOverview2DBackground() {
-    return 'data/' + dataDirName + '/images/' + 'moreno_names-bw.png'
+    return 'data/' + dataDirName + '/images/' + dataDirName + '-bw.png'
 }
 
