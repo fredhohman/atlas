@@ -34,8 +34,8 @@ function reloadPage() {
 }
 
 d3.select('#header-text-span')
-  .on('click', reloadPage)
-  .style('cursor', 'pointer')
+    .on('click', reloadPage)
+    .style('cursor', 'pointer')
 
 export default function addCard(d) {
     console.log('add card', d)
@@ -43,30 +43,30 @@ export default function addCard(d) {
     cardMessage();
 
     var layers = d3.select('#layers')
-                   .append('div')
-                   .attr('class', 'card-border-wrapper')
-                   .attr('id', 'card-' + d.peel)
-                   .append('div')
-                   .attr('class', 'card')
-                   .style('border-left', function() { return '5px solid ' + ribbonColorPeel(d.peel) })
+        .append('div')
+        .attr('class', 'card-border-wrapper')
+        .attr('id', 'card-' + d.peel)
+        .append('div')
+        .attr('class', 'card')
+        .style('border-left', function () { return '5px solid ' + ribbonColorPeel(d.peel) })
 
     var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
 
     cardTop.append('div')
-          .attr('class', 'card-title-wrapper')
-          .append('h3')
-          .attr('class', 'card-title')
-          .text('Layer ' + d.peel)
+        .attr('class', 'card-title-wrapper')
+        .append('h3')
+        .attr('class', 'card-title')
+        .text('Layer ' + d.peel)
 
     var tabs = cardTop.append('div')
-          .attr('class', 'card-tabs-wrapper tab')
+        .attr('class', 'card-tabs-wrapper tab')
 
     function changeTab(evt, cardName, peel) {
         console.log("change tab")
         console.log(evt, peel)
 
         var i, tabcontent, tablinks;
-        
+
         tabcontent = document.getElementById("card-" + peel).getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
@@ -81,7 +81,7 @@ export default function addCard(d) {
         document.getElementById(cardName).style.display = "block";
         evt.currentTarget.className += " active";
 
-    }    
+    }
 
     var originalLayerImg = tabs.append('button')
         .attr('class', 'card-tabs tablinks active') // set initial view
@@ -104,19 +104,19 @@ export default function addCard(d) {
         .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
 
     cardTop.append('div')
-          .attr('class', 'card-icon-wrapper')
-          .append("i")
-          .attr('class', 'material-icons md-dark')
-          .text('close')
-          .style('cursor', 'pointer')
-          .on('click', function() { closeCard(d) } )
+        .attr('class', 'card-icon-wrapper')
+        .append("i")
+        .attr('class', 'material-icons md-dark')
+        .text('close')
+        .style('cursor', 'pointer')
+        .on('click', function () { closeCard(d) })
 
     var cardTextValueFormat = d3.format(",.3f")
 
     var cardBottom = layers.append('div').attr('class', 'card-bottom-wrapper')
 
     var cardText = cardBottom.append('div')
-                         .attr('class', 'card-text-wrapper')
+        .attr('class', 'card-text-wrapper')
 
     // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
 
@@ -129,32 +129,32 @@ export default function addCard(d) {
         .text(d.edges)
 
     cardText.append('span')
-            .attr('class', 'card-text-item')
-            .text('vertices: ')
-            .append('span')
-            .attr('class', 'card-text-item-value')
-            .text(d.vertices)
+        .attr('class', 'card-text-item')
+        .text('vertices: ')
+        .append('span')
+        .attr('class', 'card-text-item-value')
+        .text(d.vertices)
 
     cardText.append('span')
-            .attr('class', 'card-text-item')
-            .text('clones: ')
-            .append('span')
-            .attr('class', 'card-text-item-value')
-            .text(Math.round(d.vertices * d.clones))
+        .attr('class', 'card-text-item')
+        .text('clones: ')
+        .append('span')
+        .attr('class', 'card-text-item-value')
+        .text(Math.round(d.vertices * d.clones))
 
     cardText.append('span')
-            .attr('class', 'card-text-item')
-            .text('components: ')
-            .append('span')
-            .attr('class', 'card-text-item-value')
-            .text(d.components)
+        .attr('class', 'card-text-item')
+        .text('components: ')
+        .append('span')
+        .attr('class', 'card-text-item-value')
+        .text(d.components)
 
     cardText.append('span')
-            .attr('class', 'card-text-item')
-            .text('clustering: ')
-            .append('span')
-            .attr('class', 'card-text-item-value')
-            .text(cardTextValueFormat(d.clustering))
+        .attr('class', 'card-text-item')
+        .text('clustering: ')
+        .append('span')
+        .attr('class', 'card-text-item-value')
+        .text(cardTextValueFormat(d.clustering))
 
     // cardText.append('span')
     //         .style('display', 'inline-block')
@@ -165,6 +165,9 @@ export default function addCard(d) {
     var cloneToggle = cardText.append('label').attr('class', 'switch')
     cloneToggle.append('input').attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
     cloneToggle.append('span').attr('class', 'slider round')
+
+    var cloneDisplay = cardText.append('div')
+        .attr('class', 'clone-display')
 
     cardBottom.append('div')
         .attr('id', 'original-layer-image-' + d.peel)
@@ -208,12 +211,12 @@ export default function addCard(d) {
         var graphLayerHeight = document.getElementById("interactive-node-link-" + d.peel).clientHeight - graphLayerMargin.top - graphLayerMargin.bottom
 
         var graphLayerSVG = d3.select("#interactive-node-link-" + d.peel)
-                              .append('svg')
-                              .attr('id', "interactive-node-link-" + d.peel + '-svg')
-                              .attr('class', 'interactive-node-link')
-                              .attr("width", graphLayerWidth)
-                              .attr("height", graphLayerHeight)
-                            //   .style('background-color', '#cccccc')
+            .append('svg')
+            .attr('id', "interactive-node-link-" + d.peel + '-svg')
+            .attr('class', 'interactive-node-link')
+            .attr("width", graphLayerWidth)
+            .attr("height", graphLayerHeight)
+        //   .style('background-color', '#cccccc')
 
         d3.json('data/names-decomp-layer-' + d.peel + '-data.json', function (error, graphLayerData) {
 
@@ -226,15 +229,15 @@ export default function addCard(d) {
 
             //set up the simulation and add forces  
             var simulation = d3.forceSimulation()
-                               .nodes(graphLayerData.nodes);
+                .nodes(graphLayerData.nodes);
 
             var linkForce = d3.forceLink(graphLayerData.links)
-                               .id(function (d) { return d.id; });
+                .id(function (d) { return d.id; });
 
             var chargeForce = d3.forceManyBody()
-                                 .strength(-40);
+                .strength(-40);
 
-            var centerForce = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);  
+            var centerForce = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);
 
             simulation
                 .force("chargeForce", chargeForce)
@@ -265,7 +268,9 @@ export default function addCard(d) {
             var cloneTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
                 return '<span class="tooltip-number">' + d.peels.join(', ') + '</span>'
             });
+            // g.append('circle').attr('id', 'tipfollowscursor')
             g.call(cloneTooltip)
+            window.cloneTooltip = cloneTooltip
 
             //draw circles for the nodes 
             var nodeSVGs = g.append("g")
@@ -278,7 +283,7 @@ export default function addCard(d) {
                 .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
                 .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
-            
+
             //add drag capabilities  
             var dragHandler = d3.drag()
                 .on("start", dragStart)
@@ -353,24 +358,57 @@ export default function addCard(d) {
                 const neighbors = getNeighbors(selectedNode)
 
                 nodeSVGs
-                    .attr('fill', function(node) {return getNodeColor(node, neighbors) })
+                    .attr('fill', function (node) { return getNodeColor(node, neighbors) })
                 // textElements
-                    // .attr('fill', node => getTextColor(node, neighbors))
+                // .attr('fill', node => getTextColor(node, neighbors))
                 linkSVGs
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
             }
 
-            nodeSVGs.on('mouseover', function(d) {
+            nodeSVGs.on('mouseover', function (d) {
                 selectNode(d);
                 if (d.peels.length > 1) {
-                    cloneTooltip.show(d);   
+                    //     // cloneTooltip.show(d);
+                    //     var cloneText = ''
+                    //     for (let i = 0; i < d.peels.length; i++) {
+                    //         const peel = d.peels[i];
+                    //         cloneText = cloneText + '<span>' + peel + '</span>, '
+                    //     }
+                    //     cloneDisplay.html(cloneText)
+                    cloneDisplay.html('')
+                    cloneDisplay.selectAll('clone-label')
+                        .data(d.peels)
+                        .enter()
+                        .append('span')
+                        .attr('class', 'clone-label')
+                        .text(function (datum, i) {
+                            if (i != d.peels.length - 1) {
+                                return datum + ', '
+                            } else {
+                                return datum
+                            }
+                        })
+                    .on('click', function(datum) {
+                        console.log('clicked', datum)
+                        d3.json('data/moreno_names.json', function(error, tempData) {
+                            console.log(tempData)
+                            var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
+                            addCard(obj);
+                        })
+                    })
+
+                } else {
+                    cloneDisplay.text('no clones')
                 }
             })
-            nodeSVGs.on('mouseout', function() {
+
+            nodeSVGs.on('mouseout', function () {
                 nodeSVGs.attr('fill', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
                 linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
-                cloneTooltip.hide();
+                // cloneTooltip.hide();
             })
+
+            nodeSVGs.on('click', function () { console.log('clicked') })
 
             function toggleClones() {
                 console.log('toggle clones')
@@ -379,9 +417,9 @@ export default function addCard(d) {
 
                     // style clones
                     nodeSVGs.attr('class', function (d) {
-                            if (d.peels.length > 1) {
-                                return 'clone'
-                            }
+                        if (d.peels.length > 1) {
+                            return 'clone'
+                        }
                     })
                     nodeSVGs.attr('r', function (d) {
                         if (d.peels.length > 1) {
@@ -399,6 +437,11 @@ export default function addCard(d) {
 
             }
             d3.selectAll('.clone-toggle').on('click', toggleClones)
+            // graphLayerSVG.on('click', function() { cloneTooltip.style('display', 'hidden') })
+            // graphLayerSVG.on('click', function () {
+            //     console.log('click canvas, hide tooltip')
+            //     d3.selectAll('.d3-tip').style('display', 'hidden')
+            // })
 
             function tickActions() {
                 //update circle positions each tick of the simulation 
@@ -422,7 +465,7 @@ export default function addCard(d) {
     }
 
     // set initial view
-    d3.select('#original-layer-image-' + d.peel).style('display', 'block')
+    d3.select('#original-layer-image-' + d.peel).style('display', 'none')
 
 }
 
@@ -566,7 +609,7 @@ function cardMessage() {
 
 
 
-    
+
 // multiple backgrounds, but kills performance
 // var overviewImage = ''
 // for (var layer in layers.reverse()) {
