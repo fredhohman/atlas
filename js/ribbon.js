@@ -40,7 +40,7 @@ d3.json(dataPathJSON, function(error, data) {
 
     var ribbonTextColor = '#222222'
     var x = d3.scaleLinear().range([0, ribbonWidth]);
-    var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.3);
+    var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.5);
 
     x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
     // y.domain(data.layers.map(function (d) { return d.peel })) // no spaces in ribbon y-axis
@@ -96,8 +96,8 @@ d3.json(dataPathJSON, function(error, data) {
         .enter().append('rect')
           .attr('class', 'bullet-inner')
           .attr('width', function(d) { return x(d.vertices) })
-          .attr('y', function(d) { return y(d.peel) + (y.bandwidth()/3) })
-          .attr('height', y.bandwidth()/3)
+          .attr('y', function(d) { return y(d.peel) + (y.bandwidth() * (6/13)) })
+          .attr('height', y.bandwidth() * (1/13))
           .style('fill', '#444444')
         //   .style('stroke', '#ffffff')
         //   .style('stroke-width', '1')
@@ -105,22 +105,32 @@ d3.json(dataPathJSON, function(error, data) {
           .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
 
-    var tickOffset = 10;
+    // rectangle tick
+    // var tickOffset = 10;
+    // ribbon.selectAll('.bullet-tick')
+    //       .data(data.layers)
+    //     .enter().append('rect')
+    //       .attr('class', 'bullet-tick')
+    //       .attr('width', '2')
+    //     .attr('y', function (d) { return y(d.peel) + (y.bandwidth() * (3/7) - tickOffset/2) })
+    //        // convert clone percentage to actual count
+    //       .attr('x', function (d) { return x(Math.round(d.vertices * d.clones)) })
+    //       .attr('height', y.bandwidth()*(1/7) + tickOffset)
+    //       .style('fill', '#444444')
+    //     //   .style('stroke', '#ffffff')
+    //     //   .style('stroke-width', '1')
+    //       .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
+    //       .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
+    //       .on('click', function (d) { return addCard(d) })
+
+    // circle tick
     ribbon.selectAll('.bullet-tick')
-          .data(data.layers)
-        .enter().append('rect')
-          .attr('class', 'bullet-tick')
-          .attr('width', '2')
-        .attr('y', function (d) { return y(d.peel) + (y.bandwidth() / 3) - tickOffset/2 })
-           // convert clone percentage to actual count
-          .attr('x', function (d) { return x(Math.round(d.vertices * d.clones)) })
-          .attr('height', y.bandwidth()/3 + tickOffset)
-          .style('fill', '#444444')
-        //   .style('stroke', '#ffffff')
-        //   .style('stroke-width', '1')
-          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
-          .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
-          .on('click', function (d) { return addCard(d) })
+    .data(data.layers)
+        .enter().append('circle')
+        .attr('r', 4)
+        .attr('cx', function(d) { return x(Math.round(d.vertices * d.clones))})
+        .attr('cy', function(d) { return y(d.peel) + y.bandwidth()/2})
+        .style('fill', '#444444')
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
