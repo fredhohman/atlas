@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
 import addCard from './card.js';
-import { dataPath, dataPathJSON } from './index.js'
+import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground } from './index.js'
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -85,9 +85,9 @@ d3.json(dataPathJSON, function(error, data) {
           .attr('width', function (d) { return x(d.edges) })
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
-          .style('fill', function(d) { return ribbonColorPeel(d.peel) })
+        //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
           .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
-        //   .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) } )
+          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) } )
           .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function(d) { return addCard(d) })
 
@@ -285,13 +285,13 @@ d3.json(dataPathJSON, function(error, data) {
 function showLayerInOverview(d) {
     console.log('show layer in overview')
     d3.select('#overview')
-      .style('background-image', "url(" + dataPath + "images/layer" + d.peel + ".png), " + "url(" + dataPath + "images/moreno_names-bw.png")
+        .style('background-image', "url(" + imagePathLayerOrg(d.peel) + "), " + "url(" + imagePathOverview2DBackground() + ")")
 }
 
 function hideLayerInOverview(d) {
     console.log('hide layer in overview')
     d3.select('#overview')
-        .style('background-image', "url(" + dataPath + "images/moreno_names-bw.png")
+        .style('background-image', "url(" + imagePathOverview2DBackground() + ")")
 }
 
 // ribbon accordion

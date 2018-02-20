@@ -3,7 +3,7 @@
 import * as d3 from 'd3';
 // import { geoStereographic } from 'd3';
 import tip from 'd3-tip';
-import { dataPath, dataPathJSON, dataPathLayerJSON } from './index.js'
+import { dataPath, dataPathJSON, dataPathLayerJSON, imagePathLayerOrg, imagePathLayerFD, imagePathLayerContour } from './index.js'
 
 let numOfCardsUp = 0;
 window.numOfCardsUp = numOfCardsUp;
@@ -172,7 +172,7 @@ export default function addCard(d) {
         .attr('id', 'original-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
         .append('img')
-        .attr('src', dataPath + 'images/layer' + d.peel + '.png')
+        .attr('src', imagePathLayerOrg(d.peel))
         //   .attr('width', '100%')
         .style('display', 'block')
         .style('max-height', '100%')
@@ -182,7 +182,7 @@ export default function addCard(d) {
         .attr('id', 'force-directed-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
         .append('img')
-        .attr('src', dataPath + 'images/layer-' + d.peel + '.png')
+        .attr('src', imagePathLayerFD(d.peel))
         //   .attr('width', '100%')
         .style('display', 'block')
         .style('max-height', '100%')
@@ -192,7 +192,7 @@ export default function addCard(d) {
         .attr('id', 'contour-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
         .append('img')
-        .attr('src', dataPath + 'images/contour-shaded-layer-' + d.peel + '.png')
+        .attr('src', imagePathLayerContour(d.peel))
         //   .attr('width', '100%')
         .style('display', 'block')
         .style('max-height', '100%')
