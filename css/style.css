@@ -60,7 +60,7 @@ html, body {
 
 #overview {
   flex: 1;
-  background-image: url('data/moreno_names/images/moreno_names-bw.png');
+  background-image: url('../data/moreno_names/images/moreno_names-bw.png');
   background-size: 700px;
   background-repeat: no-repeat;
   background-position: center;
