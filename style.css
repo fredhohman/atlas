@@ -582,3 +582,7 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.clone-label {
+    font-weight: 400;
+}

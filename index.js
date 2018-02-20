@@ -365,40 +365,35 @@ export default function addCard(d) {
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
             }
 
-            nodeSVGs.on('mouseover', function (d) {
-                selectNode(d);
-                if (d.peels.length > 1) {
-                    //     // cloneTooltip.show(d);
-                    //     var cloneText = ''
-                    //     for (let i = 0; i < d.peels.length; i++) {
-                    //         const peel = d.peels[i];
-                    //         cloneText = cloneText + '<span>' + peel + '</span>, '
-                    //     }
-                    //     cloneDisplay.html(cloneText)
+            nodeSVGs.on('mouseover', function(node) {
+                selectNode(node);
+                if (node.peels.length > 1) {
                     cloneDisplay.html('')
                     cloneDisplay.selectAll('clone-label')
-                        .data(d.peels)
+                        .data(node.peels)
                         .enter()
                         .append('span')
                         .attr('class', 'clone-label')
                         .text(function (datum, i) {
-                            if (i != d.peels.length - 1) {
+                            if (i != node.peels.length - 1) {
                                 return datum + ', '
                             } else {
                                 return datum
                             }
                         })
+                        .style('color', function(datum) { if (datum === d.peel) {
+                            return '#bbbbbb'
+                        }})
                     .on('click', function(datum) {
                         console.log('clicked', datum)
                         d3.json('data/moreno_names.json', function(error, tempData) {
-                            console.log(tempData)
                             var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
                             addCard(obj);
                         })
                     })
 
                 } else {
-                    cloneDisplay.text('no clones')
+                    cloneDisplay.attr('class', 'clone-label').text('no clones')
                 }
             })
 
