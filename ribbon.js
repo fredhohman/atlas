@@ -285,13 +285,13 @@ d3.json(dataPath + 'moreno_names.json', function(error, data) {
 function showLayerInOverview(d) {
     console.log('show layer in overview')
     d3.select('#overview')
-      .style('background-image', "url(images/moreno_names/layer" + d.peel + ".png), " + "url(images/moreno_names/moreno_names-bw.png")
+      .style('background-image', "url(" + dataPath + "images/layer" + d.peel + ".png), " + "url(" + dataPath + "images/moreno_names-bw.png")
 }
 
 function hideLayerInOverview(d) {
     console.log('hide layer in overview')
     d3.select('#overview')
-        .style('background-image', "url(images/moreno_names/moreno_names-bw.png")
+        .style('background-image', "url(" + dataPath + "images/moreno_names-bw.png")
 }
 
 // ribbon accordion
