@@ -25,3 +25,4 @@ export function imagePathOverview2DBackground() {
     return 'data/' + dataDirName + '/images/' + dataDirName + '-bw.png'
 }
 
+window.d3 = d3;

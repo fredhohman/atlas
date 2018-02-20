@@ -16,7 +16,6 @@ d3.json(dataPathJSON, function(error, data) {
     // some globals for console debugging
     console.log(data)
     window.data = data
-    window.d3 = d3
     
     var ribbonMargin = { top: 30, right: 45, bottom: 0, left: 45 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right

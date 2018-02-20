@@ -5,8 +5,11 @@ import * as d3 from 'd3';
 import tip from 'd3-tip';
 import { dataPath, dataPathJSON, dataPathLayerJSON, imagePathLayerOrg, imagePathLayerFD, imagePathLayerContour } from './index.js'
 
+
+let cardsUp = {};
 let numOfCardsUp = 0;
 window.numOfCardsUp = numOfCardsUp;
+window.cardsUp = cardsUp;
 
 d3.json(dataPathJSON, function (error, data) {
 
@@ -16,9 +19,6 @@ d3.json(dataPathJSON, function (error, data) {
 
     // some globals for console debugging
     console.log(data)
-    window.data = data
-    window.d3 = d3
-
 
     // set nav data
     var navNumFormat = d3.format(',');
@@ -39,6 +39,7 @@ d3.select('#header-text-span')
 export default function addCard(d) {
     console.log('add card', d)
     numOfCardsUp += 1;
+    cardsUp[d.peel] = 'up'
     cardMessage();
 
     var layers = d3.select('#layers')
@@ -465,8 +466,9 @@ export default function addCard(d) {
 function closeCard(d) {
     console.log('close card')
     numOfCardsUp -= 1;
+    delete cardsUp[d.peel]
     d3.select('#card-' + d.peel).remove();
-    console.log(document.getElementsByClassName('y-axis'))
+    // console.log(document.getElementsByClassName('y-axis'))
     cardMessage();
 }
 
