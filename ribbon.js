@@ -2,12 +2,12 @@ import * as d3 from 'd3';
 import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
 import addCard from './card.js';
-
+import { dataPath } from './index.js'
 
 // draggable ribbon 
 console.log('draggable-ribbon')
 
-d3.json('data/moreno_names.json', function(error, data) {
+d3.json(dataPath + 'moreno_names.json', function(error, data) {
 
     if (error) {
         return console.error(error);        
