@@ -640,6 +640,7 @@ input:checked + .slider:before {
 .ribbon-checkbox {
     margin-bottom: 15px;
     padding-right: 3px;
+    cursor: pointer;
 }
 
 .checkbox-text {

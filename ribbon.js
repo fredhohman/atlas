@@ -99,6 +99,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('y', function(d) { return y(d.peel) + (y.bandwidth()/3) })
           .attr('height', y.bandwidth()/3)
           .style('fill', '#444444')
+        //   .style('stroke', '#ffffff')
+        //   .style('stroke-width', '1')
           .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
           .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
@@ -114,6 +116,8 @@ d3.json('data/moreno_names.json', function(error, data) {
           .attr('x', function (d) { return x(Math.round(d.vertices * d.clones)) })
           .attr('height', y.bandwidth()/3 + tickOffset)
           .style('fill', '#444444')
+        //   .style('stroke', '#ffffff')
+        //   .style('stroke-width', '1')
           .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
           .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
           .on('click', function (d) { return addCard(d) })
@@ -272,6 +276,7 @@ d3.json('data/moreno_names.json', function(error, data) {
             default:
                 console.log('no checkbox switch cases found, breaking by default')
                 break;
+                
         }
     })
 
