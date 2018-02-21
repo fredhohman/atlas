@@ -655,3 +655,7 @@ input:checked + .slider:before {
     padding-bottom: 10px;
     font-weight: 500;
 }
+
+.fixed {
+  fill: red;
+}

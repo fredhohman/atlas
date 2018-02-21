@@ -288,7 +288,7 @@ export default function addCard(d) {
             var dragHandler = d3.drag()
                 .on("start", dragStart)
                 .on("drag", dragDrag)
-                .on("end", dragEnd);
+                .on("end", dragEnd)
             dragHandler(nodeSVGs);
 
             // add zoom capabilities 
@@ -303,6 +303,8 @@ export default function addCard(d) {
                 if (!d3.event.active) simulation.alphaTarget(0.3).restart();
                 d.fx = d.x;
                 d.fy = d.y;
+                console.log('this', this)
+                d3.select(this).attr('class', 'fixed')
             }
 
             // make sure you can't drag the circle outside the box
@@ -313,8 +315,9 @@ export default function addCard(d) {
 
             function dragEnd(d) {
                 if (!d3.event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
+                // d.fx = null;
+                // d.fy = null;
+                
             }
 
             // zoom functions
@@ -402,7 +405,12 @@ export default function addCard(d) {
                 // cloneTooltip.hide();
             })
 
-            nodeSVGs.on('click', function () { console.log('clicked') })
+            nodeSVGs.on('click', function (d) { 
+                console.log('clicked')
+                d.fx = null;
+                d.fy = null;
+                d3.select(this).classed('fixed', false)
+            })
 
             function toggleClones() {
                 console.log('toggle clones')
@@ -453,6 +461,7 @@ export default function addCard(d) {
         })
     }
 
+    
     function removeLayerGraph(peel) {
         console.log('remove interactive node link for layer ' + peel)
         d3.select("#interactive-node-link-" + peel + '-svg').remove()
