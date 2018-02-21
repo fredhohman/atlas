@@ -284,19 +284,18 @@ export default function addCard(d) {
                 .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
 
-            // add drag capabilities  
+            // add drag  
             var dragHandler = d3.drag()
                 .on("start", dragStart)
                 .on("drag", dragDrag)
                 .on("end", dragEnd)
-            dragHandler(nodeSVGs);
+            nodeSVGs.call(dragHandler)
 
-            // add zoom capabilities 
+            // add zoom 
             var zoomHandler = d3.zoom()
-                .on("zoom", zoom_actions);
-            zoomHandler(graphLayerSVG);
+                .on("zoom", zoomActions);
+            graphLayerSVG.call(zoomHandler)
 
-            // Functions
             // drag functions 
             // d is the node 
             function dragStart(d) {
@@ -321,12 +320,13 @@ export default function addCard(d) {
             }
 
             // zoom functions
-            function zoom_actions() {
+            function zoomActions() {
                 g.attr("transform", d3.event.transform)
             }
 
             function getNeighbors(node) {
                 return graphLayerData.links.reduce((neighbors, link) => {
+
                     if (link.target.id === node.id) {
                         neighbors.push(link.source.id)
                     } else if (link.source.id === node.id) {
@@ -387,11 +387,19 @@ export default function addCard(d) {
                             }
                         })
                         .on('click', function (datum) {
-                            console.log('clicked', datum)
+                            console.log('clicked clone', node, datum)
                             d3.json(dataPathJSON, function (error, tempData) {
                                 var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
                                 addCard(obj);
                             })
+                            // node.fx = 0
+                            // node.fy = 0
+                            // d3.selectAll('.everything').attr('transform', function () {
+                            //     // console.log(uh)
+                            //     'translate(' + node.fx + ', ' + node.fy + ') scale(' + 1 + ', ' + 1 + ')'
+                            // })
+                            // node.fx = graphLayerWidth / 2
+                            // node.fx = graphLayerHeight / 2
                         })
 
                 } else {

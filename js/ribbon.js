@@ -3,6 +3,7 @@ import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
 import addCard from './card.js';
 import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground } from './index.js'
+// import { onWindowResize } from './overview.js'
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -228,6 +229,9 @@ d3.json(dataPathJSON, function(error, data) {
         // layersDiv.style.height = 500 + "px";
         d3.selectAll('.interactive-node-link').attr('width', '100%') // a little hacky but works for now
         console.log('drag')
+
+        var event = new Event('ribbonDragEnd')
+        window.dispatchEvent(event);
 
         // fix bug here where dragging ribbon more left causes right div to keep growing
         // if (document.getElementById('overview').clientWidth > 250) {
