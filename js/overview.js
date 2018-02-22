@@ -12,6 +12,9 @@ console.log('overview.js loaded')
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+var zCordHeight = 500;
+camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
+camera.lookAt(scene.position)
 
 var overview = document.getElementById('overview')
 var renderer = new THREE.WebGLRenderer();
@@ -77,7 +80,6 @@ d3.json(dataPathJSON, function (error, data) {
                 circle.position.x = node.x * 5;
                 circle.position.y = node.y * 5;
 
-                var zCordHeight = 500;
                 var zCordScale = d3.scaleLinear()
                                .domain(d3.extent(data.peels))
                                .range([-zCordHeight, zCordHeight])
@@ -101,9 +103,6 @@ function RGBtoHex(rgbColor) {
     hexColor = "0x" + hexColor.join("");
     return hexColor
 }
-
-
-camera.position.z = 5;
 
 
 // projector = new Projector.Projector();
