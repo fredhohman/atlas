@@ -1,11 +1,13 @@
 // overview.js
-console.log('overview.js loaded')
+import { dataPathLayerJSON } from './index.js'
 
+import * as d3 from 'd3';
 var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
 // var Stats = require('stats.js');
 // var Projector = require('three.js-projector');
-const bible = require('../bible.json');
+
+console.log('overview.js loaded')
 
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
@@ -15,7 +17,7 @@ var overview = document.getElementById('overview')
 var renderer = new THREE.WebGLRenderer();
 camera.aspect = overview.clientWidth / overview.clientHeight;
 camera.updateProjectionMatrix();
-renderer.setSize(overview.clientWidth - 20, overview.clientHeight - 20 - 20);
+renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 0);
 overview.appendChild(renderer.domElement);
 
 window.addEventListener('resize', onWindowResize, false);
@@ -26,7 +28,7 @@ function onWindowResize() {
     camera.aspect = overview.clientWidth / overview.clientHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(overview.clientWidth - 20, overview.clientHeight - 20 - 20);
+    renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 0 - 0);
 }
 
 
@@ -34,7 +36,7 @@ var controls = new TrackballControls(camera, renderer.domElement);
 controls.rotateSpeed = 4;
 controls.dampingFactor = 0.1;
 
-var geometry = new THREE.CircleBufferGeometry(0.3, 20);
+var geometry = new THREE.CircleBufferGeometry(2, 20);
 
 // random circles
 // var size = 500;
@@ -54,21 +56,63 @@ var geometry = new THREE.CircleBufferGeometry(0.3, 20);
 // }
 
 // import graph
-for (node in bible.nodes) {
+// for (node in bible.nodes) {
 
-    var color = bible.nodes[node]['color'];
-    var material = new THREE.MeshBasicMaterial();
-    material.side = THREE.DoubleSide;
+//     var color = bible.nodes[node]['color'];
+//     var material = new THREE.MeshBasicMaterial();
+//     material.side = THREE.DoubleSide;
 
-    var circle = new THREE.Mesh(geometry, material);
+//     var circle = new THREE.Mesh(geometry, material);
 
-    circle.position.x = bible.nodes[node]['location'][0] * 5;
-    circle.position.y = bible.nodes[node]['location'][1] * 5;
-    circle.position.z = bible.nodes[node]['location'][2] * 2;
-    // circle.lookAt( camera.position );
-    circle.material.color.setHex(bible.nodes[node]['color'])
-    scene.add(circle);
+//     circle.position.x = bible.nodes[node]['location'][0] * 5;
+//     circle.position.y = bible.nodes[node]['location'][1] * 5;
+//     circle.position.z = bible.nodes[node]['location'][2] * 2;
+//     // circle.lookAt( camera.position );
+//     circle.material.color.setHex(bible.nodes[node]['color'])
+//     scene.add(circle);
 
+// }
+
+
+const data = require('../data/moreno_names/moreno_names.json')
+
+for (let peel = 0; peel < data.peels.length; peel++) {
+
+    console.log('peel', data.peels[peel])
+
+    d3.json('../' + dataPathLayerJSON(data.peels[peel]), function(error, layerData) {
+
+        // console.log('THREE LAYER DATA', layerData)
+
+        for (let i = 0; i < layerData.nodes.length; i++) {
+            const node = layerData.nodes[i];
+        
+
+            var material = new THREE.MeshBasicMaterial();
+            material.side = THREE.DoubleSide;
+
+            var circle = new THREE.Mesh(geometry, material);
+
+            circle.position.x = node.x * 5;
+            circle.position.y = node.y * 5;
+            circle.position.z = data.peels[peel] * 50;
+            // circle.lookAt( camera.position );
+            circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
+            // circle.material.color.setHex('0x222222')
+            scene.add(circle);
+        }
+    })
+}
+
+function RGBtoHex(rgbColor) {
+    var rgbColor = rgbColor.split("(")[1].split(")")[0];
+    rgbColor = rgbColor.split(",");
+    var hexColor = rgbColor.map(function (x) {             //For each array element
+        x = parseInt(x).toString(16);      //Convert to a base16 string
+        return (x.length == 1) ? "0" + x : x;  //Add zero if we get only one character
+    })
+    hexColor = "0x" + hexColor.join("");
+    return hexColor
 }
 
 

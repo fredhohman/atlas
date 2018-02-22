@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
 import addCard from './card.js';
-import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground } from './index.js'
+import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground, ribbonColorPeel } from './index.js'
 // import { onWindowResize } from './overview.js'
 
 // draggable ribbon 
@@ -47,7 +47,7 @@ d3.json(dataPathJSON, function(error, data) {
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1)) // spaces in ribbon y-axis
     // color bullet by graph layer
     var ribbonColorPeel = d3.scaleLinear()
-        .domain(d3.extent(data.layers, function (d) { return d.peel }))
+        .domain(d3.extent(data.peels))
         .interpolate(d3.interpolateHcl)
         .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
 
