@@ -1,17 +1,17 @@
 // overview.js
-import { dataPathJSON, dataPathLayerJSON } from './index.js'
-
 import * as d3 from 'd3';
 var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
 // var Stats = require('stats.js');
 // var Projector = require('three.js-projector');
+import { dataPathJSON, dataPathLayerJSON } from './index.js'
+
 
 console.log('overview.js loaded')
 
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
 
 var overview = document.getElementById('overview')
 var renderer = new THREE.WebGLRenderer();
@@ -22,12 +22,10 @@ overview.appendChild(renderer.domElement);
 
 window.addEventListener('resize', onWindowResize, false);
 window.addEventListener('ribbonDragEnd', onWindowResize, false)
-// overview.addEventListener('resize', onWindowResize, false);
 
 function onWindowResize() {
     camera.aspect = overview.clientWidth / overview.clientHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 0 - 0);
 }
 
@@ -55,14 +53,12 @@ var geometry = new THREE.CircleBufferGeometry(2, 20);
 //     scene.add( circle );
 // }
 
-// var path = '../' + dataPathJSON
-
 d3.json(dataPathJSON, function (error, data) {
 
     if (error) {
         return console.error(error);
     }
-    
+
     for (let peel = 0; peel < data.peels.length; peel++) {
 
         console.log('peel', data.peels[peel])
@@ -80,7 +76,12 @@ d3.json(dataPathJSON, function (error, data) {
 
                 circle.position.x = node.x * 5;
                 circle.position.y = node.y * 5;
-                circle.position.z = data.peels[peel] * 50;
+
+                var zCordHeight = 500;
+                var zCordScale = d3.scaleLinear()
+                               .domain(d3.extent(data.peels))
+                               .range([-zCordHeight, zCordHeight])
+                circle.position.z = zCordScale(data.peels[peel]);
                 // circle.lookAt( camera.position );
                 circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
                 // circle.material.color.setHex('0x222222')
