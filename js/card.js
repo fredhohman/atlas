@@ -17,9 +17,6 @@ d3.json(dataPathJSON, function (error, data) {
         return console.error(error);
     }
 
-    // some globals for console debugging
-    console.log(data)
-
     // set nav data
     var navNumFormat = d3.format(',');
     d3.select("#graph-name").text(data.name);

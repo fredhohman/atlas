@@ -1,5 +1,5 @@
 // overview.js
-import { dataPathLayerJSON } from './index.js'
+import { dataPathJSON, dataPathLayerJSON } from './index.js'
 
 import * as d3 from 'd3';
 var THREE = require('three');
@@ -55,54 +55,40 @@ var geometry = new THREE.CircleBufferGeometry(2, 20);
 //     scene.add( circle );
 // }
 
-// import graph
-// for (node in bible.nodes) {
+// var path = '../' + dataPathJSON
 
-//     var color = bible.nodes[node]['color'];
-//     var material = new THREE.MeshBasicMaterial();
-//     material.side = THREE.DoubleSide;
+d3.json(dataPathJSON, function (error, data) {
 
-//     var circle = new THREE.Mesh(geometry, material);
+    if (error) {
+        return console.error(error);
+    }
+    
+    for (let peel = 0; peel < data.peels.length; peel++) {
 
-//     circle.position.x = bible.nodes[node]['location'][0] * 5;
-//     circle.position.y = bible.nodes[node]['location'][1] * 5;
-//     circle.position.z = bible.nodes[node]['location'][2] * 2;
-//     // circle.lookAt( camera.position );
-//     circle.material.color.setHex(bible.nodes[node]['color'])
-//     scene.add(circle);
+        console.log('peel', data.peels[peel])
 
-// }
+        d3.json(dataPathLayerJSON(data.peels[peel]), function (error, layerData) {
+
+            for (let i = 0; i < layerData.nodes.length; i++) {
+                const node = layerData.nodes[i];
 
 
-const data = require('../data/moreno_names/moreno_names.json')
+                var material = new THREE.MeshBasicMaterial();
+                material.side = THREE.DoubleSide;
 
-for (let peel = 0; peel < data.peels.length; peel++) {
+                var circle = new THREE.Mesh(geometry, material);
 
-    console.log('peel', data.peels[peel])
-
-    d3.json('../' + dataPathLayerJSON(data.peels[peel]), function(error, layerData) {
-
-        // console.log('THREE LAYER DATA', layerData)
-
-        for (let i = 0; i < layerData.nodes.length; i++) {
-            const node = layerData.nodes[i];
-        
-
-            var material = new THREE.MeshBasicMaterial();
-            material.side = THREE.DoubleSide;
-
-            var circle = new THREE.Mesh(geometry, material);
-
-            circle.position.x = node.x * 5;
-            circle.position.y = node.y * 5;
-            circle.position.z = data.peels[peel] * 50;
-            // circle.lookAt( camera.position );
-            circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
-            // circle.material.color.setHex('0x222222')
-            scene.add(circle);
-        }
-    })
-}
+                circle.position.x = node.x * 5;
+                circle.position.y = node.y * 5;
+                circle.position.z = data.peels[peel] * 50;
+                // circle.lookAt( camera.position );
+                circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
+                // circle.material.color.setHex('0x222222')
+                scene.add(circle);
+            }
+        })
+    }
+})
 
 function RGBtoHex(rgbColor) {
     var rgbColor = rgbColor.split("(")[1].split(")")[0];
