@@ -144,9 +144,7 @@ function updateZPosition() {
 }
 
 function resetOverviewCamera() {
-    camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
-    camera.lookAt([0, 0, 0])
-    controls.update();
+    controls.reset();
 }
 
 function RGBtoHex(rgbColor) {
