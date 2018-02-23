@@ -12,8 +12,8 @@ console.log('overview.js loaded')
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-var xCordScale = 1.5;
-var yCordScale = 1.5;
+var xCordScale = 2;
+var yCordScale = 2;
 var zCordHeight = 500;
 camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
 camera.lookAt(scene.position)
@@ -68,6 +68,12 @@ var circles = [];
 
 var zCordScale;
 
+var lineMaterial = new THREE.LineBasicMaterial({
+    color: 0xcccccc
+});
+
+var lineGeometry = new THREE.Geometry();
+
 d3.json(dataPathJSON, function (error, data) {
 
     if (error) {
@@ -101,6 +107,8 @@ d3.json(dataPathJSON, function (error, data) {
                 circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
                 circle.userData['id'] = node.id
                 circle.userData['peel'] = data.peels[peel]
+                circle.userData['x'] = node.x
+                circle.userData['y'] = node.y
                 scene.add(circle);
                 circles.push(circle)
 
@@ -116,13 +124,34 @@ d3.json(dataPathJSON, function (error, data) {
 
 
             }
+
+            // for (let j = 0; j < 10; j++) {
+            //     const link = layerData.links[j];
+            //     // console.log(link)
+            //     // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
+            //     var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
+            //     var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
+
+            //     lineGeometry.vertices.push(
+            //         new THREE.Vector3(foundNode1.x * xCordScale, foundNode1.y * yCordScale, zCordScale(data.peels[peel])),
+            //         new THREE.Vector3(foundNode2.x * xCordScale, foundNode2.y * yCordScale, zCordScale(data.peels[peel])),
+            //     );
+
+            //     var line = new THREE.Line(lineGeometry, lineMaterial);
+            //     scene.add(line);               
+            // }
+
+
+
         })
     }
 })
-// test.add(circles[0].scale, 'x', 0, 3).name('Width').listen();
-d3.select('#nav').append('input').attr('type', 'range').attr('max', 10).attr('min', 0.1).attr('step', 0.01).on('input', updateRadius)
-d3.select('#nav').append('input').attr('type', 'range').attr('max', 3*zCordHeight).attr('min', 1).attr('step', 0.01).attr('value', zCordHeight).on('input', updateZPosition)
+
+d3.select('#nav').append('input').attr('type', 'range').attr('max', 10).attr('min', 0.1).attr('step', 0.01).attr('value', 1).on('input', updateRadius)
+var heightSlider = d3.select('#nav').append('input').attr('type', 'range').attr('max', 3*zCordHeight).attr('min', 1).attr('step', 0.01).attr('value', zCordHeight).on('input', updateZPosition)
+var heightSlider = d3.select('#nav').append('input').attr('type', 'range').attr('max', 5).attr('min', 0).attr('step', 0.01).attr('value', xCordScale).on('input', updateXPosition)
 d3.select('#nav').append('button').text('reset camera').on('click', resetOverviewCamera)
+d3.select('#nav').append('button').text('animate graph').on('click', animateGraph)
 
 function updateRadius() {
     for (let c = 0; c < circles.length; c++) {
@@ -143,8 +172,24 @@ function updateZPosition() {
     }
 }
 
+function updateXPosition() {
+    for (let c = 0; c < circles.length; c++) {
+        circles[c].position.x = circles[c].userData['x'] * this.value
+        circles[c].position.y = circles[c].userData['y'] * this.value
+        
+    }
+}
+
 function resetOverviewCamera() {
     controls.reset();
+}
+
+function animateGraph() {
+    console.log('animate')
+    console.log(heightSlider.attr('value'))
+    heightSlider.attr('value', 1000)
+    // heightSlider
+    console.log(heightSlider.attr('value'))
 }
 
 function RGBtoHex(rgbColor) {
