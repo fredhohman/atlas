@@ -5,13 +5,15 @@ var TrackballControls = require('three-trackballcontrols');
 // var Stats = require('stats.js');
 // var Projector = require('three.js-projector');
 import { dataPathJSON, dataPathLayerJSON } from './index.js'
-
+import { GUI } from 'dat.gui/build/dat.gui.js'
 
 console.log('overview.js loaded')
 
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+var xCordScale = 1.5;
+var yCordScale = 1.5;
 var zCordHeight = 500;
 camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
 camera.lookAt(scene.position)
@@ -56,6 +58,16 @@ var geometry = new THREE.CircleBufferGeometry(2, 20);
 //     scene.add( circle );
 // }
 
+var circles = [];
+
+// const gui = new GUI();
+// var test = gui.addFolder('test');
+// window.circles = circles
+// console.log(circles)
+// console.log(circles.length)
+
+var zCordScale;
+
 d3.json(dataPathJSON, function (error, data) {
 
     if (error) {
@@ -64,6 +76,12 @@ d3.json(dataPathJSON, function (error, data) {
 
     for (let peel = 0; peel < data.peels.length; peel++) {
 
+        zCordScale = d3.scaleLinear()
+            .domain(d3.extent(data.peels))
+            .range([-zCordHeight, zCordHeight])
+        window.zCordScale = zCordScale
+
+
         console.log('peel', data.peels[peel])
 
         d3.json(dataPathLayerJSON(data.peels[peel]), function (error, layerData) {
@@ -71,27 +89,65 @@ d3.json(dataPathJSON, function (error, data) {
             for (let i = 0; i < layerData.nodes.length; i++) {
                 const node = layerData.nodes[i];
 
-
                 var material = new THREE.MeshBasicMaterial();
                 material.side = THREE.DoubleSide;
 
                 var circle = new THREE.Mesh(geometry, material);
 
-                circle.position.x = node.x * 5;
-                circle.position.y = node.y * 5;
+                circle.position.x = node.x * xCordScale;
+                circle.position.y = node.y * yCordScale;
 
-                var zCordScale = d3.scaleLinear()
-                               .domain(d3.extent(data.peels))
-                               .range([-zCordHeight, zCordHeight])
                 circle.position.z = zCordScale(data.peels[peel]);
-                // circle.lookAt( camera.position );
                 circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
-                // circle.material.color.setHex('0x222222')
+                circle.userData['id'] = node.id
+                circle.userData['peel'] = data.peels[peel]
                 scene.add(circle);
+                circles.push(circle)
+
+
+                // var map = new THREE.TextureLoader("sprite.png");
+                // // console.log(map)
+                // var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
+                // var sprite = new THREE.Sprite(material);
+                // sprite.position.x = node.x * 4;
+                // sprite.position.y = node.y * 4;
+                // sprite.position.z = zCordScale(data.peels[peel]);
+                // scene.add(sprite);
+
+
             }
         })
     }
 })
+// test.add(circles[0].scale, 'x', 0, 3).name('Width').listen();
+d3.select('#nav').append('input').attr('type', 'range').attr('max', 10).attr('min', 0.1).attr('step', 0.01).on('input', updateRadius)
+d3.select('#nav').append('input').attr('type', 'range').attr('max', 3*zCordHeight).attr('min', 1).attr('step', 0.01).attr('value', zCordHeight).on('input', updateZPosition)
+d3.select('#nav').append('button').text('reset camera').on('click', resetOverviewCamera)
+
+function updateRadius() {
+    for (let c = 0; c < circles.length; c++) {
+        circles[c].scale.x = this.value
+        circles[c].scale.y = this.value
+        
+    }
+    console.log(circles[0])
+}
+
+function updateZPosition() {
+    zCordHeight = this.value
+    zCordScale.range([-zCordHeight, zCordHeight])
+
+    for (let c = 0; c < circles.length; c++) {
+        // zCordHeight = this.value
+        circles[c].position.z = zCordScale(circles[c].userData['peel'])
+    }
+}
+
+function resetOverviewCamera() {
+    camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
+    camera.lookAt([0, 0, 0])
+    controls.update();
+}
 
 function RGBtoHex(rgbColor) {
     var rgbColor = rgbColor.split("(")[1].split(")")[0];
@@ -128,11 +184,13 @@ function onDocumentMouseDown(event) {
 // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 // document.body.appendChild(stats.dom);
 
+
 var animate = function () {
     // stats.begin();
 
     requestAnimationFrame(animate);
     controls.update();
+    circles.map(x => x.lookAt( camera.position ));
     renderer.render(scene, camera);
 
     // stats.end();
