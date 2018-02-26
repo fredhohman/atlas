@@ -52,7 +52,7 @@ if __name__ == '__main__':
         for edge in decomposition.itertuples(name=None):
             # tuple(id, source, target, peel)
 
-            if edge[3] == peel:=
+            if edge[3] == peel:
                 graph['links'].append( { 'source': int(edge[1]), 'target': int(edge[2]), 'p': int(edge[3]) } )
                 temp_v_ids.add(edge[1])
                 temp_v_ids.add(edge[2])
