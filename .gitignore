@@ -3,3 +3,5 @@ node_modules/
 npm-debug.log
 data/
 notes.md
+data-processing/.ipynb_checkpoints/
+data-processing/debugging.ipynb
