@@ -67,7 +67,7 @@ d3.json(dataPathJSON, function(error, data) {
     var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
         return 'e: <span class="tooltip-number">' + d.edges + '</span></br>'
         + 'v: <span class="tooltip-number">' + d.vertices + '</span></br>'
-        + 'c: <span class="tooltip-number">' + Math.round(d.vertices * d.clones) + '</span>';
+        + 'c: <span class="tooltip-number">' + d.clones + '</span>';
     });
     ribbon.call(bulletTooltip)
 
@@ -75,7 +75,7 @@ d3.json(dataPathJSON, function(error, data) {
     // ribbon.call(bulletInnerTooltip)
 
     // // convert clone percentage to actual count
-    // var bulletTick = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return Math.round(d.vertices * d.clones); });
+    // var bulletTick = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.clones; });
     // ribbon.call(bulletTick)
 
     ribbon.selectAll('.bullet')
@@ -114,7 +114,7 @@ d3.json(dataPathJSON, function(error, data) {
           .attr('width', '2')
         .attr('y', function (d) { return y(d.peel) + (y.bandwidth() * (3/7) - tickOffset/2) })
            // convert clone percentage to actual count
-          .attr('x', function (d) { return x(Math.round(d.vertices * d.clones)) })
+          .attr('x', function (d) { return x(d.clones) })
           .attr('height', y.bandwidth()*(1/7) + tickOffset)
           .style('fill', '#444444')
         //   .style('stroke', '#ffffff')
@@ -129,7 +129,7 @@ d3.json(dataPathJSON, function(error, data) {
     //     .enter().append('circle')
     //     .attr('class', 'bullet-tick')
     //     .attr('r', 4)
-    //     .attr('cx', function(d) { return x(Math.round(d.vertices * d.clones))})
+    //     .attr('cx', function(d) { return x(d.clones)})
     //     .attr('cy', function(d) { return y(d.peel) + y.bandwidth()/2})
     //     .style('fill', '#444444')
 

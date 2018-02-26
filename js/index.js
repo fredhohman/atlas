@@ -11,7 +11,7 @@ export const dataPath = 'data/' + dataDirName + '/'
 export const dataPathJSON = 'data/' + dataDirName + '/' + dataDirName + '.json'
 
 export function dataPathLayerJSON(peel) {
-    return 'data/' + dataDirName + '/' + dataDirName + '-layer-' + peel + '-data.json'
+    return 'data/' + dataDirName + '/' + dataDirName + '-layer-' + peel + '.json'
 }
 export function imagePathLayerOrg(peel) {
     return 'data/' + dataDirName + '/images/' + 'layer' + peel + '.png'

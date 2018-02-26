@@ -137,7 +137,7 @@ export default function addCard(d) {
         .text('clones: ')
         .append('span')
         .attr('class', 'card-text-item-value')
-        .text(Math.round(d.vertices * d.clones))
+        .text(d.clones)
 
     cardText.append('span')
         .attr('class', 'card-text-item')
