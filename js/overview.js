@@ -15,7 +15,8 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
 var xCordScale = 2;
 var yCordScale = 2;
 var zCordHeight = 500;
-camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
+// camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
+camera.position.set(0, 0, zCordHeight);
 camera.lookAt(scene.position)
 
 var overview = document.getElementById('overview')
@@ -72,7 +73,7 @@ var lineMaterial = new THREE.LineBasicMaterial({
     color: 0xcccccc
 });
 
-var lineGeometry = new THREE.Geometry();
+// var lineGeometry = new THREE.Geometry();
 
 d3.json(dataPathJSON, function (error, data) {
 
@@ -103,7 +104,8 @@ d3.json(dataPathJSON, function (error, data) {
                 circle.position.x = node.x * xCordScale;
                 circle.position.y = node.y * yCordScale;
 
-                circle.position.z = zCordScale(data.peels[peel]);
+                // circle.position.z = zCordScale(data.peels[peel]);
+                circle.position.z = 1;
                 circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
                 circle.userData['id'] = node.id
                 circle.userData['peel'] = data.peels[peel]
@@ -125,21 +127,35 @@ d3.json(dataPathJSON, function (error, data) {
 
             }
 
-            // for (let j = 0; j < 10; j++) {
-            //     const link = layerData.links[j];
-            //     // console.log(link)
-            //     // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
-            //     var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
-            //     var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
 
-            //     lineGeometry.vertices.push(
-            //         new THREE.Vector3(foundNode1.x * xCordScale, foundNode1.y * yCordScale, zCordScale(data.peels[peel])),
-            //         new THREE.Vector3(foundNode2.x * xCordScale, foundNode2.y * yCordScale, zCordScale(data.peels[peel])),
-            //     );
+            const arrayToObject = (array, keyField) =>
+                array.reduce((obj, item) => {
+                    obj[item[keyField]] = item
+                    return obj
+                }, {})
+            const layerDataObject = arrayToObject(layerData.nodes, "id")
 
-            //     var line = new THREE.Line(lineGeometry, lineMaterial);
-            //     scene.add(line);               
+
+            // var lineGeometry = new THREE.Geometry();
+            // console.log(data.peels[peel])
+            // if (data.peels[peel] === 15 || data.peels[peel] === 12 || data.peels[peel] === 10) {
+            //     for (let j = 0; j < layerData.links.length; j++) {
+            //         const link = layerData.links[j];
+            //         // console.log(link)
+            //         // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
+            //         // var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
+            //         // var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
+
+            //         lineGeometry.vertices.push(
+            //             new THREE.Vector3(layerDataObject[link.source].x * xCordScale, layerDataObject[link.source].y * yCordScale, zCordScale(data.peels[peel])),
+            //             new THREE.Vector3(layerDataObject[link.target].x * xCordScale, layerDataObject[link.target].y * yCordScale, zCordScale(data.peels[peel])),
+            //         );
+
+            //         var line = new THREE.Line(lineGeometry, lineMaterial);
+            //         scene.add(line);
+            //     }
             // }
+
 
 
 
@@ -154,7 +170,7 @@ var heightSlider = d3.select('#nav')
                      .attr('max', 3*zCordHeight)
                      .attr('min', 1)
                      .attr('step', 0.01)
-                     .attr('value', zCordHeight)
+                     .attr('value', 1)
                      .on('input', updateZPosition)
 d3.select('#nav')
   .append('input')
@@ -168,10 +184,10 @@ d3.select('#nav')
   .append('button')
   .text('reset camera')
   .on('click', resetOverviewCamera)
-d3.select('#nav')
-  .append('button')
-  .text('animate graph')
-  .on('click', animateGraph)
+// d3.select('#nav')
+//   .append('button')
+//   .text('animate graph')
+//   .on('click', animateGraph)
 
 function updateRadius() {
     for (let c = 0; c < circles.length; c++) {
