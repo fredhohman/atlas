@@ -22,7 +22,10 @@ d3.json(dataPathJSON, function(error, data) {
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
     var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom
                      - document.getElementsByClassName('ribbon-title')[0].clientHeight - 20 
-                     // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
+                    // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
+    var ribbonHeight = 60*data.peels.length - ribbonMargin.top - ribbonMargin.bottom 
+
+    // responsive tests
     // var aspectRatio = '32:2';
     // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
 
@@ -31,12 +34,6 @@ d3.json(dataPathJSON, function(error, data) {
         .attr("height", ribbonHeight + ribbonMargin.top + ribbonMargin.bottom)
         .append("g")
         .attr("transform", "translate(" + ribbonMargin.left + "," + ribbonMargin.top + ")");
-
-    // background for debugging
-    // ribbon.append('rect')
-    //         .attr('width', ribbonWidth)
-    //         .attr('height', ribbonHeight)
-    //         .style('fill', '#eeeeee');
 
     var ribbonTextColor = '#222222'
     var x = d3.scaleLinear().range([0, ribbonWidth]);
