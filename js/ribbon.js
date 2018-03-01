@@ -36,10 +36,10 @@ d3.json(dataPathJSON, function(error, data) {
         .attr("transform", "translate(" + ribbonMargin.left + "," + ribbonMargin.top + ")");
 
     var ribbonTextColor = '#222222'
-    var x = d3.scaleLinear().range([0, ribbonWidth]);
+    var xLinear = d3.scaleLinear().range([0, ribbonWidth]);
     var y = d3.scaleBand().range([0.8*ribbonHeight, 0]).padding(0.3);
 
-    x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
+    xLinear.domain([0, d3.max(data.layers, function(d) { return d.edges })])
     // y.domain(data.layers.map(function (d) { return d.peel })) // no spaces in ribbon y-axis
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1)) // spaces in ribbon y-axis
     // color bullet by graph layer
@@ -79,7 +79,7 @@ d3.json(dataPathJSON, function(error, data) {
           .data(data.layers)
         .enter().append('rect')
           .attr('class', "bullet")
-          .attr('width', function (d) { return x(d.edges) })
+        .attr('width', function (d) { return xLinear(d.edges) })
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
         //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
@@ -92,7 +92,7 @@ d3.json(dataPathJSON, function(error, data) {
           .data(data.layers)
         .enter().append('rect')
           .attr('class', 'bullet-inner')
-          .attr('width', function(d) { return x(d.vertices) })
+        .attr('width', function (d) { return xLinear(d.vertices) })
           .attr('y', function(d) { return y(d.peel) + (y.bandwidth() * (6/13)) })
           .attr('height', y.bandwidth() * (1/13))
           .style('fill', '#444444')
@@ -111,7 +111,7 @@ d3.json(dataPathJSON, function(error, data) {
           .attr('width', '2')
         .attr('y', function (d) { return y(d.peel) + (y.bandwidth() * (3/7) - tickOffset/2) })
            // convert clone percentage to actual count
-          .attr('x', function (d) { return x(d.clones) })
+        .attr('x', function (d) { return xLinear(d.clones) })
           .attr('height', y.bandwidth()*(1/7) + tickOffset)
           .style('fill', '#444444')
         //   .style('stroke', '#ffffff')
@@ -126,14 +126,14 @@ d3.json(dataPathJSON, function(error, data) {
     //     .enter().append('circle')
     //     .attr('class', 'bullet-tick')
     //     .attr('r', 4)
-    //     .attr('cx', function(d) { return x(d.clones)})
+    //     .attr('cx', function(d) { return xLinear(d.clones)})
     //     .attr('cy', function(d) { return y(d.peel) + y.bandwidth()/2})
     //     .style('fill', '#444444')
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
           .attr('class', 'x-axis')
-          .call(d3.axisTop(x).ticks(3))
+        .call(d3.axisTop(xLinear).ticks(3))
 
     // ribbon.append("text")
     //       .attr("transform", "translate(" + ((ribbonWidth/ 2)) + " ," + (-1 * ribbonMargin.top/2) + ")")
