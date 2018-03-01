@@ -166,9 +166,6 @@ d3.json(dataPathJSON, function (error, data) {
 
 // overview header sliders
 d3.select('#overview-header-size')
-//   .append('input')
-//   .attr('type', 'range')
-//   .attr('class', 'overview-slider')
   .attr('max', 10)
   .attr('min', 0.1)
   .attr('step', 0.01)
@@ -176,36 +173,22 @@ d3.select('#overview-header-size')
   .on('input', updateRadius)
 
 var heightSlider = d3.select('#overview-slider-height')
-                    //  .append('input')
-                    //  .attr('type', 'range')
-                    //  .attr('class', 'overview-slider')
                      .attr('max', 3*zCordHeight)
                      .attr('min', 1)
                      .attr('step', 0.01)
                      .attr('value', 1)
                      .on('input', updateZPosition)
 
-d3.select('#overview-header-spread')
-//   .append('input')
-//   .attr('type', 'range')
-//   .attr('class', 'overview-slider')
+d3.select('#overview-slider-spread')
   .attr('max', 5)
   .attr('min', 0)
   .attr('step', 0.01)
   .attr('value', xCordScale)
   .on('input', updateXPosition)
 
-d3.select('#overview-header')
-  .append('button')
-    .attr('id', 'reset-camera-button')
+d3.select('#reset-camera-button')
     .on('click', resetOverviewCamera)
-    .html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px;">Reset</span>')
-    // .html('<i class="material-icons md-24 ">videocam</i>')
-    
-
-
-    // < div class="demo" > <button class="rkmd-btn btn-lightBlue"><i class="material-icons">cloud_upload</i>Button</button></div >
-
+    .html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px;">Reset</span>')   
 
 // d3.select('#overview-header')
 //   .append('button')
