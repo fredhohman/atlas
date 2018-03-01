@@ -37,9 +37,11 @@ d3.json(dataPathJSON, function(error, data) {
 
     var ribbonTextColor = '#222222'
     var xLinear = d3.scaleLinear().range([0, ribbonWidth]);
+    var xLog = d3.scaleLog().range([0, ribbonWidth])
     var y = d3.scaleBand().range([0.8*ribbonHeight, 0]).padding(0.3);
 
     xLinear.domain([0, d3.max(data.layers, function(d) { return d.edges })])
+    xLog.domain([1, d3.max(data.layers, function (d) { return d.edges })])
     // y.domain(data.layers.map(function (d) { return d.peel })) // no spaces in ribbon y-axis
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1)) // spaces in ribbon y-axis
     // color bullet by graph layer
@@ -287,6 +289,20 @@ d3.json(dataPathJSON, function(error, data) {
                     d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorClustering(d.clustering) })
                 } else {
                     d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorPeel(d.peel) })
+                }
+                break;
+
+            case 'log':
+                if (clickedCheckboxBoolean) {
+                    d3.selectAll('.bullet').transition().duration(1000).attr('width', function (d) { return xLog(d.edges) })
+                    d3.selectAll('.bullet-inner').transition().duration(1000).attr('width', function (d) { return xLog(d.vertices) })
+                    d3.selectAll('.bullet-tick').transition().duration(1000).attr('x', function (d) { return xLog(d.clones) })
+                    d3.select('.x-axis').transition().duration(1000).call(d3.axisTop(xLog).ticks(2))
+                } else {
+                    d3.selectAll('.bullet').transition().duration(1000).attr('width', function (d) { return xLinear(d.edges) })
+                    d3.selectAll('.bullet-inner').transition().duration(1000).attr('width', function (d) { return xLinear(d.vertices) })
+                    d3.selectAll('.bullet-tick').transition().duration(1000).attr('x', function (d) { return xLinear(d.clones) })
+                    d3.select('.x-axis').transition().duration(1000).call(d3.axisTop(xLinear).ticks(3))
                 }
                 break;
 
