@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <!-- <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" /> -->
   <link rel="stylesheet" href="css/style.css">
+  <!-- <link rel="stylesheet" href="css/buttons"> -->
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -20,9 +21,52 @@
     <header id="header">
       <div id="header-text"><span id="header-text-span">Graph Playground</span></div>
     </header>
+          <!-- <nav id=nav>
+            <div id="graph-data-wrapper">
+              <h1 id="graph-name">
+                Bible
+              </h1>
+              <div id="vertices">
+                vertices:
+                <span id="vertices-value">N/A</span>
+              </div>
+              <div id="edges">
+                edges:
+                <span id="edges-value">N/A</span>
+              </div>
+            </div>
+            <div id="graph-description">
+              No description available.
+            </div>
+          </nav> -->
     <div id=middle>
         <div id="glass"></div>
         <div id="overview">
+          <div id="overview-header">
+                        <div id="graph-data-wrapper">
+                          <div id="graph-name-wrapper">
+                            <h1 id="graph-name">Graph Name</h1>
+                          </div>
+                          <div id="vertices">
+                            vertices:
+                            <span id="vertices-value">N/A</span>
+                          </div>
+                          <div id="edges">
+                            edges:
+                            <span id="edges-value">N/A</span>
+                          </div>
+                        </div>
+                        <input type="range" class="overview-slider" id="overview-header-size">
+                        <input type="range" class="overview-slider" id="overview-slider-height">
+                        <input type="range" class="overview-slider" id="overview-slider-spread">
+
+                        <!-- <div id="graph-description">
+                          No description available.
+                        </div> -->
+          </div>
+          <div id="overview-canvas-wrapper">
+
+          </div>
           <!-- <h2>Overview</h2> -->
           
         </div>
@@ -63,24 +107,6 @@
           </div>
         </div>
       </div>
-      <nav id=nav>
-        <div id="graph-data-wrapper">
-          <h1 id="graph-name">
-            Bible
-          </h1>
-          <div id="vertices">
-            vertices:
-            <span id="vertices-value">N/A</span>
-          </div>
-          <div id="edges">
-            edges:
-            <span id="edges-value">N/A</span>
-          </div>
-        </div>
-        <div id="graph-description">
-          No description available.
-        </div>
-      </nav>
     <!-- <footer id="footer">Footer</footer> -->
   </div>
 

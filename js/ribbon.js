@@ -37,7 +37,7 @@ d3.json(dataPathJSON, function(error, data) {
 
     var ribbonTextColor = '#222222'
     var x = d3.scaleLinear().range([0, ribbonWidth]);
-    var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.5);
+    var y = d3.scaleBand().range([0.8*ribbonHeight, 0]).padding(0.3);
 
     x.domain([0, d3.max(data.layers, function(d) { return d.edges })])
     // y.domain(data.layers.map(function (d) { return d.peel })) // no spaces in ribbon y-axis

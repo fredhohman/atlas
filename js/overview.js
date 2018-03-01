@@ -6,6 +6,7 @@ var TrackballControls = require('three-trackballcontrols');
 // var Projector = require('three.js-projector');
 import { dataPathJSON, dataPathLayerJSON } from './index.js'
 import { GUI } from 'dat.gui/build/dat.gui.js'
+import * as $ from 'jquery';
 
 console.log('overview.js loaded')
 
@@ -19,11 +20,11 @@ var zCordHeight = 500;
 camera.position.set(0, 0, zCordHeight);
 camera.lookAt(scene.position)
 
-var overview = document.getElementById('overview')
+var overview = document.getElementById('overview-canvas-wrapper')
 var renderer = new THREE.WebGLRenderer();
 camera.aspect = overview.clientWidth / overview.clientHeight;
 camera.updateProjectionMatrix();
-renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 0);
+renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 0 - document.getElementById('overview-header').clientHeight);
 overview.appendChild(renderer.domElement);
 
 window.addEventListener('resize', onWindowResize, false);
@@ -32,7 +33,7 @@ window.addEventListener('ribbonDragEnd', onWindowResize, false)
 function onWindowResize() {
     camera.aspect = overview.clientWidth / overview.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 0 - 0);
+    renderer.setSize(overview.clientWidth - 0, overview.clientHeight - document.getElementById('overview-header').clientHeight - 0);
 }
 
 
@@ -163,28 +164,50 @@ d3.json(dataPathJSON, function (error, data) {
     }
 })
 
-d3.select('#nav').append('input').attr('type', 'range').attr('max', 10).attr('min', 0.1).attr('step', 0.01).attr('value', 1).on('input', updateRadius)
-var heightSlider = d3.select('#nav')
-                     .append('input')
-                     .attr('type', 'range')
+// overview header sliders
+d3.select('#overview-header-size')
+//   .append('input')
+//   .attr('type', 'range')
+//   .attr('class', 'overview-slider')
+  .attr('max', 10)
+  .attr('min', 0.1)
+  .attr('step', 0.01)
+  .attr('value', 1)
+  .on('input', updateRadius)
+
+var heightSlider = d3.select('#overview-slider-height')
+                    //  .append('input')
+                    //  .attr('type', 'range')
+                    //  .attr('class', 'overview-slider')
                      .attr('max', 3*zCordHeight)
                      .attr('min', 1)
                      .attr('step', 0.01)
                      .attr('value', 1)
                      .on('input', updateZPosition)
-d3.select('#nav')
-  .append('input')
-  .attr('type', 'range')
+
+d3.select('#overview-header-spread')
+//   .append('input')
+//   .attr('type', 'range')
+//   .attr('class', 'overview-slider')
   .attr('max', 5)
   .attr('min', 0)
   .attr('step', 0.01)
   .attr('value', xCordScale)
   .on('input', updateXPosition)
-d3.select('#nav')
+
+d3.select('#overview-header')
   .append('button')
-  .text('reset camera')
-  .on('click', resetOverviewCamera)
-// d3.select('#nav')
+    .attr('id', 'reset-camera-button')
+    .on('click', resetOverviewCamera)
+    .html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px;">Reset</span>')
+    // .html('<i class="material-icons md-24 ">videocam</i>')
+    
+
+
+    // < div class="demo" > <button class="rkmd-btn btn-lightBlue"><i class="material-icons">cloud_upload</i>Button</button></div >
+
+
+// d3.select('#overview-header')
 //   .append('button')
 //   .text('animate graph')
 //   .on('click', animateGraph)
@@ -276,3 +299,4 @@ var animate = function () {
 };
 
 animate();
+
