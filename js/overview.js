@@ -13,8 +13,8 @@ console.log('overview.js loaded')
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-var xCordScale = 2;
-var yCordScale = 2;
+var xCordScaleConst = 1;
+var yCordScaleConst = 1;
 var zCordHeight = 500;
 // camera.position.set(0, -1.5 * zCordHeight, 1.5 * zCordHeight);
 camera.position.set(0, 0, zCordHeight);
@@ -68,7 +68,7 @@ var circles = [];
 // console.log(circles)
 // console.log(circles.length)
 
-var zCordScale;
+var xCordScale, yCordScale, zCordScale;
 
 var lineMaterial = new THREE.LineBasicMaterial({
     color: 0xcccccc
@@ -83,6 +83,14 @@ d3.json(dataPathJSON, function (error, data) {
     }
 
     for (let peel = 0; peel < data.peels.length; peel++) {
+
+        // xCordScale = d3.scaleLinear()
+        //     // .domain([0,1000])
+        //     .range([0, 1000])
+
+        // yCordScale = d3.scaleLinear()
+        //     // .domain([0,1000])
+        //     .range([0, 1000])
 
         zCordScale = d3.scaleLinear()
             .domain(d3.extent(data.peels))
@@ -102,8 +110,18 @@ d3.json(dataPathJSON, function (error, data) {
 
                 var circle = new THREE.Mesh(geometry, material);
 
-                circle.position.x = node.x * xCordScale;
-                circle.position.y = node.y * yCordScale;
+                // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                //     return (item.x);
+                // })))
+
+                // yCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                //     return (item.y);
+                // })))
+
+                circle.position.x = node.x * xCordScaleConst;
+                // circle.position.x = xCordScale(node.x);
+                circle.position.y = node.y * xCordScaleConst;
+                // circle.position.y = yCordScale(node.y);
 
                 // circle.position.z = zCordScale(data.peels[peel]);
                 circle.position.z = 1;
@@ -148,8 +166,8 @@ d3.json(dataPathJSON, function (error, data) {
             //         // var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
 
             //         lineGeometry.vertices.push(
-            //             new THREE.Vector3(layerDataObject[link.source].x * xCordScale, layerDataObject[link.source].y * yCordScale, zCordScale(data.peels[peel])),
-            //             new THREE.Vector3(layerDataObject[link.target].x * xCordScale, layerDataObject[link.target].y * yCordScale, zCordScale(data.peels[peel])),
+            //             new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[peel])),
+            //             new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[peel])),
             //         );
 
             //         var line = new THREE.Line(lineGeometry, lineMaterial);
@@ -180,10 +198,10 @@ var heightSlider = d3.select('#overview-slider-height')
                      .on('input', updateZPosition)
 
 d3.select('#overview-slider-spread')
-  .attr('max', 5)
+  .attr('max', 2)
   .attr('min', 0)
   .attr('step', 0.01)
-  .attr('value', xCordScale)
+  .attr('value', 1)
   .on('input', updateXPosition)
 
 d3.select('#reset-camera-button')
