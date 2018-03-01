@@ -157,7 +157,7 @@ d3.json(dataPathJSON, function (error, data) {
 
             // var lineGeometry = new THREE.Geometry();
             // console.log(data.peels[peel])
-            // if (data.peels[peel] === 15 || data.peels[peel] === 12 || data.peels[peel] === 10) {
+            // // if (data.peels[peel] === 15 || data.peels[peel] === 12 || data.peels[peel] === 10) {
             //     for (let j = 0; j < layerData.links.length; j++) {
             //         const link = layerData.links[j];
             //         // console.log(link)
@@ -173,7 +173,7 @@ d3.json(dataPathJSON, function (error, data) {
             //         var line = new THREE.Line(lineGeometry, lineMaterial);
             //         scene.add(line);
             //     }
-            // }
+            // // }
 
 
 
