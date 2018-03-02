@@ -309,6 +309,11 @@ d3.select('#add-all-3d-layers')
     // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Draw All</span>')  
     .html('<i class="material-icons md-24 ">add</i>')  
 
+d3.select('#remove-all-3d-layers')
+    .on('click', removeAll3DPoints)
+    // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Draw All</span>')  
+    .html('<i class="material-icons md-24 ">remove</i>')  
+
 // d3.select('#overview-header')
 //   .append('button')
 //   .text('animate graph')
@@ -343,6 +348,12 @@ function updateXPosition() {
 
 function resetOverviewCamera() {
     controls.reset();
+}
+
+function removeAll3DPoints() {
+    for (let c = 0; c < circles.length; c++) {
+        scene.remove(circles[c])
+    }
 }
 
 function animateGraph() {
