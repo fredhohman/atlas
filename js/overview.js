@@ -24,7 +24,7 @@ var overview = document.getElementById('overview-canvas-wrapper')
 var renderer = new THREE.WebGLRenderer();
 camera.aspect = overview.clientWidth / overview.clientHeight;
 camera.updateProjectionMatrix();
-renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 0 - document.getElementById('overview-header').clientHeight);
+renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 2); // -2 is a bit hacky
 overview.appendChild(renderer.domElement);
 
 window.addEventListener('resize', onWindowResize, false);
@@ -33,32 +33,14 @@ window.addEventListener('ribbonDragEnd', onWindowResize, false)
 function onWindowResize() {
     camera.aspect = overview.clientWidth / overview.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(overview.clientWidth - 0, overview.clientHeight - document.getElementById('overview-header').clientHeight - 0);
+    renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 2); // -2 is a bit hacky
 }
-
 
 var controls = new TrackballControls(camera, renderer.domElement);
 controls.rotateSpeed = 4;
 controls.dampingFactor = 0.1;
 
 var geometry = new THREE.CircleBufferGeometry(2, 20);
-
-// random circles
-// var size = 500;
-// var numOfCircles = 10000
-
-// for ( i = 0; i < numOfCircles; i++ ) {
-//     var material = new THREE.MeshBasicMaterial( );
-//     material.side = THREE.DoubleSide;
-
-//     var circle = new THREE.Mesh( geometry, material );
-//     circle.position.x = Math.random() * size - size/2;
-//     circle.position.y = Math.random() * size - size/2;
-//     circle.position.z = Math.random() * size - size/2;
-//     // circle.lookAt( camera.position );
-//     circle.material.color.setHex('0xffffff')
-//     scene.add( circle );
-// }
 
 var circles = [];
 
