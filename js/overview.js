@@ -58,111 +58,225 @@ var lineMaterial = new THREE.LineBasicMaterial({
 
 // var lineGeometry = new THREE.Geometry();
 
-d3.json(dataPathJSON, function (error, data) {
+function drawAll3DPoints() {
+    d3.json(dataPathJSON, function (error, data) {
 
-    if (error) {
-        return console.error(error);
-    }
+        if (error) {
+            return console.error(error);
+        }
 
-    for (let peel = 0; peel < data.peels.length; peel++) {
+        for (let peel = 0; peel < data.peels.length; peel++) {
 
-        // xCordScale = d3.scaleLinear()
-        //     // .domain([0,1000])
-        //     .range([0, 1000])
+            // xCordScale = d3.scaleLinear()
+            //     // .domain([0,1000])
+            //     .range([0, 1000])
 
-        // yCordScale = d3.scaleLinear()
-        //     // .domain([0,1000])
-        //     .range([0, 1000])
+            // yCordScale = d3.scaleLinear()
+            //     // .domain([0,1000])
+            //     .range([0, 1000])
 
-        zCordScale = d3.scaleLinear()
-            .domain(d3.extent(data.peels))
-            .range([-zCordHeight, zCordHeight])
-        window.zCordScale = zCordScale
-
-
-        console.log('peel', data.peels[peel])
-
-        d3.json(dataPathLayerJSON(data.peels[peel]), function (error, layerData) {
-
-            for (let i = 0; i < layerData.nodes.length; i++) {
-                const node = layerData.nodes[i];
-
-                var material = new THREE.MeshBasicMaterial();
-                material.side = THREE.DoubleSide;
-
-                var circle = new THREE.Mesh(geometry, material);
-
-                // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
-                //     return (item.x);
-                // })))
-
-                // yCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
-                //     return (item.y);
-                // })))
-
-                circle.position.x = node.x * xCordScaleConst;
-                // circle.position.x = xCordScale(node.x);
-                circle.position.y = node.y * xCordScaleConst;
-                // circle.position.y = yCordScale(node.y);
-
-                // circle.position.z = zCordScale(data.peels[peel]);
-                circle.position.z = 1;
-                circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
-                circle.userData['id'] = node.id
-                circle.userData['peel'] = data.peels[peel]
-                circle.userData['x'] = node.x
-                circle.userData['y'] = node.y
-                scene.add(circle);
-                circles.push(circle)
+            zCordScale = d3.scaleLinear()
+                .domain(d3.extent(data.peels))
+                .range([-zCordHeight, zCordHeight])
+            window.zCordScale = zCordScale
 
 
-                // var map = new THREE.TextureLoader("sprite.png");
-                // // console.log(map)
-                // var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
-                // var sprite = new THREE.Sprite(material);
-                // sprite.position.x = node.x * 4;
-                // sprite.position.y = node.y * 4;
-                // sprite.position.z = zCordScale(data.peels[peel]);
-                // scene.add(sprite);
+            console.log('peel', data.peels[peel])
+
+            d3.json(dataPathLayerJSON(data.peels[peel]), function (error, layerData) {
+
+                for (let i = 0; i < layerData.nodes.length; i++) {
+                    const node = layerData.nodes[i];
+
+                    var material = new THREE.MeshBasicMaterial();
+                    material.side = THREE.DoubleSide;
+
+                    var circle = new THREE.Mesh(geometry, material);
+
+                    // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                    //     return (item.x);
+                    // })))
+
+                    // yCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                    //     return (item.y);
+                    // })))
+
+                    circle.position.x = node.x * xCordScaleConst;
+                    // circle.position.x = xCordScale(node.x);
+                    circle.position.y = node.y * xCordScaleConst;
+                    // circle.position.y = yCordScale(node.y);
+
+                    // circle.position.z = zCordScale(data.peels[peel]);
+                    circle.position.z = 1;
+                    circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
+                    circle.userData['id'] = node.id
+                    circle.userData['peel'] = data.peels[peel]
+                    circle.userData['x'] = node.x
+                    circle.userData['y'] = node.y
+                    scene.add(circle);
+                    circles.push(circle)
 
 
-            }
+                    // var map = new THREE.TextureLoader("sprite.png");
+                    // // console.log(map)
+                    // var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
+                    // var sprite = new THREE.Sprite(material);
+                    // sprite.position.x = node.x * 4;
+                    // sprite.position.y = node.y * 4;
+                    // sprite.position.z = zCordScale(data.peels[peel]);
+                    // scene.add(sprite);
 
 
-            const arrayToObject = (array, keyField) =>
-                array.reduce((obj, item) => {
-                    obj[item[keyField]] = item
-                    return obj
-                }, {})
-            const layerDataObject = arrayToObject(layerData.nodes, "id")
+                }
 
 
-            // var lineGeometry = new THREE.Geometry();
-            // console.log(data.peels[peel])
-            // // if (data.peels[peel] === 15 || data.peels[peel] === 12 || data.peels[peel] === 10) {
-            //     for (let j = 0; j < layerData.links.length; j++) {
-            //         const link = layerData.links[j];
-            //         // console.log(link)
-            //         // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
-            //         // var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
-            //         // var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
-
-            //         lineGeometry.vertices.push(
-            //             new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[peel])),
-            //             new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[peel])),
-            //         );
-
-            //         var line = new THREE.Line(lineGeometry, lineMaterial);
-            //         scene.add(line);
-            //     }
-            // // }
+                const arrayToObject = (array, keyField) =>
+                    array.reduce((obj, item) => {
+                        obj[item[keyField]] = item
+                        return obj
+                    }, {})
+                const layerDataObject = arrayToObject(layerData.nodes, "id")
 
 
+                // var lineGeometry = new THREE.Geometry();
+                // console.log(data.peels[peel])
+                // // if (data.peels[peel] === 15 || data.peels[peel] === 12 || data.peels[peel] === 10) {
+                //     for (let j = 0; j < layerData.links.length; j++) {
+                //         const link = layerData.links[j];
+                //         // console.log(link)
+                //         // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
+                //         // var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
+                //         // var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
+
+                //         lineGeometry.vertices.push(
+                //             new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[peel])),
+                //             new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[peel])),
+                //         );
+
+                //         var line = new THREE.Line(lineGeometry, lineMaterial);
+                //         scene.add(line);
+                //     }
+                // // }
 
 
-        })
-    }
-})
+
+
+            })
+        }
+    })
+}
+// drawAll3DPoints()
+
+export function drawLayer3DPoints(layerNum) {
+    console.log('drawing layer ' + layerNum + ' 3D points'
+)
+    d3.json(dataPathJSON, function (error, data) {
+
+        if (error) {
+            return console.error(error);
+        }
+
+        // for (let peel = 0; peel < data.peels.length; peel++) {
+
+            // xCordScale = d3.scaleLinear()
+            //     // .domain([0,1000])
+            //     .range([0, 1000])
+
+            // yCordScale = d3.scaleLinear()
+            //     // .domain([0,1000])
+            //     .range([0, 1000])
+
+            zCordScale = d3.scaleLinear()
+                .domain(d3.extent(data.peels))
+                .range([-zCordHeight, zCordHeight])
+            window.zCordScale = zCordScale
+
+        var layerNumIndex = data.peels.indexOf(layerNum)
+        console.log('peel', data.peels[layerNumIndex])
+
+        d3.json(dataPathLayerJSON(data.peels[layerNumIndex]), function (error, layerData) {
+
+                for (let i = 0; i < layerData.nodes.length; i++) {
+                    const node = layerData.nodes[i];
+
+                    var material = new THREE.MeshBasicMaterial();
+                    material.side = THREE.DoubleSide;
+
+                    var circle = new THREE.Mesh(geometry, material);
+
+                    // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                    //     return (item.x);
+                    // })))
+
+                    // yCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                    //     return (item.y);
+                    // })))
+
+                    circle.position.x = node.x * xCordScaleConst;
+                    // circle.position.x = xCordScale(node.x);
+                    circle.position.y = node.y * xCordScaleConst;
+                    // circle.position.y = yCordScale(node.y);
+
+                    // circle.position.z = zCordScale(data.peels[peel]);
+                    circle.position.z = 1;
+                    circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[layerNumIndex])))
+                    circle.userData['id'] = node.id
+                    circle.userData['peel'] = data.peels[layerNumIndex]
+                    circle.userData['x'] = node.x
+                    circle.userData['y'] = node.y
+                    scene.add(circle);
+                    circles.push(circle)
+
+
+                    // var map = new THREE.TextureLoader("sprite.png");
+                    // // console.log(map)
+                    // var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
+                    // var sprite = new THREE.Sprite(material);
+                    // sprite.position.x = node.x * 4;
+                    // sprite.position.y = node.y * 4;
+                    // sprite.position.z = zCordScale(data.peels[peel]);
+                    // scene.add(sprite);
+
+
+                }
+
+
+                const arrayToObject = (array, keyField) =>
+                    array.reduce((obj, item) => {
+                        obj[item[keyField]] = item
+                        return obj
+                    }, {})
+                const layerDataObject = arrayToObject(layerData.nodes, "id")
+
+
+                // var lineGeometry = new THREE.Geometry();
+                // console.log(data.peels[layerNumIndex])
+                // // if (data.peels[layerNumIndex] === 15 || data.peels[layerNumIndex] === 12 || data.peels[layerNumIndex] === 10) {
+                //     for (let j = 0; j < layerData.links.length; j++) {
+                //         const link = layerData.links[j];
+                //         // console.log(link)
+                //         // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
+                //         // var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
+                //         // var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
+
+                //         lineGeometry.vertices.push(
+                //             new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[peel])),
+                //             new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[peel])),
+                //         );
+
+                //         var line = new THREE.Line(lineGeometry, lineMaterial);
+                //         scene.add(line);
+                //     }
+                // // }
+
+
+
+
+            })
+        // }
+    })
+}
+// drawLayer3DPoints(15)
 
 // overview header sliders
 d3.select('#overview-header-size')
@@ -244,6 +358,11 @@ function RGBtoHex(rgbColor) {
     hexColor = "0x" + hexColor.join("");
     return hexColor
 }
+
+
+
+
+
 
 
 // projector = new Projector.Projector();

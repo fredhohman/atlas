@@ -3,10 +3,23 @@ import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
 import addCard from './card.js';
 import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground, ribbonColorPeel } from './index.js'
-// import { onWindowResize } from './overview.js'
+import { drawLayer3DPoints } from './overview.js'
 
 // draggable ribbon 
 console.log('draggable-ribbon')
+
+// window.onclick = function (e) {
+//     if (!e) e = window.event;
+//     if (e.shiftKey) {/*shift is down*/console.log('shift is down')}
+//     if (e.altKey) {/*alt is down*/ }
+//     if (e.ctrlKey) {/*ctrl is down*/ }
+//     if (e.metaKey) {/*cmd is down*/ }
+// }
+
+var keysDownOrUp = {};
+window.onkeyup = function (e) { keysDownOrUp[e.keyCode] = false; }
+window.onkeydown = function (e) { keysDownOrUp[e.keyCode] = true; }
+window.keysDownOrUp = keysDownOrUp
 
 d3.json(dataPathJSON, function(error, data) {
 
@@ -156,17 +169,24 @@ d3.json(dataPathJSON, function(error, data) {
 
     d3.select('.y-axis').selectAll(".tick text")
         .on("click", function (d, i) {
-            console.log('tick clicked', d, i)
+            if (keysDownOrUp[91] || keysDownOrUp[93]) { 
+                // command key down add to 3D
+                console.log('tick dbl clicked', d, i)
+                console.log(keysDownOrUp)
+                drawLayer3DPoints(d);
+            } else {
+                // add 2D card
+                console.log('tick clicked', d, i)
+                var obj = data.layers.find(function (obj) { return obj.peel === d; });
+                addCard(obj);
+            }
 
-            // d3.select(this).style('fill', 'red')
-            var obj = data.layers.find(function (obj) { return obj.peel === d; });
-            addCard(obj);
         })
-        .on('mouseover', function (d) {
-            var obj = data.layers.find(function (obj) { return obj.peel === d; });
-            showLayerInOverview(obj)
-        })
-        .on("mouseout", hideLayerInOverview())
+        // .on('mouseover', function (d) {
+        //     var obj = data.layers.find(function (obj) { return obj.peel === d; });
+        //     showLayerInOverview(obj)
+        // })
+        // .on("mouseout", hideLayerInOverview())
 
     var componentsData = {}
     for (const layer in data.layers) {
