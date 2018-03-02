@@ -58,115 +58,6 @@ var lineMaterial = new THREE.LineBasicMaterial({
 
 // var lineGeometry = new THREE.Geometry();
 
-function drawAll3DPoints() {
-    d3.json(dataPathJSON, function (error, data) {
-
-        if (error) {
-            return console.error(error);
-        }
-
-        for (let peel = 0; peel < data.peels.length; peel++) {
-
-            // xCordScale = d3.scaleLinear()
-            //     // .domain([0,1000])
-            //     .range([0, 1000])
-
-            // yCordScale = d3.scaleLinear()
-            //     // .domain([0,1000])
-            //     .range([0, 1000])
-
-            zCordScale = d3.scaleLinear()
-                .domain(d3.extent(data.peels))
-                .range([-zCordHeight, zCordHeight])
-            window.zCordScale = zCordScale
-
-
-            console.log('peel', data.peels[peel])
-
-            d3.json(dataPathLayerJSON(data.peels[peel]), function (error, layerData) {
-
-                for (let i = 0; i < layerData.nodes.length; i++) {
-                    const node = layerData.nodes[i];
-
-                    var material = new THREE.MeshBasicMaterial();
-                    material.side = THREE.DoubleSide;
-
-                    var circle = new THREE.Mesh(geometry, material);
-
-                    // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
-                    //     return (item.x);
-                    // })))
-
-                    // yCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
-                    //     return (item.y);
-                    // })))
-
-                    circle.position.x = node.x * xCordScaleConst;
-                    // circle.position.x = xCordScale(node.x);
-                    circle.position.y = node.y * xCordScaleConst;
-                    // circle.position.y = yCordScale(node.y);
-
-                    // circle.position.z = zCordScale(data.peels[peel]);
-                    circle.position.z = 1;
-                    circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[peel])))
-                    circle.userData['id'] = node.id
-                    circle.userData['peel'] = data.peels[peel]
-                    circle.userData['x'] = node.x
-                    circle.userData['y'] = node.y
-                    scene.add(circle);
-                    circles.push(circle)
-
-
-                    // var map = new THREE.TextureLoader("sprite.png");
-                    // // console.log(map)
-                    // var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
-                    // var sprite = new THREE.Sprite(material);
-                    // sprite.position.x = node.x * 4;
-                    // sprite.position.y = node.y * 4;
-                    // sprite.position.z = zCordScale(data.peels[peel]);
-                    // scene.add(sprite);
-
-
-                }
-
-
-                const arrayToObject = (array, keyField) =>
-                    array.reduce((obj, item) => {
-                        obj[item[keyField]] = item
-                        return obj
-                    }, {})
-                const layerDataObject = arrayToObject(layerData.nodes, "id")
-
-
-                // var lineGeometry = new THREE.Geometry();
-                // console.log(data.peels[peel])
-                // // if (data.peels[peel] === 15 || data.peels[peel] === 12 || data.peels[peel] === 10) {
-                //     for (let j = 0; j < layerData.links.length; j++) {
-                //         const link = layerData.links[j];
-                //         // console.log(link)
-                //         // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
-                //         // var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
-                //         // var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
-
-                //         lineGeometry.vertices.push(
-                //             new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[peel])),
-                //             new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[peel])),
-                //         );
-
-                //         var line = new THREE.Line(lineGeometry, lineMaterial);
-                //         scene.add(line);
-                //     }
-                // // }
-
-
-
-
-            })
-        }
-    })
-}
-// drawAll3DPoints()
-
 export function drawLayer3DPoints(layerNum) {
     console.log('drawing layer ' + layerNum + ' 3D points'
 )
@@ -285,6 +176,23 @@ export function drawLayer3DPoints(layerNum) {
     })
 }
 
+export function drawAll3DPointsWithLayers() {
+    d3.json(dataPathJSON, function (error, data) {
+
+        if (error) {
+            return console.error(error);
+        }
+
+        for (let peel = 0; peel < data.peels.length; peel++) {
+
+            console.log('peel', data.peels[peel])
+            drawLayer3DPoints(data.peels[peel])
+
+        }
+    })
+}
+
+
 // overview header sliders
 d3.select('#overview-slider-size')
   .attr('max', 10)
@@ -313,7 +221,7 @@ d3.select('#reset-camera-button')
     .html('<i class="material-icons md-24 ">videocam</i>')
 
 d3.select('#add-all-3d-layers')
-    .on('click', drawAll3DPoints)
+    .on('click', drawAll3DPointsWithLayers)
     // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Draw All</span>')  
     .html('<i class="material-icons md-24 ">add</i>')  
 
@@ -350,7 +258,6 @@ function updateXPosition() {
     for (let c = 0; c < circles.length; c++) {
         circles[c].position.x = circles[c].userData['x'] * this.value
         circles[c].position.y = circles[c].userData['y'] * this.value
-        
     }
 }
 
@@ -382,8 +289,6 @@ function RGBtoHex(rgbColor) {
     hexColor = "0x" + hexColor.join("");
     return hexColor
 }
-
-
 
 
 
@@ -425,4 +330,3 @@ var animate = function () {
 };
 
 animate();
-

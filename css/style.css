@@ -93,7 +93,7 @@ html, body {
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 20px;
-    padding-bottom: 0px;
+    padding-bottom: 5px;
     /* background-color: #fafafa; */
     color: #212121;
     /* border-bottom: 1px solid rgba(0,0,0,.14); */
@@ -755,8 +755,6 @@ canvas {
     border-radius: 10px;
 } */
 
-
-
 #overview-slider-wrapper {
     display: flex;
     flex-flow: row;
@@ -776,8 +774,6 @@ canvas {
     text-transform: uppercase;
     letter-spacing: .8px;
 }
-
-
 
 .overview-header-button {
     background-color: var(--lighter);
