@@ -10,6 +10,9 @@ import * as $ from 'jquery';
 
 console.log('overview.js loaded')
 
+export var layersUp3D = {};
+window.layersUp3D = layersUp3D;
+
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -59,8 +62,9 @@ var lineMaterial = new THREE.LineBasicMaterial({
 // var lineGeometry = new THREE.Geometry();
 
 export function drawLayer3DPoints(layerNum) {
-    console.log('drawing layer ' + layerNum + ' 3D points'
-)
+    console.log('drawing layer ' + layerNum + ' 3D points')
+    layersUp3D[layerNum] = 'up'
+
     d3.json(dataPathJSON, function (error, data) {
 
         if (error) {
@@ -83,7 +87,7 @@ export function drawLayer3DPoints(layerNum) {
             window.zCordScale = zCordScale
 
         var layerNumIndex = data.peels.indexOf(layerNum)
-        console.log('peel', data.peels[layerNumIndex])
+        // console.log('peel', data.peels[layerNumIndex])
 
         d3.json(dataPathLayerJSON(data.peels[layerNumIndex]), function (error, layerData) {
 
@@ -177,6 +181,7 @@ export function drawLayer3DPoints(layerNum) {
 }
 
 export function drawAll3DPointsWithLayers() {
+    console.log('drawing all 3D layers')
     d3.json(dataPathJSON, function (error, data) {
 
         if (error) {
@@ -184,10 +189,9 @@ export function drawAll3DPointsWithLayers() {
         }
 
         for (let peel = 0; peel < data.peels.length; peel++) {
-
-            console.log('peel', data.peels[peel])
-            drawLayer3DPoints(data.peels[peel])
-
+            if (!(data.peels[peel] in layersUp3D)) {
+                drawLayer3DPoints(data.peels[peel])
+            }
         }
     })
 }

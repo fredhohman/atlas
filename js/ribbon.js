@@ -3,7 +3,7 @@ import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
 import addCard from './card.js';
 import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground, ribbonColorPeel } from './index.js'
-import { drawLayer3DPoints } from './overview.js'
+import { drawLayer3DPoints, layersUp3D } from './overview.js'
 
 // draggable ribbon 
 console.log('draggable-ribbon')
