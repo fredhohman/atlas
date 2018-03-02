@@ -277,8 +277,8 @@ export default function addCard(d) {
                 .enter()
                 .append("circle")
                 .attr("r", 3)
-                .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
-                .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
+                // .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
+                // .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
 
             // add drag  

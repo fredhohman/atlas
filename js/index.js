@@ -5,8 +5,8 @@ console.log('index.js loaded')
 
 // global data and image paths
 // const dataDirName = 'lesmis'
-const dataDirName = 'moreno_names'
-// const dataDirName = 'astroph'
+// const dataDirName = 'moreno_names'
+const dataDirName = 'astroph'
 
 export const dataPath = 'data/' + dataDirName + '/'
 export const dataPathJSON = 'data/' + dataDirName + '/' + dataDirName + '.json'

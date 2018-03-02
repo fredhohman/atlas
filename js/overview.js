@@ -24,7 +24,7 @@ var overview = document.getElementById('overview-canvas-wrapper')
 var renderer = new THREE.WebGLRenderer();
 camera.aspect = overview.clientWidth / overview.clientHeight;
 camera.updateProjectionMatrix();
-renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 2); // -2 is a bit hacky
+renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 2 ); // -2 is a bit hacky
 overview.appendChild(renderer.domElement);
 
 window.addEventListener('resize', onWindowResize, false);
@@ -204,6 +204,9 @@ export function drawLayer3DPoints(layerNum) {
 
                     var circle = new THREE.Mesh(geometry, material);
 
+                    circle.scale.x = d3.select('#overview-slider-size').property('value')
+                    circle.scale.y = d3.select('#overview-slider-size').property('value')
+
                     // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
                     //     return (item.x);
                     // })))
@@ -212,13 +215,18 @@ export function drawLayer3DPoints(layerNum) {
                     //     return (item.y);
                     // })))
 
-                    circle.position.x = node.x * xCordScaleConst;
                     // circle.position.x = xCordScale(node.x);
-                    circle.position.y = node.y * xCordScaleConst;
+                    circle.position.x = node.x * d3.select('#overview-slider-spread').property('value')
+
                     // circle.position.y = yCordScale(node.y);
+                    circle.position.y = node.y * d3.select('#overview-slider-spread').property('value')
 
                     // circle.position.z = zCordScale(data.peels[peel]);
-                    circle.position.z = 1;
+                    zCordHeight = d3.select('#overview-slider-height').property('value')
+                    zCordScale.range([-zCordHeight, zCordHeight])
+                    circle.position.z = zCordScale(data.peels[layerNumIndex])
+
+                    // circle.position.z = 1;
                     circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[layerNumIndex])))
                     circle.userData['id'] = node.id
                     circle.userData['peel'] = data.peels[layerNumIndex]
@@ -278,7 +286,7 @@ export function drawLayer3DPoints(layerNum) {
 }
 
 // overview header sliders
-d3.select('#overview-header-size')
+d3.select('#overview-slider-size')
   .attr('max', 10)
   .attr('min', 0.1)
   .attr('step', 0.01)
