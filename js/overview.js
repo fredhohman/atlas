@@ -273,6 +273,10 @@ function removeAll3DPoints() {
     for (let c = 0; c < circles.length; c++) {
         scene.remove(circles[c])
     }
+
+    layersUp3D = {};
+    window.layersUp3D = layersUp3D
+
 }
 
 function animateGraph() {
