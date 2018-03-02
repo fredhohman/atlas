@@ -8,14 +8,6 @@ import { drawLayer3DPoints } from './overview.js'
 // draggable ribbon 
 console.log('draggable-ribbon')
 
-// window.onclick = function (e) {
-//     if (!e) e = window.event;
-//     if (e.shiftKey) {/*shift is down*/console.log('shift is down')}
-//     if (e.altKey) {/*alt is down*/ }
-//     if (e.ctrlKey) {/*ctrl is down*/ }
-//     if (e.metaKey) {/*cmd is down*/ }
-// }
-
 var keysDownOrUp = {};
 window.onkeyup = function (e) { keysDownOrUp[e.keyCode] = false; }
 window.onkeydown = function (e) { keysDownOrUp[e.keyCode] = true; }
@@ -99,8 +91,14 @@ d3.json(dataPathJSON, function(error, data) {
           .attr('height', y.bandwidth())
         //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
           .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
-          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) } )
-          .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
+          .on('mouseover', function (d) {
+              bulletTooltip.show(d);
+            //   showLayerInOverview(d)
+            })
+          .on('mouseout', function (d) {
+              bulletTooltip.hide();
+            //   hideLayerInOverview();
+            })
           .on('click', function(d) { return addCard(d) })
 
     ribbon.selectAll('.bullet-inner')
@@ -113,8 +111,14 @@ d3.json(dataPathJSON, function(error, data) {
           .style('fill', '#444444')
         //   .style('stroke', '#ffffff')
         //   .style('stroke-width', '1')
-          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
-          .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
+          .on('mouseover', function (d) {
+              bulletTooltip.show(d);
+            //   showLayerInOverview(d);
+            })
+          .on('mouseout', function (d) {
+              bulletTooltip.hide();
+            //   hideLayerInOverview();
+            })
           .on('click', function (d) { return addCard(d) })
 
     // rectangle tick
@@ -131,8 +135,14 @@ d3.json(dataPathJSON, function(error, data) {
           .style('fill', '#444444')
         //   .style('stroke', '#ffffff')
         //   .style('stroke-width', '1')
-          .on('mouseover', function (d) { bulletTooltip.show(d); showLayerInOverview(d) })
-          .on('mouseout', function (d) { bulletTooltip.hide(); hideLayerInOverview() })
+          .on('mouseover', function (d) {
+              bulletTooltip.show(d);
+            //   showLayerInOverview(d)
+            })
+          .on('mouseout', function (d) {
+              bulletTooltip.hide();
+            //   hideLayerInOverview()
+            })
           .on('click', function (d) { return addCard(d) })
 
     // circle tick

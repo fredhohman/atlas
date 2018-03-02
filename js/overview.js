@@ -276,7 +276,6 @@ export function drawLayer3DPoints(layerNum) {
         // }
     })
 }
-// drawLayer3DPoints(15)
 
 // overview header sliders
 d3.select('#overview-header-size')
@@ -302,7 +301,13 @@ d3.select('#overview-slider-spread')
 
 d3.select('#reset-camera-button')
     .on('click', resetOverviewCamera)
-    .html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px;">Reset</span>')   
+    // .html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px;">Reset</span>')
+    .html('<i class="material-icons md-24 ">videocam</i>')
+
+d3.select('#add-all-3d-layers')
+    .on('click', drawAll3DPoints)
+    // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Draw All</span>')  
+    .html('<i class="material-icons md-24 ">add</i>')  
 
 // d3.select('#overview-header')
 //   .append('button')
