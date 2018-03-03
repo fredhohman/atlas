@@ -67,7 +67,8 @@ export default function addCard(d) {
         tabcontent = document.getElementById("card-" + peel).getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
-            removeLayerGraph(peel)
+            removeLayerGraph(peel);
+            removeLayerGraphContour(peel);
         }
 
         tablinks = document.getElementById("card-" + peel).getElementsByClassName("tablinks");
@@ -95,10 +96,15 @@ export default function addCard(d) {
         .text('Contour')
         .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
 
-    var contourLayerImg = tabs.append('button')
+    var interactiveLayer = tabs.append('button')
         .attr('class', 'card-tabs tablinks')
         .text('Interactive')
         .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
+
+    var contourLayer = tabs.append('button')
+        .attr('class', 'card-tabs tablinks')
+        .text('ContourInt')
+        .on('click', function () { changeTab(event, 'contour-interactive-' + d.peel, d.peel); drawLayerGraphContour(d) })
 
     cardTop.append('div')
         .attr('class', 'card-icon-wrapper')
@@ -198,6 +204,10 @@ export default function addCard(d) {
 
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
+        .attr('class', 'card-image-wrapper tabcontent')
+
+    var interactiveContourDiv = cardBottom.append('div')
+        .attr('id', 'contour-interactive-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
 
     function drawLayerGraph(d) {
@@ -466,10 +476,31 @@ export default function addCard(d) {
         })
     }
 
-    
+    function drawLayerGraphContour(d) {
+        console.log('draw graph contour', d)
+
+        var graphLayerMargin = { top: 0, right: 0, bottom: 0, left: 0 };
+        var graphLayerWidth = document.getElementById("contour-interactive-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right
+        var graphLayerHeight = document.getElementById("contour-interactive-" + d.peel).clientHeight - graphLayerMargin.top - graphLayerMargin.bottom
+
+        var graphLayerSVG = d3.select("#contour-interactive-" + d.peel)
+            .append('svg')
+            .attr('id', "contour-interactive-" + d.peel + '-svg')
+            .attr('class', 'contour-interactive')
+            .attr("width", graphLayerWidth)
+            .attr("height", graphLayerHeight)
+            .style('background-color', '#cccccc')
+
+    }
+
     function removeLayerGraph(peel) {
         console.log('remove interactive node link for layer ' + peel)
         d3.select("#interactive-node-link-" + peel + '-svg').remove()
+    }
+
+    function removeLayerGraphContour(peel) {
+        console.log('remove interactive contour for layer ' + peel)
+        d3.select("#contour-interactive-" + peel + '-svg').remove()
     }
 
     // set initial view
