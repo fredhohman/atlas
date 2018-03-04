@@ -50,7 +50,9 @@ if __name__ == '__main__':
         print('-----')
         print('peel ', peel)
 
-        graph_layer = json.load(open('../data/' + args['-data'] + '/' + args['-data'] + '-layer-' + str(peel) + '.json'))
+        graph_layer_data_path = '../data/' + args['-data'] + '/' + args['-data'] + '-layer-' + str(peel) + '.json'
+        graph_layer = json.load(open(graph_layer_data_path))
+
         g_layer = ig.Graph.DictList(directed=False,
                                     vertices=graph_layer['nodes'],
                                     vertex_name_attr='id',
@@ -67,6 +69,16 @@ if __name__ == '__main__':
 
         clustering = g_layer.transitivity_undirected()
 
+        print('computing force directed layout')
+        layout = g_layer.layout("fr", maxiter=100).fit_into(bbox=[(-500,500),(500,-500)])
+        print('finished computing force directed layout')
+
+        # print(graph_layer)
+
+        for i, coords in enumerate(layout):
+            graph_layer['nodes'][i]['fdx']= coords[0]
+            graph_layer['nodes'][i]['fdy']= coords[1]
+
         # define layer data
         layer = {}
         layer['peel'] = peel
@@ -79,10 +91,13 @@ if __name__ == '__main__':
         # add layer data to data
         data['layers'].append(layer)
         data['peels'].append(peel)
+
+        # save data as json
+        with open(graph_layer_data_path, 'w') as outfile:
+            json.dump(graph_layer, outfile)
     
     # pprint.pprint(data)
 
-    # save data as json
     with open('../data/' + args['-data'] + '/' + args['-data'] + '.json' , 'w') as outfile:
         json.dump(data, outfile)
 
