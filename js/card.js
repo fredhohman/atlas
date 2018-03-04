@@ -172,6 +172,10 @@ export default function addCard(d) {
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
 
+    var positionToggle = cardText.append('label').attr('class', 'switch')
+    positionToggle.append('input').attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
+    positionToggle.append('span').attr('class', 'slider round')
+
     cardBottom.append('div')
         .attr('id', 'original-layer-image-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
@@ -235,28 +239,35 @@ export default function addCard(d) {
             window.graphLayerData = graphLayerData
 
             //set up the simulation and add forces  
-            var simulation = d3.forceSimulation()
-                .nodes(graphLayerData.nodes);
+            // var simulation = d3.forceSimulation()
+            //     .nodes(graphLayerData.nodes);
 
-            var linkForce = d3.forceLink(graphLayerData.links)
-                .id(function (d) { return d.id; });
+            // var linkForce = d3.forceLink(graphLayerData.links)
+            //     .id(function (d) { return d.id; });
 
-            var chargeForce = d3.forceManyBody()
-                .strength(-40);
+            // // var chargeForce = d3.forceManyBody()
+            // //     .strength(-40);
 
-            var centerForce = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);
+            // // var centerForce = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);
 
-            simulation
-                .force("chargeForce", chargeForce)
-                .force("centerForce", centerForce)
-                .force("links", linkForce);
+            // simulation
+            //     // .force("chargeForce", chargeForce)
+            //     // .force("centerForce", centerForce)
+            //     .force("links", linkForce);
 
             //add tick instructions: 
-            simulation.on("tick", tickActions);
+            // simulation.on("tick", tickActions);
 
             //add encompassing group for the zoom 
             var g = graphLayerSVG.append("g")
                 .attr("class", "everything");
+
+            graphLayerData.links.forEach(function (d) {
+                d.source = graphLayerData.nodes.filter(function (node) { return node.id === d.source })[0]
+                d.target = graphLayerData.nodes.filter(function (node) { return node.id === d.target })[0]
+                // d.source = graphLayerData.nodes[d.source];
+                // d.target = graphLayerData.nodes[d.target];
+            });
 
             //draw lines for the links 
             var linkSVGs = g.append("g")
@@ -264,7 +275,7 @@ export default function addCard(d) {
                 .selectAll("line")
                 .data(graphLayerData.links)
                 .enter().append("line")
-                .attr("x1", function (d) { return d.source.x + graphLayerWidth / 2; })
+                .attr("x1", function (d) { console.log(d); return d.source.x + graphLayerWidth / 2; })
                 .attr("y1", function (d) { return d.source.y + graphLayerHeight / 2; })
                 .attr("x2", function (d) { return d.target.x + graphLayerWidth / 2; })
                 .attr("y2", function (d) { return d.target.y + graphLayerHeight / 2; })
@@ -286,9 +297,9 @@ export default function addCard(d) {
                 .data(graphLayerData.nodes)
                 .enter()
                 .append("circle")
-                .attr("r", 3)
-                // .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
-                // .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
+                .attr("r", 2)
+                .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
+                .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
 
             // add drag  
@@ -451,14 +462,44 @@ export default function addCard(d) {
                     nodeSVGs.attr('class', function (d) { return ribbonColorPeel(d.peel) })
                     nodeSVGs.attr('r', 3)
                 }
-
             }
-            d3.selectAll('.clone-toggle').on('click', toggleClones)
             // graphLayerSVG.on('click', function() { cloneTooltip.style('display', 'hidden') })
             // graphLayerSVG.on('click', function () {
             //     console.log('click canvas, hide tooltip')
             //     d3.selectAll('.d3-tip').style('display', 'hidden')
             // })
+
+            d3.selectAll('.clone-toggle').on('click', toggleClones)
+            function togglePosition() {
+                console.log('toggle position')
+
+                if (d3.select(this).property('checked')) {
+                    nodeSVGs
+                        .transition().duration(2000)
+                        .attr('cx', function (d) { return d.fdx + graphLayerWidth / 2 })
+                        .attr('cy', function (d) { return d.fdy + graphLayerHeight / 2 })
+                        .style('fill', 'red')
+                    linkSVGs
+                        .transition().duration(2000)
+                        .attr("x1", function (d) { return d.source.fdx + graphLayerWidth / 2; })
+                        .attr("y1", function (d) { return d.source.fdy + graphLayerHeight / 2; })
+                        .attr("x2", function (d) { return d.target.fdx + graphLayerWidth / 2; })
+                        .attr("y2", function (d) { return d.target.fdy + graphLayerHeight / 2; })
+                } else {
+                    nodeSVGs
+                        .transition().duration(2000)
+                        .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
+                        .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
+                        .style('fill','blue')
+                    linkSVGs
+                        .transition().duration(2000)
+                        .attr("x1", function (d) { return d.source.x + graphLayerWidth / 2; })
+                        .attr("y1", function (d) { return d.source.y + graphLayerHeight / 2; })
+                        .attr("x2", function (d) { return d.target.x + graphLayerWidth / 2; })
+                        .attr("y2", function (d) { return d.target.y + graphLayerHeight / 2; })
+                }
+            }
+            d3.selectAll('.position-toggle').on('click', togglePosition)
 
             function tickActions() {
                 //update circle positions each tick of the simulation 
