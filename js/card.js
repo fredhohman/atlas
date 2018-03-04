@@ -238,43 +238,15 @@ export default function addCard(d) {
             // globals for debugging
             window.graphLayerData = graphLayerData
 
-            //set up the simulation and add forces  
-            // var simulation = d3.forceSimulation()
-            //     .nodes(graphLayerData.nodes);
-
-            // var linkForce = d3.forceLink(graphLayerData.links)
-            //     .id(function (d) { return d.id; });
-
-            // // var chargeForce = d3.forceManyBody()
-            // //     .strength(-40);
-
-            // // var centerForce = d3.forceCenter(graphLayerWidth / 2, graphLayerHeight / 2);
-
-            // simulation
-            //     // .force("chargeForce", chargeForce)
-            //     // .force("centerForce", centerForce)
-            //     .force("links", linkForce);
-
-            //add tick instructions: 
-            // simulation.on("tick", tickActions);
+            // point link sources and targets at node objects, this could be a little slow
+            graphLayerData.links.forEach(function (d) {
+                d.source = graphLayerData.nodes.filter(function (node) { return node.id === d.source })[0]
+                d.target = graphLayerData.nodes.filter(function (node) { return node.id === d.target })[0]
+            });
 
             //add encompassing group for the zoom 
             var g = graphLayerSVG.append("g")
                 .attr("class", "everything")
-
-
-            // d3.selectAll('.everything').attr('transform', function () {
-            //     // console.log(uh)
-            //     'translate(' + node.fx + ', ' + node.fy + ') scale(' + 1 + ', ' + 1 + ')'
-            // })
-
-
-            graphLayerData.links.forEach(function (d) {
-                d.source = graphLayerData.nodes.filter(function (node) { return node.id === d.source })[0]
-                d.target = graphLayerData.nodes.filter(function (node) { return node.id === d.target })[0]
-                // d.source = graphLayerData.nodes[d.source];
-                // d.target = graphLayerData.nodes[d.target];
-            });
 
             //draw lines for the links 
             var linkSVGs = g.append("g")
