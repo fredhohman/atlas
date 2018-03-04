@@ -260,7 +260,14 @@ export default function addCard(d) {
 
             //add encompassing group for the zoom 
             var g = graphLayerSVG.append("g")
-                .attr("class", "everything");
+                .attr("class", "everything")
+
+
+            // d3.selectAll('.everything').attr('transform', function () {
+            //     // console.log(uh)
+            //     'translate(' + node.fx + ', ' + node.fy + ') scale(' + 1 + ', ' + 1 + ')'
+            // })
+
 
             graphLayerData.links.forEach(function (d) {
                 d.source = graphLayerData.nodes.filter(function (node) { return node.id === d.source })[0]
@@ -275,10 +282,10 @@ export default function addCard(d) {
                 .selectAll("line")
                 .data(graphLayerData.links)
                 .enter().append("line")
-                .attr("x1", function (d) { console.log(d); return d.source.x + graphLayerWidth / 2; })
-                .attr("y1", function (d) { return d.source.y + graphLayerHeight / 2; })
-                .attr("x2", function (d) { return d.target.x + graphLayerWidth / 2; })
-                .attr("y2", function (d) { return d.target.y + graphLayerHeight / 2; })
+                .attr("x1", function (d) { return d.source.x; })
+                .attr("y1", function (d) { return d.source.y; })
+                .attr("x2", function (d) { return d.target.x; })
+                .attr("y2", function (d) { return d.target.y; })
                 .attr("stroke-width", 0.6)
                 .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
                 .style("stroke-opacity", 0.75)
@@ -298,43 +305,41 @@ export default function addCard(d) {
                 .enter()
                 .append("circle")
                 .attr("r", 2)
-                .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
-                .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
+                .attr('cx', function (d) { return d.x })
+                .attr('cy', function (d) { return d.y })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
-
-            // add drag  
-            var dragHandler = d3.drag()
-                .on("start", dragStart)
-                .on("drag", dragDrag)
-                .on("end", dragEnd)
-            nodeSVGs.call(dragHandler)
 
             // add zoom 
             var zoomHandler = d3.zoom()
                 .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
 
-            // drag functions 
-            // d is the node 
-            function dragStart(d) {
-                if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
-                console.log('this', this)
-                d3.select(this).attr('class', 'fixed')
+            // add drag
+            var drag = d3.drag()
+                .subject(function () {
+                    var t = d3.select(this);
+                    return { x: t.attr("x"), y: t.attr("y") };
+                })
+                .on("start", dragstarted)
+                .on("drag", dragged);
+            nodeSVGs.call(drag)
+
+            // stops the propagation of the click event
+            function dragstarted(d) {
+                d3.event.sourceEvent.stopPropagation();
             }
 
-            // make sure you can't drag the circle outside the box
-            function dragDrag(d) {
-                d.fx = d3.event.x;
-                d.fy = d3.event.y;
-            }
+            //Called when the drag event occurs (object should be moved)
+            function dragged(d) {
 
-            function dragEnd(d) {
-                if (!d3.event.active) simulation.alphaTarget(0);
-                // d.fx = null;
-                // d.fy = null;
-                
+                if (d3.select('.position-toggle').property('checked')) {
+                    d.fdx += d3.event.dx;
+                    d.fdy += d3.event.dy;
+                } else {
+                    d.x += d3.event.dx;
+                    d.y += d3.event.dy;
+                }
+                updateNodePositionsTick();
             }
 
             // zoom functions
@@ -431,7 +436,7 @@ export default function addCard(d) {
                 // cloneTooltip.hide();
             })
 
-            nodeSVGs.on('click', function (d) { 
+            nodeSVGs.on('click', function (d) {
                 console.log('clicked')
                 d.fx = null;
                 d.fy = null;
@@ -476,44 +481,61 @@ export default function addCard(d) {
                 if (d3.select(this).property('checked')) {
                     nodeSVGs
                         .transition().duration(2000)
-                        .attr('cx', function (d) { return d.fdx + graphLayerWidth / 2 })
-                        .attr('cy', function (d) { return d.fdy + graphLayerHeight / 2 })
-                        .style('fill', 'red')
+                        .attr('cx', function (d) { return d.fdx })
+                        .attr('cy', function (d) { return d.fdy })
+                    // .style('fill', 'red')
                     linkSVGs
                         .transition().duration(2000)
-                        .attr("x1", function (d) { return d.source.fdx + graphLayerWidth / 2; })
-                        .attr("y1", function (d) { return d.source.fdy + graphLayerHeight / 2; })
-                        .attr("x2", function (d) { return d.target.fdx + graphLayerWidth / 2; })
-                        .attr("y2", function (d) { return d.target.fdy + graphLayerHeight / 2; })
+                        .attr("x1", function (d) { return d.source.fdx; })
+                        .attr("y1", function (d) { return d.source.fdy; })
+                        .attr("x2", function (d) { return d.target.fdx; })
+                        .attr("y2", function (d) { return d.target.fdy; })
                 } else {
                     nodeSVGs
                         .transition().duration(2000)
-                        .attr('cx', function (d) { return d.x + graphLayerWidth / 2 })
-                        .attr('cy', function (d) { return d.y + graphLayerHeight / 2 })
-                        .style('fill','blue')
+                        .attr('cx', function (d) { return d.x })
+                        .attr('cy', function (d) { return d.y })
+                    // .style('fill', 'blue')
                     linkSVGs
                         .transition().duration(2000)
-                        .attr("x1", function (d) { return d.source.x + graphLayerWidth / 2; })
-                        .attr("y1", function (d) { return d.source.y + graphLayerHeight / 2; })
-                        .attr("x2", function (d) { return d.target.x + graphLayerWidth / 2; })
-                        .attr("y2", function (d) { return d.target.y + graphLayerHeight / 2; })
+                        .attr("x1", function (d) { return d.source.x; })
+                        .attr("y1", function (d) { return d.source.y; })
+                        .attr("x2", function (d) { return d.target.x; })
+                        .attr("y2", function (d) { return d.target.y; })
                 }
             }
             d3.selectAll('.position-toggle').on('click', togglePosition)
 
-            function tickActions() {
-                //update circle positions each tick of the simulation 
-                nodeSVGs
-                    .attr("cx", function (d) { return d.x; })
-                    .attr("cy", function (d) { return d.y; });
+            function updateNodePositionsTick() {
+                if (d3.select('.position-toggle').property('checked')) {
 
-                //update link positions 
-                linkSVGs
-                    .attr("x1", function (d) { return d.source.x; })
-                    .attr("y1", function (d) { return d.source.y; })
-                    .attr("x2", function (d) { return d.target.x; })
-                    .attr("y2", function (d) { return d.target.y; });
+                    nodeSVGs
+                        .attr("cx", function (d) { return d.fdx; })
+                        .attr("cy", function (d) { return d.fdy; });
+
+                    linkSVGs
+                        .attr("x1", function (d) { return d.source.fdx; })
+                        .attr("y1", function (d) { return d.source.fdy; })
+                        .attr("x2", function (d) { return d.target.fdx; })
+                        .attr("y2", function (d) { return d.target.fdy; });
+                } else {
+
+                    nodeSVGs
+                        .attr("cx", function (d) { return d.x; })
+                        .attr("cy", function (d) { return d.y; });
+
+                    linkSVGs
+                        .attr("x1", function (d) { return d.source.x; })
+                        .attr("y1", function (d) { return d.source.y; })
+                        .attr("x2", function (d) { return d.target.x; })
+                        .attr("y2", function (d) { return d.target.y; });
+                }
             }
+
+            d3.select('.everything').attr('transform', function () {
+                'translate(' - 1 * graphLayerWidth / 2 + ', ' - 1 * graphLayerHeight / 2 + ')'
+            })
+
         })
     }
 
