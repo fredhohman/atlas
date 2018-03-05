@@ -1,10 +1,5 @@
 import numpy as np
-import pandas as pd
-import sys
 import json
-import os
-import igraph as ig
-import pprint
 import matplotlib.pyplot as plt
 
 def getopts(argv):
