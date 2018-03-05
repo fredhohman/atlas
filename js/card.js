@@ -1,5 +1,5 @@
 // card.js
-// import * as contour from 'd3-contour';
+import * as contour from 'd3-contour';
 import * as d3 from 'd3';
 // import { geoStereographic } from 'd3';
 import tip from 'd3-tip';
@@ -167,11 +167,11 @@ export default function addCard(d) {
         .attr('class', 'clone-display')
 
     var positionToggle = cardText.append('label').attr('class', 'switch')
-    positionToggle.append('input').attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
+    positionToggle.append('input').attr('id', 'position-toggle-' + d.peel).attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
     positionToggle.append('span').attr('class', 'slider round')
 
     var contourToggle = cardText.append('label').attr('class', 'switch')
-    contourToggle.append('input').attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
+    contourToggle.append('input').attr('id', 'contour-toggle-' + d.peel).attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
     contourToggle.append('span').attr('class', 'slider round')
 
     cardBottom.append('div')
@@ -248,6 +248,7 @@ export default function addCard(d) {
                 .selectAll("line")
                 .data(graphLayerData.links)
                 .enter().append("line")
+                .attr('class', 'link-' + d.peel)
                 .attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
                 .attr("x2", function (d) { return d.target.x; })
@@ -420,6 +421,8 @@ export default function addCard(d) {
 
             function toggleClones() {
                 console.log('toggle clones')
+                console.log(this)
+
                 var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
                 var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
 
@@ -444,7 +447,7 @@ export default function addCard(d) {
                 } else {
                     // default node styling
                     selectedNodes.classed('clone', false)
-                    selectedNodes.attr('fill', function () { return ribbonColorPeel(contourLayerNum) }) // refers to original d
+                    selectedNodes.attr('fill', function () { return ribbonColorPeel(contourLayerNum) })
                     selectedNodes.attr('r', 3)
                 }
             }
@@ -459,24 +462,29 @@ export default function addCard(d) {
 
             function togglePosition() {
                 console.log('toggle position')
+                console.log(this)
+                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
+                var selectedLinks = d3.selectAll('.link-' + contourLayerNum)
+                console.log(contourLayerNum)
 
                 if (d3.select(this).property('checked')) {
-                    nodeSVGs
+                    selectedNodes
                         .transition().duration(2000)
                         .attr('cx', function (d) { return d.fdx })
                         .attr('cy', function (d) { return d.fdy })
-                    linkSVGs
+                    selectedLinks
                         .transition().duration(2000)
                         .attr("x1", function (d) { return d.source.fdx; })
                         .attr("y1", function (d) { return d.source.fdy; })
                         .attr("x2", function (d) { return d.target.fdx; })
                         .attr("y2", function (d) { return d.target.fdy; })
                 } else {
-                    nodeSVGs
+                    selectedNodes
                         .transition().duration(2000)
                         .attr('cx', function (d) { return d.x })
                         .attr('cy', function (d) { return d.y })
-                    linkSVGs
+                    selectedLinks
                         .transition().duration(2000)
                         .attr("x1", function (d) { return d.source.x; })
                         .attr("y1", function (d) { return d.source.y; })
@@ -512,30 +520,84 @@ export default function addCard(d) {
                 }
             }
 
-            function toggleContour(d) {
-                console.log('draw contour', d)
-                d3.select('interactive-node-link-' + d)
+            function toggleContour() {
+                console.log('draw contour')
+
+                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
+
+                if (d3.select(this).property('checked')) {
+
+                    var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
+                    var selectedNodesData = selectedNodes.data()
+                    console.log(contourLayerNum, selectedNodesData)
+
+                    var contourX = d3.scaleLinear()
+                        .rangeRound([graphLayerMargin.left, graphLayerWidth - graphLayerMargin.right]);
+
+                    var contourY = d3.scaleLinear()
+                        .rangeRound([graphLayerHeight - graphLayerMargin.bottom, graphLayerMargin.top]);
+
+                    contourX.domain(d3.extent(selectedNodesData, function (d) { return d.x; })).nice();
+                    contourY.domain(d3.extent(selectedNodesData, function (d) { return d.y; })).nice();
+
+                    // g.append("g")
+                    //     .attr("stroke", "white")
+                    //     .attr("stroke-width", 0.5)
+                    //     .selectAll("circle")
+                    //     // .data(data.nodes.filter(function (d) {
+                    //     //     // return +d.id.split('_')[1] === layer
+                    //     //     return d
+                    //     // }))
+                    //     .data()
+                    //     .enter().append("circle")
+                    //     .attr("cx", function (d) { return x(d.location[0]); })
+                    //     .attr("cy", function (d) { return y(d.location[1]); })
+                    //     .attr("r", 2)
+                    //     .attr("opacity", 1.0)
+                    //     .attr("fill", function (d) { return '#' + d.color.split('x')[1] });
+
+                    g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
+                        .attr("fill", "none")
+                        .attr("stroke", ribbonColorPeel(contourLayerNum))
+                        .attr("stroke-linejoin", "round")
+                        .selectAll("path")
+                        .data(contour.contourDensity()
+                            .x(function (d) { return contourX(d.x); })
+                            .y(function (d) { return contourY(d.y); })
+                            .size([graphLayerWidth, graphLayerHeight])
+                            .bandwidth(70)
+                            (selectedNodesData))
+                        .enter().append("path")
+                        .attr("d", d3.geoPath());
+
+                    g.append("g")
+                        .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
+                        .call(d3.axisBottom(contourX))
+                        .select(".tick:last-of-type text")
+                        .select(function () { return this.parentNode.appendChild(this.cloneNode()); })
+                        .attr("y", -3)
+                        .attr("dy", null)
+                        .attr("font-weight", "bold")
+                        .text("x");
+
+                    g.append("g")
+                        .attr("transform", "translate(" + graphLayerMargin.left + ",0)")
+                        .call(d3.axisLeft(contourY))
+                        .select(".tick:last-of-type text")
+                        .select(function () { return this.parentNode.appendChild(this.cloneNode()); })
+                        .attr("x", 3)
+                        .attr("text-anchor", "start")
+                        .attr("font-weight", "bold")
+                        .text("y");
+
+                } else {
+                    d3.select('#contour-' + contourLayerNum).remove()
+                }
 
             }
             d3.selectAll('.contour-toggle').on('click', toggleContour)
 
         })
-    }
-
-    function drawLayerGraphContour(d) {
-        console.log('draw graph contour', d)
-
-        var graphLayerMargin = { top: 0, right: 0, bottom: 0, left: 0 };
-        var graphLayerWidth = document.getElementById("contour-interactive-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right
-        var graphLayerHeight = document.getElementById("contour-interactive-" + d.peel).clientHeight - graphLayerMargin.top - graphLayerMargin.bottom
-
-        var graphLayerSVG = d3.select("#contour-interactive-" + d.peel)
-            .append('svg')
-            .attr('id', "contour-interactive-" + d.peel + '-svg')
-            .attr('class', 'contour-interactive')
-            .attr("width", graphLayerWidth)
-            .attr("height", graphLayerHeight)
-            .style('background-color', '#cccccc')
     }
 
     function removeLayerGraph(peel) {
