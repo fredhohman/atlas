@@ -57,8 +57,7 @@ if __name__ == '__main__':
                                     vertices=graph_layer['nodes'],
                                     vertex_name_attr='id',
                                     edges=graph_layer['links'],
-                                    edge_foreign_keys=('source', 'target')
-                                    )
+                                    edge_foreign_keys=('source', 'target'))
         print(g_layer.summary())
 
         # compute stats
@@ -76,8 +75,8 @@ if __name__ == '__main__':
         # print(graph_layer)
 
         for i, coords in enumerate(layout):
-            graph_layer['nodes'][i]['fdx']= coords[0]
-            graph_layer['nodes'][i]['fdy']= coords[1]
+            graph_layer['nodes'][i]['fdx'] = coords[0]
+            graph_layer['nodes'][i]['fdy'] = coords[1]
 
         # define layer data
         layer = {}

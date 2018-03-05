@@ -12,3 +12,6 @@ echo'\n'
 
 echo 'gather-statistics.py'
 python gather-statistics.py -data $1
+
+echo 'process-positions.py'
+python process-positions.py -data $1
