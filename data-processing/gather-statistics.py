@@ -70,7 +70,7 @@ if __name__ == '__main__':
         clustering = g_layer.transitivity_undirected()
 
         print('computing force directed layout')
-        layout = g_layer.layout("fr", maxiter=100).fit_into(bbox=[(-500,500),(500,-500)])
+        layout = g_layer.layout("fr", maxiter=100)
         print('finished computing force directed layout')
 
         # print(graph_layer)
