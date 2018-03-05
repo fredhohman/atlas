@@ -82,7 +82,7 @@ export default function addCard(d) {
     }
 
     var originalLayerImg = tabs.append('button')
-        .attr('class', 'card-tabs tablinks active') // set initial view
+        .attr('class', 'card-tabs tablinks')
         .text('Original')
         .on('click', function () { changeTab(event, 'original-layer-image-' + d.peel, d.peel) })
 
@@ -97,14 +97,9 @@ export default function addCard(d) {
         .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
 
     var interactiveLayer = tabs.append('button')
-        .attr('class', 'card-tabs tablinks')
+        .attr('class', 'card-tabs tablinks active') // set initial view
         .text('Interactive')
         .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
-
-    var contourLayer = tabs.append('button')
-        .attr('class', 'card-tabs tablinks')
-        .text('ContourInt')
-        .on('click', function () { changeTab(event, 'contour-interactive-' + d.peel, d.peel); drawLayerGraphContour(d) })
 
     cardTop.append('div')
         .attr('class', 'card-icon-wrapper')
@@ -122,7 +117,6 @@ export default function addCard(d) {
         .attr('class', 'card-text-wrapper')
 
     // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
-
 
     cardText.append('span')
         .attr('class', 'card-text-item')
@@ -166,7 +160,7 @@ export default function addCard(d) {
     //         .attr('type', 'button')
     //         .text('toggle clones')
     var cloneToggle = cardText.append('label').attr('class', 'switch')
-    cloneToggle.append('input').attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
+    cloneToggle.append('input').attr('id', 'clone-toggle-' + d.peel).attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
     cloneToggle.append('span').attr('class', 'slider round')
 
     var cloneDisplay = cardText.append('div')
@@ -175,6 +169,10 @@ export default function addCard(d) {
     var positionToggle = cardText.append('label').attr('class', 'switch')
     positionToggle.append('input').attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
     positionToggle.append('span').attr('class', 'slider round')
+
+    var contourToggle = cardText.append('label').attr('class', 'switch')
+    contourToggle.append('input').attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
+    contourToggle.append('span').attr('class', 'slider round')
 
     cardBottom.append('div')
         .attr('id', 'original-layer-image-' + d.peel)
@@ -208,10 +206,6 @@ export default function addCard(d) {
 
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
-        .attr('class', 'card-image-wrapper tabcontent')
-
-    var interactiveContourDiv = cardBottom.append('div')
-        .attr('id', 'contour-interactive-' + d.peel)
         .attr('class', 'card-image-wrapper tabcontent')
 
     function drawLayerGraph(d) {
@@ -276,6 +270,7 @@ export default function addCard(d) {
                 .data(graphLayerData.nodes)
                 .enter()
                 .append("circle")
+                .attr('class', 'node-' + d.peel)
                 .attr("r", 2)
                 .attr('cx', function (d) { return d.x })
                 .attr('cy', function (d) { return d.y })
@@ -285,6 +280,19 @@ export default function addCard(d) {
             var zoomHandler = d3.zoom()
                 .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
+
+            // zoom functions
+            function zoomActions() {
+                g.attr("transform", d3.event.transform)
+            }
+
+            function zoomToCenter() {
+                console.log('zoom to center')
+                // d3.select('.everything').transition().duration(100).call(zoomHandler.transform, d3.zoomIdentity);
+                zoomHandler.translateBy(d3.select('.everything'), 400, 500)
+                zoomActions()
+            }
+            d3.select('#zoom-to-center').on('click', zoomToCenter)
 
             // add drag
             var drag = d3.drag()
@@ -312,11 +320,6 @@ export default function addCard(d) {
                     d.y += d3.event.dy;
                 }
                 updateNodePositionsTick();
-            }
-
-            // zoom functions
-            function zoomActions() {
-                g.attr("transform", d3.event.transform)
             }
 
             function getNeighbors(node) {
@@ -417,36 +420,43 @@ export default function addCard(d) {
 
             function toggleClones() {
                 console.log('toggle clones')
+                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
 
+                // style clones
                 if (d3.select(this).property('checked')) {
-
-                    // style clones
-                    nodeSVGs.attr('class', function (d) {
-                        if (d.peels.length > 1) {
-                            return 'clone'
-                        }
-                    })
-                    nodeSVGs.attr('r', function (d) {
-                        if (d.peels.length > 1) {
-                            return 3.5
-                        } else {
-                            return 2.5
-                        }
-                    })
-
+                    selectedNodes
+                            .classed("clone", function (d) {
+                                if (d.peels.length > 1) {
+                                    return true
+                                } else {
+                                    return false
+                                }
+                            })
+                    selectedNodes
+                            .attr('r', function (d) {
+                                if (d.peels.length > 1) {
+                                    return 3.5
+                                } else {
+                                    return 2.5
+                                }
+                            })
                 } else {
                     // default node styling
-                    nodeSVGs.attr('class', function (d) { return ribbonColorPeel(d.peel) })
-                    nodeSVGs.attr('r', 3)
+                    selectedNodes.classed('clone', false)
+                    selectedNodes.attr('fill', function () { return ribbonColorPeel(contourLayerNum) }) // refers to original d
+                    selectedNodes.attr('r', 3)
                 }
             }
+            d3.selectAll('.clone-toggle').on('click', toggleClones)
+
+            // optional
             // graphLayerSVG.on('click', function() { cloneTooltip.style('display', 'hidden') })
             // graphLayerSVG.on('click', function () {
             //     console.log('click canvas, hide tooltip')
             //     d3.selectAll('.d3-tip').style('display', 'hidden')
             // })
 
-            d3.selectAll('.clone-toggle').on('click', toggleClones)
             function togglePosition() {
                 console.log('toggle position')
 
@@ -455,7 +465,6 @@ export default function addCard(d) {
                         .transition().duration(2000)
                         .attr('cx', function (d) { return d.fdx })
                         .attr('cy', function (d) { return d.fdy })
-                    // .style('fill', 'red')
                     linkSVGs
                         .transition().duration(2000)
                         .attr("x1", function (d) { return d.source.fdx; })
@@ -467,7 +476,6 @@ export default function addCard(d) {
                         .transition().duration(2000)
                         .attr('cx', function (d) { return d.x })
                         .attr('cy', function (d) { return d.y })
-                    // .style('fill', 'blue')
                     linkSVGs
                         .transition().duration(2000)
                         .attr("x1", function (d) { return d.source.x; })
@@ -504,9 +512,12 @@ export default function addCard(d) {
                 }
             }
 
-            d3.select('.everything').attr('transform', function () {
-                'translate(' - 1 * graphLayerWidth / 2 + ', ' - 1 * graphLayerHeight / 2 + ')'
-            })
+            function toggleContour(d) {
+                console.log('draw contour', d)
+                d3.select('interactive-node-link-' + d)
+
+            }
+            d3.selectAll('.contour-toggle').on('click', toggleContour)
 
         })
     }
@@ -525,7 +536,6 @@ export default function addCard(d) {
             .attr("width", graphLayerWidth)
             .attr("height", graphLayerHeight)
             .style('background-color', '#cccccc')
-
     }
 
     function removeLayerGraph(peel) {
