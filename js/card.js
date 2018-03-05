@@ -278,7 +278,7 @@ export default function addCard(d) {
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
 
             // add zoom 
-            var zoomHandler = d3.zoom()
+            var zoomHandler = d3.zoom().scaleExtent([0.1, 8])
                 .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
 
