@@ -114,7 +114,7 @@ export function drawLayer3DPoints(layerNum) {
                     circle.position.x = node.x * d3.select('#overview-slider-spread').property('value')
 
                     // circle.position.y = yCordScale(node.y);
-                    circle.position.y = node.y * d3.select('#overview-slider-spread').property('value')
+                    circle.position.y = -1 * node.y * d3.select('#overview-slider-spread').property('value')
 
                     // circle.position.z = zCordScale(data.peels[peel]);
                     zCordHeight = d3.select('#overview-slider-height').property('value')
@@ -262,7 +262,7 @@ function updateZPosition() {
 function updateXPosition() {
     for (let c = 0; c < circles.length; c++) {
         circles[c].position.x = circles[c].userData['x'] * this.value
-        circles[c].position.y = circles[c].userData['y'] * this.value
+        circles[c].position.y = -1 * circles[c].userData['y'] * this.value
     }
 }
 

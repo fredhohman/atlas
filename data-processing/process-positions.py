@@ -28,8 +28,6 @@ if __name__ == '__main__':
         graph_layer_data_path = '../data/' + args['-data'] + '/' + args['-data'] + '-layer-' + str(peel) + '.json'
         graph_layer = json.load(open(graph_layer_data_path))
 
-        print(len(graph_layer['nodes']))
-
         # zero center points
         x = [ node['x'] for node in graph_layer['nodes'] ]
         y = [ node['y'] for node in graph_layer['nodes'] ] 
@@ -83,7 +81,7 @@ if __name__ == '__main__':
             node['x'] = scale_factor * node['x']
             node['y'] = scale_factor * node['y']
             node['fdx'] = scale_factor_fd * node['fdx']
-            node['fdy'] = scale_factor_fd * node['fdy']
+            node['fdy'] = scale_factor_fd * node['fdy'] # flip y-axis
 
         # plotting checks
         # plt.figure(figsize=(6,6))
