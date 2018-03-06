@@ -238,7 +238,7 @@ export default function addCard(d) {
                 d.target = graphLayerData.nodes.filter(function (node) { return node.id === d.target })[0]
             });
 
-            //add encompassing group for the zoom 
+            // add encompassing group for the zoom 
             var g = graphLayerSVG.append("g")
                 .attr("class", "everything")
 
@@ -281,6 +281,7 @@ export default function addCard(d) {
             var zoomHandler = d3.zoom().scaleExtent([0.1, 8])
                 .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
+            graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
 
             // zoom functions
             function zoomActions() {
@@ -289,9 +290,7 @@ export default function addCard(d) {
 
             function zoomToCenter() {
                 console.log('zoom to center')
-                // d3.select('.everything').transition().duration(100).call(zoomHandler.transform, d3.zoomIdentity);
-                zoomHandler.translateBy(d3.select('.everything'), 400, 500)
-                zoomActions()
+                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, 0, 0)
             }
             d3.select('#zoom-to-center').on('click', zoomToCenter)
 
@@ -532,13 +531,15 @@ export default function addCard(d) {
                     console.log(contourLayerNum, selectedNodesData)
 
                     var contourX = d3.scaleLinear()
-                        .rangeRound([graphLayerMargin.left, graphLayerWidth - graphLayerMargin.right]);
+                        // .rangeRound([graphLayerMargin.left, graphLayerWidth - graphLayerMargin.right]);
+                        .rangeRound([0, 500]);
 
                     var contourY = d3.scaleLinear()
-                        .rangeRound([graphLayerHeight - graphLayerMargin.bottom, graphLayerMargin.top]);
+                        // .rangeRound([graphLayerHeight - graphLayerMargin.bottom, graphLayerMargin.top]);
+                        .rangeRound([0, 500]);
 
-                    contourX.domain(d3.extent(selectedNodesData, function (d) { return d.x; })).nice();
-                    contourY.domain(d3.extent(selectedNodesData, function (d) { return d.y; })).nice();
+                    contourX.domain(d3.extent(selectedNodesData, function (d) { return d.fdx; })).nice();
+                    contourY.domain(d3.extent(selectedNodesData, function (d) { return d.fdy; })).nice();
 
                     // g.append("g")
                     //     .attr("stroke", "white")
@@ -562,8 +563,8 @@ export default function addCard(d) {
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
-                            .x(function (d) { return contourX(d.x); })
-                            .y(function (d) { return contourY(d.y); })
+                            .x(function (d) { return contourX(d.fdx); })
+                            .y(function (d) { return contourY(-1 * d.fdy); })
                             .size([graphLayerWidth, graphLayerHeight])
                             .bandwidth(70)
                             (selectedNodesData))
