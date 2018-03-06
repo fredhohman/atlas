@@ -81,20 +81,20 @@ export default function addCard(d) {
 
     }
 
-    var originalLayerImg = tabs.append('button')
-        .attr('class', 'card-tabs tablinks')
-        .text('Original')
-        .on('click', function () { changeTab(event, 'original-layer-image-' + d.peel, d.peel) })
+    // var originalLayerImg = tabs.append('button')
+    //     .attr('class', 'card-tabs tablinks')
+    //     .text('Original')
+    //     .on('click', function () { changeTab(event, 'original-layer-image-' + d.peel, d.peel) })
 
-    var forceDirectedLayerImg = tabs.append('button')
-        .attr('class', 'card-tabs tablinks')
-        .text('Force directed')
-        .on('click', function () { changeTab(event, 'force-directed-layer-image-' + d.peel, d.peel) })
+    // var forceDirectedLayerImg = tabs.append('button')
+    //     .attr('class', 'card-tabs tablinks')
+    //     .text('Force directed')
+    //     .on('click', function () { changeTab(event, 'force-directed-layer-image-' + d.peel, d.peel) })
 
-    var contourLayerImg = tabs.append('button')
-        .attr('class', 'card-tabs tablinks')
-        .text('Contour')
-        .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
+    // var contourLayerImg = tabs.append('button')
+    //     .attr('class', 'card-tabs tablinks')
+    //     .text('Contour')
+    //     .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
 
     var interactiveLayer = tabs.append('button')
         .attr('class', 'card-tabs tablinks active') // set initial view
@@ -174,39 +174,39 @@ export default function addCard(d) {
     contourToggle.append('input').attr('id', 'contour-toggle-' + d.peel).attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
     contourToggle.append('span').attr('class', 'slider round')
 
-    cardBottom.append('div')
-        .attr('id', 'original-layer-image-' + d.peel)
-        .attr('class', 'card-image-wrapper tabcontent')
-        .append('img')
-        .attr('src', imagePathLayerOrg(d.peel))
-        //   .attr('width', '100%')
-        .style('display', 'block')
-        .style('max-height', '100%')
-        .style('margin', 'auto')
+    // cardBottom.append('div')
+    //     .attr('id', 'original-layer-image-' + d.peel)
+    //     .attr('class', 'card-image-wrapper tabcontent')
+    //     .append('img')
+    //     .attr('src', imagePathLayerOrg(d.peel))
+    //     //   .attr('width', '100%')
+    //     .style('display', 'block')
+    //     .style('max-height', '100%')
+    //     .style('margin', 'auto')
 
-    cardBottom.append('div')
-        .attr('id', 'force-directed-layer-image-' + d.peel)
-        .attr('class', 'card-image-wrapper tabcontent')
-        .append('img')
-        .attr('src', imagePathLayerFD(d.peel))
-        //   .attr('width', '100%')
-        .style('display', 'block')
-        .style('max-height', '100%')
-        .style('margin', 'auto')
+    // cardBottom.append('div')
+    //     .attr('id', 'force-directed-layer-image-' + d.peel)
+    //     .attr('class', 'card-image-wrapper tabcontent')
+    //     .append('img')
+    //     .attr('src', imagePathLayerFD(d.peel))
+    //     //   .attr('width', '100%')
+    //     .style('display', 'block')
+    //     .style('max-height', '100%')
+    //     .style('margin', 'auto')
 
-    cardBottom.append('div')
-        .attr('id', 'contour-layer-image-' + d.peel)
-        .attr('class', 'card-image-wrapper tabcontent')
-        .append('img')
-        .attr('src', imagePathLayerContour(d.peel))
-        //   .attr('width', '100%')
-        .style('display', 'block')
-        .style('max-height', '100%')
-        .style('margin', 'auto')
+    // cardBottom.append('div')
+    //     .attr('id', 'contour-layer-image-' + d.peel)
+    //     .attr('class', 'card-image-wrapper tabcontent')
+    //     .append('img')
+    //     .attr('src', imagePathLayerContour(d.peel))
+    //     //   .attr('width', '100%')
+    //     .style('display', 'block')
+    //     .style('max-height', '100%')
+    //     .style('margin', 'auto')
 
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
-        .attr('class', 'card-image-wrapper tabcontent')
+        .attr('class', 'card-image-wrapper')
 
     function drawLayerGraph(d) {
         console.log('draw graph', d)
@@ -278,10 +278,14 @@ export default function addCard(d) {
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
 
             // add zoom 
-            var zoomHandler = d3.zoom().scaleExtent([0.1, 8])
-                .on("zoom", zoomActions);
+            const cardTranslateExtent = 2000
+            var zoomHandler = d3.zoom()
+                                .scaleExtent([0.25, 8])
+                                // .translateExtent([[-cardTranslateExtent, -0.8*cardTranslateExtent], [cardTranslateExtent, 0.8*cardTranslateExtent]])
+                                .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
             graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
+            graphLayerSVG.call(zoomHandler.scaleTo, 0.4)
 
             // zoom functions
             function zoomActions() {
@@ -600,6 +604,7 @@ export default function addCard(d) {
 
         })
     }
+    drawLayerGraph(d);
 
     function removeLayerGraph(peel) {
         console.log('remove interactive node link for layer ' + peel)
