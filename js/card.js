@@ -49,14 +49,8 @@ export default function addCard(d) {
 
     var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
 
-    cardTop.append('div')
-        .attr('class', 'card-title-wrapper')
-        .append('h3')
-        .attr('class', 'card-title')
-        .text('Layer ' + d.peel)
-
-    var tabs = cardTop.append('div')
-        .attr('class', 'card-tabs-wrapper tab')
+    // var tabs = cardTop.append('div')
+    //     .attr('class', 'card-tabs-wrapper tab')
 
     // function changeTab(evt, cardName, peel) {
     //     console.log("change tab")
@@ -101,20 +95,27 @@ export default function addCard(d) {
     //     .text('Interactive')
     //     .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
 
-    cardTop.append('div')
-        .attr('class', 'card-icon-wrapper')
-        .append("i")
-        .attr('class', 'material-icons md-dark')
-        .text('close')
-        .style('cursor', 'pointer')
-        .on('click', function () { closeCard(d) })
-
     var cardTextValueFormat = d3.format(",.3f")
 
     var cardBottom = layers.append('div').attr('class', 'card-bottom-wrapper')
 
     var cardText = cardBottom.append('div')
         .attr('class', 'card-text-wrapper')
+
+    var cardTitle = cardText.append('div')
+        .attr('class', 'card-title-wrapper')
+
+    cardTitle.append('h3')
+        .attr('class', 'card-title')
+        .text('Layer ' + d.peel)
+
+    cardTitle.append('div')
+        .attr('class', 'card-icon-wrapper')
+        .append("i")
+        .attr('class', 'material-icons md-dark')
+        .text('close')
+        .style('cursor', 'pointer')
+        .on('click', function () { closeCard(d) })
 
     // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
 
@@ -212,7 +213,7 @@ export default function addCard(d) {
         console.log('draw graph', d)
 
         var graphLayerMargin = { top: 0, right: 0, bottom: 0, left: 0 };
-        var graphLayerWidth = document.getElementById("interactive-node-link-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right
+        var graphLayerWidth = document.getElementById("interactive-node-link-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right - 6
         var graphLayerHeight = document.getElementById("interactive-node-link-" + d.peel).clientHeight - graphLayerMargin.top - graphLayerMargin.bottom
 
         var graphLayerSVG = d3.select("#interactive-node-link-" + d.peel)

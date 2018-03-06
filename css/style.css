@@ -368,10 +368,11 @@ h2 {
     /* border-left: 1px solid rgba(0,0,0,.14); */
     border: 0;
     height: 400px;
-    width: 96%;
+    width: 100%;
     /* background-color: slategray; */
     /* margin: 4%; */
-    padding: 2%;
+    /* padding: 2%; */
+    padding: 0%;
     position: relative;
     display: flex;
     flex-flow: column;
@@ -419,15 +420,17 @@ h3 {
     /* width: 30%; */
     /* float: left; */
     color: var(--darkest);
-    flex-grow: 0;
+    /* flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 150px;
+    flex-basis: 150px; */
+    display: flex;
 }
 
 .card-title {
     /* flex-grow: 0;
     flex-shrink: 0;
     flex-basis: 150px; */
+    flex: 1;
 }
 
 .card-tabs-wrapper {
@@ -451,13 +454,10 @@ h3 {
 }
 
 .card-icon-wrapper {
-    height: 30px;
-    /* width: 10%; */
-    /* float: left; */
     text-align: right;
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 50px;
+    flex-basis: 0px; /* this is hacky, just ensures icon as as small as possible */
 }
 
 .card-bottom-wrapper {
@@ -476,6 +476,7 @@ h3 {
     /* height: 270px; */
     /* background-color: red; */
     box-sizing: border-box; 
+    padding: 10px;
 }
 
 .card-image-wrapper {
@@ -485,7 +486,6 @@ h3 {
     height: 100%;
     /* background-color: blue; */
     box-sizing: border-box;
-    text-align: center;
 }
 
 .card-text-item {
