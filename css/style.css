@@ -121,7 +121,7 @@ html, body {
 
 #layers {
     flex: 1;
-    padding: 10px;
+    /* padding: 10px; */
     width: 300px;
     box-sizing: border-box; /* fixes sudden translate/pop from dragging the ribbon  */
     min-width: 400px;
@@ -383,13 +383,14 @@ h2 {
 }
 
 .card-border-wrapper {
-    border-top: 1px solid var(--ui-border-color);
-    border-right: 1px solid var(--ui-border-color);
+    /* border-top: 1px solid var(--ui-border-color); */
+    /* border-right: 1px solid var(--ui-border-color); */
     border-bottom: 1px solid var(--ui-border-color);
-    border-left: 0;
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-top: 2%;
+    /* border-left: 1px solid var(--ui-border-color); */
+    /* border-left: 0; */
+    /* margin-left: 2%; */
+    /* margin-right: 2%; */
+    /* margin-top: 2%; */
 }
 
 /* .card:before {
@@ -584,7 +585,9 @@ h3 {
     fill: var(--darker);
 }
 
-.switch {
+
+/* old toggles */
+/* .switch {
     position: relative;
     display: inline-block;
     width: 60px;
@@ -631,21 +634,24 @@ input:focus + .slider {
 input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
-    transform: translateX(26px);    }
+    transform: translateX(26px);    } */
 
 /* Rounded sliders */
-.slider.round {
+/* .slider.round {
     border-radius: 34px;
 }
 
 .slider.round:before {
     border-radius: 50%;
 }
+*/
 
 .clone-label {
     font-weight: 400;
     cursor: pointer;
+    font-size: 10;
 }
+
 
 .nodes circle {
     cursor: pointer;
@@ -829,7 +835,7 @@ canvas {
 
 
 
-/* */
+/* toggle */
 .switch-input {
   display: none;
 }
