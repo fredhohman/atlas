@@ -209,7 +209,7 @@ d3.select('#overview-slider-size')
 var heightSlider = d3.select('#overview-slider-height')
                      .attr('max', 3*zCordHeight)
                      .attr('min', 1)
-                     .attr('step', 1)
+                     .attr('step', 0.01)
                      .property('value', 1)
                      .on('input', updateZPosition)
 
@@ -235,10 +235,9 @@ d3.select('#remove-all-3d-layers')
     // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Remove All</span>')  
     .html('<i class="material-icons md-24 ">remove</i>hide all')  
 
-// d3.select('#overview-header')
-//   .append('button')
-//   .text('animate graph')
-//   .on('click', animateGraph)
+d3.select('#animate-graph')
+  .on('click', animateGraph)
+  .html('<i class="material-icons md-24 ">play_arrow</i>animate')
 
 function updateRadius() {
     for (let c = 0; c < circles.length; c++) {
@@ -281,12 +280,32 @@ function removeAll3DPoints() {
 }
 
 function animateGraph() {
+    
     console.log('animate')
-    console.log(heightSlider.attr('value'))
-    heightSlider.attr('value', 1000)
-    // heightSlider
-    console.log(heightSlider.attr('value'))
+    // console.log(heightSlider.property('value'))
+
+    var start = 1
+    var end = 1000
+    var duration = 2
+    var increment = (end-start) / (60 * duration)
+    var counter = 0
+
+    function matt() {
+        heightSlider.property('value', start + counter*increment)
+        counter += 1
+
+        // console.log(heightSlider.property('value'))
+
+        if (start + increment*counter < end) {
+            window.requestAnimationFrame(matt);
+            updateZPosition.call({ 'value': start + counter * increment })
+        }
+    }
+
+    window.requestAnimationFrame(matt)
+
 }
+
 
 function RGBtoHex(rgbColor) {
     var rgbColor = rgbColor.split("(")[1].split(")")[0];
