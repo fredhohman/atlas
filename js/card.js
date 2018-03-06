@@ -58,28 +58,28 @@ export default function addCard(d) {
     var tabs = cardTop.append('div')
         .attr('class', 'card-tabs-wrapper tab')
 
-    function changeTab(evt, cardName, peel) {
-        console.log("change tab")
-        console.log(evt, peel)
+    // function changeTab(evt, cardName, peel) {
+    //     console.log("change tab")
+    //     console.log(evt, peel)
 
-        var i, tabcontent, tablinks;
+    //     var i, tabcontent, tablinks;
 
-        tabcontent = document.getElementById("card-" + peel).getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-            removeLayerGraph(peel);
-            removeLayerGraphContour(peel);
-        }
+    //     tabcontent = document.getElementById("card-" + peel).getElementsByClassName("tabcontent");
+    //     for (i = 0; i < tabcontent.length; i++) {
+    //         tabcontent[i].style.display = "none";
+    //         removeLayerGraph(peel);
+    //         removeLayerGraphContour(peel);
+    //     }
 
-        tablinks = document.getElementById("card-" + peel).getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
+    //     tablinks = document.getElementById("card-" + peel).getElementsByClassName("tablinks");
+    //     for (i = 0; i < tablinks.length; i++) {
+    //         tablinks[i].className = tablinks[i].className.replace(" active", "");
+    //     }
 
-        document.getElementById(cardName).style.display = "block";
-        evt.currentTarget.className += " active";
+    //     document.getElementById(cardName).style.display = "block";
+    //     evt.currentTarget.className += " active";
 
-    }
+    // }
 
     // var originalLayerImg = tabs.append('button')
     //     .attr('class', 'card-tabs tablinks')
@@ -96,10 +96,10 @@ export default function addCard(d) {
     //     .text('Contour')
     //     .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
 
-    var interactiveLayer = tabs.append('button')
-        .attr('class', 'card-tabs tablinks active') // set initial view
-        .text('Interactive')
-        .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
+    // var interactiveLayer = tabs.append('button')
+    //     .attr('class', 'card-tabs tablinks active') // set initial view
+    //     .text('Interactive')
+    //     .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
 
     cardTop.append('div')
         .attr('class', 'card-icon-wrapper')
