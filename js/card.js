@@ -120,60 +120,70 @@ export default function addCard(d) {
     // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
 
     cardText.append('span')
-        .attr('class', 'card-text-item')
+        .attr('class', 'smalltext-header card-text-item')
         .text('edges: ')
         .append('span')
         .attr('class', 'card-text-item-value')
         .text(d.edges)
 
     cardText.append('span')
-        .attr('class', 'card-text-item')
+        .attr('class', 'smalltext-header card-text-item')
         .text('vertices: ')
         .append('span')
         .attr('class', 'card-text-item-value')
         .text(d.vertices)
 
     cardText.append('span')
-        .attr('class', 'card-text-item')
+        .attr('class', 'smalltext-header card-text-item')
         .text('clones: ')
         .append('span')
         .attr('class', 'card-text-item-value')
         .text(d.clones)
 
     cardText.append('span')
-        .attr('class', 'card-text-item')
+        .attr('class', 'smalltext-header card-text-item')
         .text('components: ')
         .append('span')
         .attr('class', 'card-text-item-value')
         .text(d.components)
 
     cardText.append('span')
-        .attr('class', 'card-text-item')
+        .attr('class', 'smalltext-header card-text-item')
         .text('clustering: ')
         .append('span')
         .attr('class', 'card-text-item-value')
         .text(cardTextValueFormat(d.clustering))
 
-    // cardText.append('span')
-    //         .style('display', 'inline-block')
-    //         .append('button')
-    //         .attr('id', 'toggle-clones')
-    //         .attr('type', 'button')
-    //         .text('toggle clones')
-    var cloneToggle = cardText.append('label').attr('class', 'switch')
-    cloneToggle.append('input').attr('id', 'clone-toggle-' + d.peel).attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
-    cloneToggle.append('span').attr('class', 'slider round')
+
+    // var positionToggle = cardText.append('label').attr('class', 'switch')
+    // positionToggle.append('input').attr('id', 'position-toggle-' + d.peel).attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
+    // positionToggle.append('span').attr('class', 'slider round')
+
+    var positionToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "position-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input position-toggle')
+    var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('position')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('on')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('off')
+
+    // var contourToggle = cardText.append('label').attr('class', 'switch')
+    // contourToggle.append('input').attr('id', 'contour-toggle-' + d.peel).attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
+    // contourToggle.append('span').attr('class', 'slider round')
+
+    var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
+    var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('contour')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('on')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('off')
+
+    // var cloneToggle = cardText.append('label').attr('class', 'switch')
+    // cloneToggle.append('input').attr('id', 'clone-toggle-' + d.peel).attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
+    // cloneToggle.append('span').attr('class', 'slider round')
+
+    var cloneToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "clone-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input clone-toggle')
+    var cloneToggleLabel = cardText.append('label').attr('for', "clone-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('clones')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('on')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('off')
 
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
-
-    var positionToggle = cardText.append('label').attr('class', 'switch')
-    positionToggle.append('input').attr('id', 'position-toggle-' + d.peel).attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
-    positionToggle.append('span').attr('class', 'slider round')
-
-    var contourToggle = cardText.append('label').attr('class', 'switch')
-    contourToggle.append('input').attr('id', 'contour-toggle-' + d.peel).attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
-    contourToggle.append('span').attr('class', 'slider round')
 
     // cardBottom.append('div')
     //     .attr('id', 'original-layer-image-' + d.peel)
@@ -577,6 +587,7 @@ export default function addCard(d) {
                         .attr("d", d3.geoPath());
 
                     g.append("g")
+                        .attr('class', 'contour-x-axis')
                         .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
                         .call(d3.axisBottom(contourX))
                         .select(".tick:last-of-type text")
@@ -587,6 +598,7 @@ export default function addCard(d) {
                         .text("x");
 
                     g.append("g")
+                        .attr('class', 'contour-y-axis')
                         .attr("transform", "translate(" + graphLayerMargin.left + ",0)")
                         .call(d3.axisLeft(contourY))
                         .select(".tick:last-of-type text")
@@ -598,6 +610,8 @@ export default function addCard(d) {
 
                 } else {
                     d3.select('#contour-' + contourLayerNum).remove()
+                    d3.select('.contour-x-axis').remove()
+                    d3.select('.contour-y-axis').remove()
                 }
 
             }
