@@ -109,14 +109,6 @@ export default function addCard(d) {
         .attr('class', 'card-title')
         .text('Layer ' + d.peel)
 
-    cardTitle.append('div')
-        .attr('class', 'card-icon-wrapper')
-        .append("i")
-        .attr('class', 'material-icons md-dark')
-        .text('close')
-        .style('cursor', 'pointer')
-        .on('click', function () { closeCard(d) })
-
     // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
 
     cardText.append('span')
@@ -219,11 +211,25 @@ export default function addCard(d) {
         .attr('id', 'interactive-node-link-' + d.peel)
         .attr('class', 'card-image-wrapper')
 
+    // close button
+    interactiveNodeLinkDiv.append('div')
+        .style('z-index', '1000')
+        .style('position', 'absolute')
+        .style('right', '0')
+        .style('padding', '8px')
+        // .attr('class', 'card-icon-wrapper')
+        .append("i")
+        .attr('class', 'material-icons md-dark')
+        .text('close')
+        .style('cursor', 'pointer')
+        .on('click', function () { closeCard(d) })
+
+
     function drawLayerGraph(d) {
         console.log('draw graph', d)
 
         var graphLayerMargin = { top: 0, right: 0, bottom: 0, left: 0 };
-        var graphLayerWidth = document.getElementById("interactive-node-link-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right - 6
+        var graphLayerWidth = document.getElementById("interactive-node-link-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right //- 6
         var graphLayerHeight = document.getElementById("interactive-node-link-" + d.peel).clientHeight - graphLayerMargin.top - graphLayerMargin.bottom
 
         var graphLayerSVG = d3.select("#interactive-node-link-" + d.peel)
