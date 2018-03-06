@@ -175,7 +175,7 @@ d3.json(dataPathJSON, function(error, data) {
           .call(d3.axisLeft(y))
           .selectAll('.tick text')
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
-          .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
+        //   .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
 
     d3.select('.y-axis').selectAll(".tick text")
         .on("click", function (d, i) {
