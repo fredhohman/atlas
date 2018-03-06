@@ -224,7 +224,6 @@ export default function addCard(d) {
         .style('cursor', 'pointer')
         .on('click', function () { closeCard(d) })
 
-
     function drawLayerGraph(d) {
         console.log('draw graph', d)
 
@@ -562,6 +561,8 @@ export default function addCard(d) {
                     contourX.domain(d3.extent(selectedNodesData, function (d) { return d.fdx; })).nice();
                     contourY.domain(d3.extent(selectedNodesData, function (d) { return d.fdy; })).nice();
 
+                    var g = d3.select('#interactive-node-link-' + contourLayerNum + '-svg').select('g')
+                    
                     // g.append("g")
                     //     .attr("stroke", "white")
                     //     .attr("stroke-width", 0.5)
@@ -577,7 +578,7 @@ export default function addCard(d) {
                     //     .attr("r", 2)
                     //     .attr("opacity", 1.0)
                     //     .attr("fill", function (d) { return '#' + d.color.split('x')[1] });
-
+                    
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
                         .attr("fill", "none")
                         .attr("stroke", ribbonColorPeel(contourLayerNum))
