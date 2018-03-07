@@ -369,7 +369,7 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
 
             // called when the drag event occurs (object should be moved)
             function dragged(d) {
-                var peel = d3.select(this).attr('class').split('-')[1]
+                var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1] // careful here, always looks as first class of circle node-i where i is a peel
                 if (d3.select('#position-toggle-' + peel).property('checked')) {
                     d.fdx += d3.event.dx;
                     d.fdy += d3.event.dy;
