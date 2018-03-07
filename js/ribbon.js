@@ -91,6 +91,8 @@ d3.json(dataPathJSON, function(error, data) {
           .attr('height', y.bandwidth())
         //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
           .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
+          .style('stroke', '#dddddd')
+          .style('stroke-width', 1)
           .on('mouseover', function (d) {
               bulletTooltip.show(d);
             //   showLayerInOverview(d)
