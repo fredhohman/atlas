@@ -170,18 +170,18 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
     // positionToggle.append('span').attr('class', 'slider round')
 
     var positionToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "position-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input position-toggle')
-    var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('position')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('on')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('off')
+    var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('redraw')
+    // positionToggleLabel.append('span').attr('class', 'toggle--on').text('original positions')
+    // positionToggleLabel.append('span').attr('class', 'toggle--off').text('redrawn')
 
     // var contourToggle = cardText.append('label').attr('class', 'switch')
     // contourToggle.append('input').attr('id', 'contour-toggle-' + d.peel).attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
     // contourToggle.append('span').attr('class', 'slider round')
 
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
-    var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('contour')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('on')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('off')
+    var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
+    // contourToggleLabel.append('span').attr('class', 'toggle--on').text('hide contour')
+    // contourToggleLabel.append('span').attr('class', 'toggle--off').text('show contour')
 
     // var cloneToggle = cardText.append('label').attr('class', 'switch')
     // cloneToggle.append('input').attr('id', 'clone-toggle-' + d.peel).attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
@@ -189,8 +189,8 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var cloneToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "clone-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input clone-toggle')
     var cloneToggleLabel = cardText.append('label').attr('for', "clone-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('clones')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('on')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('off')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('hide clones')
+    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('show clones')
 
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
