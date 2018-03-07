@@ -311,8 +311,10 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                 console.log('initNode', initNode)
                 var foundClone = graphLayerData.nodes.filter(function (node) { return node.id === initNode.id})[0]
                 console.log(foundClone)
+                graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
+                graphLayerSVG.call(zoomHandler.scaleTo, zoomScale)
                 graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, foundClone.x, foundClone.y)
-                graphLayerSVG.transition().duration(1000).call(zoomHandler.scaleTo, zoomScale)
+                // graphLayerSVG.transition().duration(1000).call(zoomHandler.scaleTo, 1)
             } else {
                 graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
                 graphLayerSVG.call(zoomHandler.scaleTo, zoomScale)
@@ -417,9 +419,10 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                             console.log('clicked clone', node, datum)
                             d3.json(dataPathJSON, function (error, tempData) {
                                 var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
-                                // console.log(g.attr('transform').split(' ')[1])
+                                var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
+                                scale = scale.substring(0, scale.length - 1)
                                 graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.x, node.y)
-                                addCard(obj, initNode = node);
+                                addCard(obj, initNode = node, scale = scale);
                             })
                         })
 
