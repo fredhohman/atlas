@@ -325,9 +325,12 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
             if (initNode) {
                 // card clicked from clone 
                 var foundClone = graphLayerData.nodes.filter(function (node) { return node.id === initNode.id})[0]
+                if (!foundClone) {
+                    alert('no clone found')                    
+                }
                 graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
                 graphLayerSVG.call(zoomHandler.scaleTo, zoomScale)
-                graphLayerSVG.transition().duration(1000).call(function(a) { zoomHandler.translateTo(a,foundClone.x,foundClone.y); })
+                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, foundClone.fdx, foundClone.fdy)
                 // graphLayerSVG.transition().duration(1000).call(zoomHandler.transform, transform)
                 // function transform() {
                 //     return d3.zoomIdentity
@@ -337,7 +340,7 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                 // }
                 // graphLayerSVG.transition().duration(1000).call(function(a) { zoomHandler.translateTo(a,foundClone.x,foundClone.y); })
                 // graphLayerSVG.transition().duration(1000).call(zoomHandler.scaleTo, 1)
-                nodeSVGs.filter(function(d) {return d === foundClone}).style('fill', 'red')
+                nodeSVGs.filter(function(d) {return d === foundClone}).classed('selected', true)
             } else {
                 // card clicked from ribbon
                 graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
@@ -445,8 +448,8 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                                 var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
                                 var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
                                 scale = scale.substring(0, scale.length - 1)
-                                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.x, node.y) // transition card that is clicked
-                                nodeSVGs.filter(function(n) { return n === node}).style('fill', 'red')
+                                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.fdx, node.fdy) // transition card that is clicked
+                                nodeSVGs.filter(function (n) { return n === node }).classed('selected', true).classed('pulse', true)
                                 addCard(obj, initNode = node, scale = scale);
                             })
                         })
@@ -583,32 +586,30 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
 
                     var contourX = d3.scaleLinear()
                         // .rangeRound([graphLayerMargin.left, graphLayerWidth - graphLayerMargin.right]);
-                        .rangeRound([0, 500]);
+                        .rangeRound([-500, 500]);
 
                     var contourY = d3.scaleLinear()
                         // .rangeRound([graphLayerHeight - graphLayerMargin.bottom, graphLayerMargin.top]);
-                        .rangeRound([0, 500]);
+                        .rangeRound([-500, 500]);
 
                     contourX.domain(d3.extent(selectedNodesData, function (d) { return d.fdx; })).nice();
+                    console.log(d3.extent(selectedNodesData, function (d) { return d.fdx; }))
                     contourY.domain(d3.extent(selectedNodesData, function (d) { return d.fdy; })).nice();
+                    console.log(d3.extent(selectedNodesData, function (d) { return d.fdy; }))
 
                     var g = d3.select('#interactive-node-link-' + contourLayerNum + '-svg').select('g')
 
-                    // g.append("g")
-                    //     .attr("stroke", "white")
-                    //     .attr("stroke-width", 0.5)
-                    //     .selectAll("circle")
-                    //     // .data(data.nodes.filter(function (d) {
-                    //     //     // return +d.id.split('_')[1] === layer
-                    //     //     return d
-                    //     // }))
-                    //     .data()
-                    //     .enter().append("circle")
-                    //     .attr("cx", function (d) { return x(d.location[0]); })
-                    //     .attr("cy", function (d) { return y(d.location[1]); })
-                    //     .attr("r", 2)
-                    //     .attr("opacity", 1.0)
-                    //     .attr("fill", function (d) { return '#' + d.color.split('x')[1] });
+                    g.append("g")
+                        .attr("stroke", "white")
+                        .attr("stroke-width", 0.5)
+                        .selectAll("circle")
+                        .data(selectedNodesData)
+                        .enter().append("circle")
+                        .attr("cx", function (d) { return d.fdx; })
+                        .attr("cy", function (d) { return d.fdy; })
+                        .attr("r", 2)
+                        .attr("opacity", 1.0)
+                        .attr("fill", 'black');
 
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
                         .attr("fill", "none")
@@ -616,17 +617,17 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
-                            .x(function (d) { return contourX(d.fdx); })
-                            .y(function (d) { return contourY(-1 * d.fdy); })
-                            .size([graphLayerWidth, graphLayerHeight])
-                            .bandwidth(70)
+                            .x(function (d) { return d.fdx; })
+                            .y(function (d) { return d.fdy; })
+                            .size([500, 500])
+                            .bandwidth(40)
                             (selectedNodesData))
                         .enter().append("path")
                         .attr("d", d3.geoPath());
-
+                    console.log(graphLayerHeight, graphLayerMargin)
                     g.append("g")
                         .attr('class', 'contour-x-axis')
-                        .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
+                        // .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
                         .call(d3.axisBottom(contourX))
                         .select(".tick:last-of-type text")
                         .select(function () { return this.parentNode.appendChild(this.cloneNode()); })
