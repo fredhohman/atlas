@@ -308,14 +308,22 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
             zoomHandlerUp[d.peel] = zoomHandler
             // if ((zzomX.x != 0) || (zoomY != 0) || (zoomScale != 0.4)) {
             if (initNode) {
-                console.log('initNode', initNode)
+                // card clicked from clone 
                 var foundClone = graphLayerData.nodes.filter(function (node) { return node.id === initNode.id})[0]
-                console.log(foundClone)
                 graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
                 graphLayerSVG.call(zoomHandler.scaleTo, zoomScale)
-                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, foundClone.x, foundClone.y)
+                graphLayerSVG.transition().duration(1000).call(function(a) { zoomHandler.translateTo(a,foundClone.x,foundClone.y); })
+                // graphLayerSVG.transition().duration(1000).call(zoomHandler.transform, transform)
+                // function transform() {
+                //     return d3.zoomIdentity
+                //         // .translate(0,0)
+                //         .scale(zoomScale)
+                //         // .translate(foundClone.x,foundClone.y);
+                // }
+                // graphLayerSVG.transition().duration(1000).call(function(a) { zoomHandler.translateTo(a,foundClone.x,foundClone.y); })
                 // graphLayerSVG.transition().duration(1000).call(zoomHandler.scaleTo, 1)
             } else {
+                // card clicked from ribbon
                 graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
                 graphLayerSVG.call(zoomHandler.scaleTo, zoomScale)
             }
@@ -421,7 +429,7 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                                 var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
                                 var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
                                 scale = scale.substring(0, scale.length - 1)
-                                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.x, node.y)
+                                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.x, node.y) // transition card that is clicked
                                 addCard(obj, initNode = node, scale = scale);
                             })
                         })
