@@ -170,6 +170,10 @@ export function drawLayer3DPoints(layerNum) {
                 dst.target = link.target;
                 src.peel = data.peels[layerNumIndex];
                 dst.peel = data.peels[layerNumIndex];
+                src.ox = layerDataObject[link.source].x;
+                src.oy = -1*layerDataObject[link.source].y;
+                dst.ox = layerDataObject[link.target].x;
+                dst.oy = -1*layerDataObject[link.target].y;
 
                 lineGeometry.vertices.push(src, dst);
             }
@@ -276,6 +280,16 @@ function updateXPosition() {
         circles[c].position.x = circles[c].userData['x'] * this.value
         circles[c].position.y = circles[c].userData['y'] * this.value
     }
+
+    for (let l = 0; l < lines.length; l++) {
+        // console.log('lines', lines[l])
+        for (let v = 0; v < lines[l].geometry.vertices.length; v++) {
+            lines[l].geometry.vertices[v].x = lines[l].geometry.vertices[v].ox * this.value
+            lines[l].geometry.vertices[v].y = lines[l].geometry.vertices[v].oy * this.value
+            lines[l].geometry.verticesNeedUpdate = true;
+        }
+    }
+
 }
 
 function resetOverviewCamera() {
