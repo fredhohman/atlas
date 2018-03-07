@@ -897,3 +897,11 @@ canvas {
 .switch-input:checked + .switch-label .toggle--off {
   display: none;
 }
+
+hr {
+    border: 0;
+    background-color: var(--ui-border-color);
+    height: 1px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}

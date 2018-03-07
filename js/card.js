@@ -150,6 +150,20 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
         .attr('class', 'card-text-item-value')
         .text(cardTextValueFormat(d.clustering))
 
+    if (d.components === 1) {
+        cardText.append('hr')
+        
+        var cliqueMessage = cardText.append('span')
+            .attr('class', 'smalltext-header card-text-item')
+
+        cliqueMessage
+            .text('clique: ')
+            .append('span')
+            .attr('class', 'card-text-item-value')
+            .html(cardTextValueFormat(d.edges / (d.vertices * (d.vertices - 1) / 2)) + '% <br>(' + (d.vertices * (d.vertices - 1) / 2 - d.edges) + ' missing edges)')
+    }
+
+    cardText.append('hr')
 
     // var positionToggle = cardText.append('label').attr('class', 'switch')
     // positionToggle.append('input').attr('id', 'position-toggle-' + d.peel).attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
@@ -180,6 +194,7 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
+
 
     // cardBottom.append('div')
     //     .attr('id', 'original-layer-image-' + d.peel)
