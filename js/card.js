@@ -11,6 +11,9 @@ let numOfCardsUp = 0;
 window.numOfCardsUp = numOfCardsUp;
 window.cardsUp = cardsUp;
 
+let zoomHandlerUp = {};
+window.zoomHandlerUp = zoomHandlerUp;
+
 d3.json(dataPathJSON, function (error, data) {
 
     if (error) {
@@ -33,7 +36,7 @@ d3.select('#header-text-span')
     .on('click', reloadPage)
     .style('cursor', 'pointer')
 
-export default function addCard(d) {
+export default function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;
     cardsUp[d.peel] = 'up'
@@ -45,7 +48,7 @@ export default function addCard(d) {
         .attr('id', 'card-' + d.peel)
         .append('div')
         .attr('class', 'card')
-        // .style('border-left', function () { return '5px solid ' + ribbonColorPeel(d.peel) })
+    // .style('border-left', function () { return '5px solid ' + ribbonColorPeel(d.peel) })
 
     var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
 
@@ -95,6 +98,7 @@ export default function addCard(d) {
     //     .text('Interactive')
     //     .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
 
+    var cardTextValueFormat = d3.format(",.3f")
     var cardTextValueFormat = d3.format(",.3f")
 
     var cardBottom = layers.append('div').attr('class', 'card-bottom-wrapper')
@@ -271,7 +275,7 @@ export default function addCard(d) {
                 .attr("y2", function (d) { return d.target.y; })
                 .attr("stroke-width", 0.6)
                 .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
-                .style("stroke-opacity", 0.75)
+                .style("stroke-opacity", 0.5)
 
             var cloneTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
                 return '<span class="tooltip-number">' + d.peels.join(', ') + '</span>'
@@ -288,31 +292,36 @@ export default function addCard(d) {
                 .enter()
                 .append("circle")
                 .attr('class', 'node-' + d.peel)
-                .attr("r", 2)
+                .attr("r", 6)
                 .attr('cx', function (d) { return d.x })
                 .attr('cy', function (d) { return d.y })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
+                .attr('stroke', '#ffffff')
+                .attr('stroke-width', 1.5)
 
             // add zoom 
-            const cardTranslateExtent = 2000
             var zoomHandler = d3.zoom()
-                                .scaleExtent([0.25, 8])
-                                // .translateExtent([[-cardTranslateExtent, -0.8*cardTranslateExtent], [cardTranslateExtent, 0.8*cardTranslateExtent]])
-                                .on("zoom", zoomActions);
+                .scaleExtent([0.25, 8])
+                // .translateExtent([[-2000, -0.8*2000], [2000, 0.8*2000]])
+                .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
-            graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
-            graphLayerSVG.call(zoomHandler.scaleTo, 0.4)
+            zoomHandlerUp[d.peel] = zoomHandler
+            // if ((zzomX.x != 0) || (zoomY != 0) || (zoomScale != 0.4)) {
+            if (initNode) {
+                console.log('initNode', initNode)
+                var foundClone = graphLayerData.nodes.filter(function (node) { return node.id === initNode.id})[0]
+                console.log(foundClone)
+                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, foundClone.x, foundClone.y)
+                graphLayerSVG.transition().duration(1000).call(zoomHandler.scaleTo, zoomScale)
+            } else {
+                graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
+                graphLayerSVG.call(zoomHandler.scaleTo, zoomScale)
+            }
 
             // zoom functions
             function zoomActions() {
                 g.attr("transform", d3.event.transform)
             }
-
-            function zoomToCenter() {
-                console.log('zoom to center')
-                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, 0, 0)
-            }
-            d3.select('#zoom-to-center').on('click', zoomToCenter)
 
             // add drag
             var drag = d3.drag()
@@ -329,17 +338,17 @@ export default function addCard(d) {
                 d3.event.sourceEvent.stopPropagation();
             }
 
-            //Called when the drag event occurs (object should be moved)
+            // called when the drag event occurs (object should be moved)
             function dragged(d) {
-
-                if (d3.select('.position-toggle').property('checked')) {
+                var peel = d3.select(this).attr('class').split('-')[1]
+                if (d3.select('#position-toggle-' + peel).property('checked')) {
                     d.fdx += d3.event.dx;
                     d.fdy += d3.event.dy;
                 } else {
                     d.x += d3.event.dx;
                     d.y += d3.event.dy;
                 }
-                updateNodePositionsTick();
+                updateNodePositionsTick(peel);
             }
 
             function getNeighbors(node) {
@@ -408,16 +417,10 @@ export default function addCard(d) {
                             console.log('clicked clone', node, datum)
                             d3.json(dataPathJSON, function (error, tempData) {
                                 var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
-                                addCard(obj);
+                                // console.log(g.attr('transform').split(' ')[1])
+                                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.x, node.y)
+                                addCard(obj, initNode = node);
                             })
-                            // node.fx = 0
-                            // node.fy = 0
-                            // d3.selectAll('.everything').attr('transform', function () {
-                            //     // console.log(uh)
-                            //     'translate(' + node.fx + ', ' + node.fy + ') scale(' + 1 + ', ' + 1 + ')'
-                            // })
-                            // node.fx = graphLayerWidth / 2
-                            // node.fx = graphLayerHeight / 2
                         })
 
                 } else {
@@ -448,26 +451,26 @@ export default function addCard(d) {
                 // style clones
                 if (d3.select(this).property('checked')) {
                     selectedNodes
-                            .classed("clone", function (d) {
-                                if (d.peels.length > 1) {
-                                    return true
-                                } else {
-                                    return false
-                                }
-                            })
+                        .classed("clone", function (d) {
+                            if (d.peels.length > 1) {
+                                return true
+                            } else {
+                                return false
+                            }
+                        })
                     selectedNodes
-                            .attr('r', function (d) {
-                                if (d.peels.length > 1) {
-                                    return 3.5
-                                } else {
-                                    return 2.5
-                                }
-                            })
+                        .attr('r', function (d) {
+                            if (d.peels.length > 1) {
+                                return 8
+                            } else {
+                                return 4
+                            }
+                        })
                 } else {
                     // default node styling
                     selectedNodes.classed('clone', false)
                     selectedNodes.attr('fill', function () { return ribbonColorPeel(contourLayerNum) })
-                    selectedNodes.attr('r', 3)
+                    selectedNodes.attr('r', 6)
                 }
             }
             d3.selectAll('.clone-toggle').on('click', toggleClones)
@@ -513,8 +516,8 @@ export default function addCard(d) {
             }
             d3.selectAll('.position-toggle').on('click', togglePosition)
 
-            function updateNodePositionsTick() {
-                if (d3.select('.position-toggle').property('checked')) {
+            function updateNodePositionsTick(peel) {
+                if (d3.select('#position-toggle-' + peel).property('checked')) {
 
                     nodeSVGs
                         .attr("cx", function (d) { return d.fdx; })
@@ -578,7 +581,7 @@ export default function addCard(d) {
                     //     .attr("r", 2)
                     //     .attr("opacity", 1.0)
                     //     .attr("fill", function (d) { return '#' + d.color.split('x')[1] });
-                    
+
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
                         .attr("fill", "none")
                         .attr("stroke", ribbonColorPeel(contourLayerNum))
@@ -648,6 +651,7 @@ function closeCard(d) {
     numOfCardsUp -= 1;
     delete cardsUp[d.peel]
     d3.select('#card-' + d.peel).remove();
+    delete zoomHandlerUp[d.peel]
     // console.log(document.getElementsByClassName('y-axis'))
     cardMessage();
 }
