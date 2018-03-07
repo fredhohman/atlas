@@ -322,6 +322,7 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                 // }
                 // graphLayerSVG.transition().duration(1000).call(function(a) { zoomHandler.translateTo(a,foundClone.x,foundClone.y); })
                 // graphLayerSVG.transition().duration(1000).call(zoomHandler.scaleTo, 1)
+                nodeSVGs.filter(function(d) {return d === foundClone}).style('fill', 'red')
             } else {
                 // card clicked from ribbon
                 graphLayerSVG.call(zoomHandler.translateTo, 0, 0)
@@ -430,6 +431,7 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                                 var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
                                 scale = scale.substring(0, scale.length - 1)
                                 graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.x, node.y) // transition card that is clicked
+                                nodeSVGs.filter(function(n) { return n === node}).style('fill', 'red')
                                 addCard(obj, initNode = node, scale = scale);
                             })
                         })
