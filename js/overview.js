@@ -27,16 +27,18 @@ var overview = document.getElementById('overview-canvas-wrapper')
 var renderer = new THREE.WebGLRenderer();
 camera.aspect = overview.clientWidth / overview.clientHeight;
 camera.updateProjectionMatrix();
-renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 2 ); // -2 is a bit hacky
+console.log(document.getElementById('overview-header').clientHeight)
+renderer.setSize(overview.clientWidth - 0, overview.clientHeight - document.getElementById('overview-header').clientHeight);
 overview.appendChild(renderer.domElement);
 
 window.addEventListener('resize', onWindowResize, false);
 window.addEventListener('ribbonDragEnd', onWindowResize, false)
 
 function onWindowResize() {
+    console.log(document.getElementById('overview-header').clientHeight)
     camera.aspect = overview.clientWidth / overview.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(overview.clientWidth - 0, overview.clientHeight - 2); // -2 is a bit hacky
+    renderer.setSize(overview.clientWidth - 0, overview.clientHeight - document.getElementById('overview-header').clientHeight);
 }
 
 var controls = new TrackballControls(camera, renderer.domElement);
@@ -46,6 +48,7 @@ controls.dampingFactor = 0.1;
 var geometry = new THREE.CircleBufferGeometry(2, 20);
 
 var circles = [];
+var lines = [];
 
 // const gui = new GUI();
 // var test = gui.addFolder('test');
@@ -73,109 +76,112 @@ export function drawLayer3DPoints(layerNum) {
 
         // for (let peel = 0; peel < data.peels.length; peel++) {
 
-            // xCordScale = d3.scaleLinear()
-            //     // .domain([0,1000])
-            //     .range([0, 1000])
+        // xCordScale = d3.scaleLinear()
+        //     // .domain([0,1000])
+        //     .range([0, 1000])
 
-            // yCordScale = d3.scaleLinear()
-            //     // .domain([0,1000])
-            //     .range([0, 1000])
+        // yCordScale = d3.scaleLinear()
+        //     // .domain([0,1000])
+        //     .range([0, 1000])
 
-            zCordScale = d3.scaleLinear()
-                .domain(d3.extent(data.peels))
-                .range([-zCordHeight, zCordHeight])
-            window.zCordScale = zCordScale
+        zCordScale = d3.scaleLinear()
+            .domain(d3.extent(data.peels))
+            .range([-zCordHeight, zCordHeight])
+        window.zCordScale = zCordScale
 
         var layerNumIndex = data.peels.indexOf(layerNum)
         // console.log('peel', data.peels[layerNumIndex])
 
         d3.json(dataPathLayerJSON(data.peels[layerNumIndex]), function (error, layerData) {
 
-                for (let i = 0; i < layerData.nodes.length; i++) {
-                    const node = layerData.nodes[i];
+            for (let i = 0; i < layerData.nodes.length; i++) {
+                const node = layerData.nodes[i];
 
-                    var material = new THREE.MeshBasicMaterial();
-                    material.side = THREE.DoubleSide;
+                var material = new THREE.MeshBasicMaterial();
+                material.side = THREE.DoubleSide;
 
-                    var circle = new THREE.Mesh(geometry, material);
+                var circle = new THREE.Mesh(geometry, material);
 
-                    circle.scale.x = d3.select('#overview-slider-size').property('value')
-                    circle.scale.y = d3.select('#overview-slider-size').property('value')
+                circle.scale.x = d3.select('#overview-slider-size').property('value')
+                circle.scale.y = d3.select('#overview-slider-size').property('value')
 
-                    // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
-                    //     return (item.x);
-                    // })))
+                // xCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                //     return (item.x);
+                // })))
 
-                    // yCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
-                    //     return (item.y);
-                    // })))
+                // yCordScale.domain(d3.extent(layerData.nodes.map(function (item) {
+                //     return (item.y);
+                // })))
 
-                    // circle.position.x = xCordScale(node.x);
-                    circle.position.x = node.x * d3.select('#overview-slider-spread').property('value')
+                // circle.position.x = xCordScale(node.x);
+                circle.position.x = node.x * d3.select('#overview-slider-spread').property('value')
 
-                    // circle.position.y = yCordScale(node.y);
-                    circle.position.y = -1 * node.y * d3.select('#overview-slider-spread').property('value')
+                // circle.position.y = yCordScale(node.y);
+                circle.position.y = -1 * node.y * d3.select('#overview-slider-spread').property('value')
 
-                    // circle.position.z = zCordScale(data.peels[peel]);
-                    zCordHeight = d3.select('#overview-slider-height').property('value')
-                    zCordScale.range([-zCordHeight, zCordHeight])
-                    circle.position.z = zCordScale(data.peels[layerNumIndex])
+                // circle.position.z = zCordScale(data.peels[peel]);
+                zCordHeight = d3.select('#overview-slider-height').property('value')
+                zCordScale.range([-zCordHeight, zCordHeight])
+                circle.position.z = zCordScale(data.peels[layerNumIndex])
 
-                    // circle.position.z = 1;
-                    circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[layerNumIndex])))
-                    circle.userData['id'] = node.id
-                    circle.userData['peel'] = data.peels[layerNumIndex]
-                    circle.userData['x'] = node.x
-                    circle.userData['y'] = node.y
-                    scene.add(circle);
-                    circles.push(circle)
-
-
-                    // var map = new THREE.TextureLoader("sprite.png");
-                    // // console.log(map)
-                    // var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
-                    // var sprite = new THREE.Sprite(material);
-                    // sprite.position.x = node.x * 4;
-                    // sprite.position.y = node.y * 4;
-                    // sprite.position.z = zCordScale(data.peels[peel]);
-                    // scene.add(sprite);
+                // circle.position.z = 1;
+                circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[layerNumIndex])))
+                circle.userData['id'] = node.id
+                circle.userData['peel'] = data.peels[layerNumIndex]
+                circle.userData['x'] = node.x
+                circle.userData['y'] = -1 * node.y
+                scene.add(circle);
+                circles.push(circle)
 
 
-                }
+                // var map = new THREE.TextureLoader("sprite.png");
+                // // console.log(map)
+                // var material = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
+                // var sprite = new THREE.Sprite(material);
+                // sprite.position.x = node.x * 4;
+                // sprite.position.y = node.y * 4;
+                // sprite.position.z = zCordScale(data.peels[peel]);
+                // scene.add(sprite);
 
 
-                const arrayToObject = (array, keyField) =>
-                    array.reduce((obj, item) => {
-                        obj[item[keyField]] = item
-                        return obj
-                    }, {})
-                const layerDataObject = arrayToObject(layerData.nodes, "id")
+            }
+
+            console.log('add lines')
+            console.log(layerData.links)
+            const arrayToObject = (array, keyField) =>
+                array.reduce((obj, item) => {
+                    obj[item[keyField]] = item
+                    return obj
+                }, {})
+            const layerDataObject = arrayToObject(layerData.nodes, "id")
+            console.log(layerDataObject)
+
+            var lineGeometry = new THREE.Geometry();
 
 
-                // var lineGeometry = new THREE.Geometry();
-                // console.log(data.peels[layerNumIndex])
-                // // if (data.peels[layerNumIndex] === 15 || data.peels[layerNumIndex] === 12 || data.peels[layerNumIndex] === 10) {
-                //     for (let j = 0; j < layerData.links.length; j++) {
-                //         const link = layerData.links[j];
-                //         // console.log(link)
-                //         // console.log(layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; }))
-                //         // var foundNode1 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.source; })
-                //         // var foundNode2 = layerData.nodes.find(function (foundNode) { return foundNode.id === link.target; })
+            console.log(data.peels[layerNumIndex])
+            for (let j = 0; j < layerData.links.length; j++) {
+                const link = layerData.links[j];
 
-                //         lineGeometry.vertices.push(
-                //             new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[peel])),
-                //             new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[peel])),
-                //         );
+                let src = new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, -1 * layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[layerNumIndex])),
+                    dst = new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, -1 * layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[layerNumIndex]));
+                
+                src.source = link.source;
+                dst.target = link.target;
+                src.peel = data.peels[layerNumIndex];
+                dst.peel = data.peels[layerNumIndex];
 
-                //         var line = new THREE.Line(lineGeometry, lineMaterial);
-                //         scene.add(line);
-                //     }
-                // // }
+                lineGeometry.vertices.push(src, dst);
+            }
+
+            var line = new THREE.LineSegments(lineGeometry, lineMaterial);
+            // line.userData['peel'] = data.peels[layerNumIndex]
+            scene.add(line);
+            lines.push(line)
+            // console.log(line)
 
 
-
-
-            })
+        })
         // }
     })
 }
@@ -199,26 +205,26 @@ export function drawAll3DPointsWithLayers() {
 
 // overview header sliders
 d3.select('#overview-slider-size')
-  .attr('max', 10)
-  .attr('min', 0.1)
-  .attr('step', 0.1)
-  .property('value', 1)
-  .on('input', updateRadius)
-.on('change', updateRadius)
+    .attr('max', 10)
+    .attr('min', 0.1)
+    .attr('step', 0.1)
+    .property('value', 1)
+    .on('input', updateRadius)
+    .on('change', updateRadius)
 
 var heightSlider = d3.select('#overview-slider-height')
-                     .attr('max', 3*zCordHeight)
-                     .attr('min', 1)
-                     .attr('step', 0.01)
-                     .property('value', 1)
-                     .on('input', updateZPosition)
+    .attr('max', 3 * zCordHeight)
+    .attr('min', 1)
+    .attr('step', 0.01)
+    .property('value', 1)
+    .on('input', updateZPosition)
 
 d3.select('#overview-slider-spread')
-  .attr('max', 2)
-  .attr('min', 0)
-  .attr('step', 0.05)
-  .property('value', 1)
-  .on('input', updateXPosition)
+    .attr('max', 2)
+    .attr('min', 0)
+    .attr('step', 0.05)
+    .property('value', 1)
+    .on('input', updateXPosition)
 
 d3.select('#reset-camera-button')
     .on('click', resetOverviewCamera)
@@ -228,24 +234,23 @@ d3.select('#reset-camera-button')
 d3.select('#add-all-3d-layers')
     .on('click', drawAll3DPointsWithLayers)
     // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Add All</span>')  
-    .html('<i class="material-icons md-24 ">add</i>show all')  
+    .html('<i class="material-icons md-24 ">add</i>show all')
 
 d3.select('#remove-all-3d-layers')
     .on('click', removeAll3DPoints)
     // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Remove All</span>')  
-    .html('<i class="material-icons md-24 ">remove</i>hide all')  
+    .html('<i class="material-icons md-24 ">remove</i>hide all')
 
 d3.select('#animate-graph')
-  .on('click', animateGraph)
-  .html('<i class="material-icons md-24 ">play_arrow</i>animate')
+    .on('click', animateGraph)
+    .html('<i class="material-icons md-24 ">play_arrow</i>animate')
 
 function updateRadius() {
     for (let c = 0; c < circles.length; c++) {
         circles[c].scale.x = this.value
-        circles[c].scale.y = this.value
-        
+        circles[c].scale.y = -1 * this.value
+
     }
-    console.log(circles[0])
 }
 
 function updateZPosition() {
@@ -256,12 +261,20 @@ function updateZPosition() {
         // zCordHeight = this.value
         circles[c].position.z = zCordScale(circles[c].userData['peel'])
     }
+
+    for (let l = 0; l < lines.length; l++) {
+        // console.log('lines', lines[l])
+        for (let v = 0; v < lines[l].geometry.vertices.length; v++) {
+            lines[l].geometry.vertices[v].z = zCordScale(lines[l].geometry.vertices[v].peel)
+            lines[l].geometry.verticesNeedUpdate = true;
+        }
+    }
 }
 
 function updateXPosition() {
     for (let c = 0; c < circles.length; c++) {
         circles[c].position.x = circles[c].userData['x'] * this.value
-        circles[c].position.y = -1 * circles[c].userData['y'] * this.value
+        circles[c].position.y = circles[c].userData['y'] * this.value
     }
 }
 
@@ -275,28 +288,30 @@ function removeAll3DPoints() {
     }
 
     layersUp3D = {};
-    window.layersUp3D = layersUp3D
+    circles = [];
+    lines = [];
+    window.layersUp3D = layersUp3D;
 
 }
 
 function animateGraph() {
-    
+
     console.log('animate')
     // console.log(heightSlider.property('value'))
 
     var start = 1
     var end = 1000
     var duration = 2
-    var increment = (end-start) / (60 * duration)
+    var increment = (end - start) / (60 * duration)
     var counter = 0
 
     function matt() {
-        heightSlider.property('value', start + counter*increment)
+        heightSlider.property('value', start + counter * increment)
         counter += 1
 
         // console.log(heightSlider.property('value'))
 
-        if (start + increment*counter < end) {
+        if (start + increment * counter < end) {
             window.requestAnimationFrame(matt);
             updateZPosition.call({ 'value': start + counter * increment })
         }
@@ -351,10 +366,11 @@ var animate = function () {
 
     requestAnimationFrame(animate);
     controls.update();
-    circles.map(x => x.lookAt( camera.position ));
+    circles.map(x => x.lookAt(camera.position));
     renderer.render(scene, camera);
 
     // stats.end();
 };
 
 animate();
+// onWindowResize();
