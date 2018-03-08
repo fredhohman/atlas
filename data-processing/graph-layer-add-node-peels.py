@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
         # save clones to 'peels' key
         for node in graph_layer_data['nodes']:
-            node['peels'] = list(node_peels[node['id']])
+            node['peels'] = sorted(list(node_peels[node['id']]), reverse=True)
 
         # save graph as json
         with open(graph_layer_data_path, 'w') as outfile:
