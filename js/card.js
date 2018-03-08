@@ -458,6 +458,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .append('span')
                         .attr('class', 'clone-label')
                         .text(function (datum, i) {
+                            console.log(datum, i)
                             if (i != node.peels.length - 1) {
                                 return datum + ', '
                             } else {
@@ -581,6 +582,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 }
             }
             d3.selectAll('.position-toggle').on('click', togglePosition)
+            // if card is drawn using a init node, click the position toggle to redraw
+            if (initNode) {
+                document.getElementById('position-toggle-'+ d.peel).click()
+            }
 
             function updateNodePositionsTick(peel) {
                 if (d3.select('#position-toggle-' + peel).property('checked')) {
