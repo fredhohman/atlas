@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
-import addCard from './card.js';
+import { addCard, cardsUp } from './card.js';
 import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground, ribbonColorPeel } from './index.js'
-import { drawLayer3DPoints, layersUp3D } from './overview.js'
+import { drawLayer3DPoints, layersUp3D, hideLayerPoints, showLayerPoints } from './overview.js'
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -97,11 +97,17 @@ d3.json(dataPathJSON, function(error, data) {
               bulletTooltip.show(d);
             //   showLayerInOverview(d)
             })
-          .on('mouseout', function (d) {
-              bulletTooltip.hide();
+        .on('mouseout', function (d) {
+            bulletTooltip.hide();
             //   hideLayerInOverview();
-            })
-          .on('click', function(d) { return addCard(d) })
+        })
+        .on('click', function (d) {
+            if (!(d.peel in cardsUp)) {
+                return addCard(d)
+            } else {
+                alert('Layer ' + d.peel + ' is already being shown!')
+            }
+        })
 
     ribbon.selectAll('.bullet-inner')
           .data(data.layers)
@@ -121,7 +127,13 @@ d3.json(dataPathJSON, function(error, data) {
               bulletTooltip.hide();
             //   hideLayerInOverview();
             })
-          .on('click', function (d) { return addCard(d) })
+          .on('click', function (d) {
+              if (!(d.peel in cardsUp)) {
+                  return addCard(d)
+              } else {
+                  alert('Layer ' + d.peel + ' is already being shown!')
+              }
+           })
 
     // rectangle tick
     var tickOffset = 10;
@@ -145,7 +157,13 @@ d3.json(dataPathJSON, function(error, data) {
               bulletTooltip.hide();
             //   hideLayerInOverview()
             })
-          .on('click', function (d) { return addCard(d) })
+          .on('click', function (d) { 
+              if (!(d.peel in cardsUp)) {
+                  return addCard(d)
+              } else {
+                  alert('Layer ' + d.peel + ' is already being shown!')
+              }
+           })
 
     // circle tick
     // ribbon.selectAll('.bullet-tick')
@@ -189,8 +207,12 @@ d3.json(dataPathJSON, function(error, data) {
             } else {
                 // add 2D card
                 console.log('tick clicked', d, i)
-                var obj = data.layers.find(function (obj) { return obj.peel === d; });
-                addCard(obj);
+                if (!(d in cardsUp)) {
+                    var obj = data.layers.find(function (obj) { return obj.peel === d; });
+                    addCard(obj);
+                } else {
+                    alert('Layer ' + d + ' is already being shown!')
+                }
             }
 
         })

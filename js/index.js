@@ -4,8 +4,8 @@ import * as d3 from 'd3';
 console.log('index.js loaded')
 
 // global data and image paths
-// const dataDirName = 'lesmis'
-const dataDirName = 'moreno_names'
+const dataDirName = 'lesmis'
+// const dataDirName = 'moreno_names'
 // const dataDirName = 'astroph'
 
 export const dataPath = 'data/' + dataDirName + '/'

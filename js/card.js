@@ -6,7 +6,7 @@ import tip from 'd3-tip';
 import { dataPath, dataPathJSON, dataPathLayerJSON, imagePathLayerOrg, imagePathLayerFD, imagePathLayerContour } from './index.js'
 
 
-let cardsUp = {};
+export let cardsUp = {};
 let numOfCardsUp = 0;
 window.numOfCardsUp = numOfCardsUp;
 window.cardsUp = cardsUp;
@@ -36,7 +36,7 @@ d3.select('#header-text-span')
     .on('click', reloadPage)
     .style('cursor', 'pointer')
 
-export default function addCard(d, initNode = null, zoomScale = 0.4) {
+export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;
     cardsUp[d.peel] = 'up'
@@ -444,14 +444,18 @@ export default function addCard(d, initNode = null, zoomScale = 0.4) {
                         })
                         .on('click', function (datum) {
                             console.log('clicked clone', node, datum)
-                            d3.json(dataPathJSON, function (error, tempData) {
-                                var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
-                                var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
-                                scale = scale.substring(0, scale.length - 1)
-                                graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.fdx, node.fdy) // transition card that is clicked
-                                nodeSVGs.filter(function (n) { return n === node }).classed('selected', true).classed('pulse', true)
-                                addCard(obj, initNode = node, scale = scale);
-                            })
+                            if (!(datum in cardsUp)) {
+                                d3.json(dataPathJSON, function (error, tempData) {
+                                    var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
+                                    var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
+                                    scale = scale.substring(0, scale.length - 1)
+                                    graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.fdx, node.fdy) // transition card that is clicked
+                                    nodeSVGs.filter(function (n) { return n === node }).classed('selected', true).classed('pulse', true)
+                                    addCard(obj, initNode = node, scale = scale);
+                                })
+                            } else{
+                                alert('Layer ' + datum + ' is already being shown!')
+                            }
                         })
 
                 } else {
