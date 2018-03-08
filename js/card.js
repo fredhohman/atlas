@@ -277,7 +277,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 d.x = d.x - (xmin + x_midpoint)
                 d.y = d.y - (ymin + y_midpoint)
             })
-            
+
             // scale original graph
             // var ymax = d3.max(graphLayerData.nodes, function (d) { return d.x })
             // var xmax = d3.max(graphLayerData.nodes, function (d) { return d.y })
@@ -510,6 +510,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
                 var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
 
+                var maxPeels = d3.max(selectedNodes.data(), function(d) { return d.peels.length })
+                var cloneSizeScale = d3.scaleLinear().domain([1, maxPeels]).range([4,8])
+
                 // style clones
                 if (d3.select(this).property('checked')) {
                     selectedNodes
@@ -522,11 +525,12 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         })
                     selectedNodes
                         .attr('r', function (d) {
-                            if (d.peels.length > 1) {
-                                return 8
-                            } else {
-                                return 4
-                            }
+                            // if (d.peels.length > 1) {
+                            //     return 8
+                            // } else {
+                            //     return 4
+                            // }
+                            return cloneSizeScale(d.peels.length)
                         })
                 } else {
                     // default node styling
