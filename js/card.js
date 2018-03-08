@@ -264,6 +264,33 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 return console.error(error);
             }
 
+            // zero center original graph 
+            const boundary = 500
+            var ymax = d3.max(graphLayerData.nodes, function (d) { return d.x })
+            var xmax = d3.max(graphLayerData.nodes, function (d) { return d.y })
+            var ymin = d3.min(graphLayerData.nodes, function (d) { return d.x })
+            var xmin = d3.min(graphLayerData.nodes, function (d) { return d.y })
+            var x_midpoint = (xmax - xmin) / 2
+            var y_midpoint = (ymax - ymin) / 2
+
+            graphLayerData.nodes.forEach(function (d) {
+                d.x = d.x - (xmin + x_midpoint)
+                d.y = d.y - (ymin + y_midpoint)
+            })
+            
+            // scale original graph
+            // var ymax = d3.max(graphLayerData.nodes, function (d) { return d.x })
+            // var xmax = d3.max(graphLayerData.nodes, function (d) { return d.y })
+            // var ymin = d3.min(graphLayerData.nodes, function (d) { return d.x })
+            // var xmin = d3.min(graphLayerData.nodes, function (d) { return d.y })
+            // var max_cord = d3.max([xmax, ymax])
+            // var scale_factor = boundary / max_cord
+
+            // graphLayerData.nodes.forEach(function (d) {
+            //     d.x = d.x * scale_factor
+            //     d.y = d.y * scale_factor
+            // })
+
             // globals for debugging
             window.graphLayerData = graphLayerData
 
