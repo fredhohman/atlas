@@ -17,6 +17,8 @@ if __name__ == '__main__':
     args = getopts(sys.argv)
     print(args)
 
+    boundary = 500
+
     # load vertices and positions
     positions = pd.io.parsers.read_csv(
         '../data/' + args['-data'] + '/' + args['-data'] + '-positions.csv',
@@ -25,6 +27,30 @@ if __name__ == '__main__':
         names=['id','x','y']
         )
     print(positions.shape)
+
+    # zero center
+    max = positions.max()
+    min = positions.min()
+    x_max = max['x']
+    y_max = max['y']
+    x_min = min['x']
+    y_min = min['y']
+    x_midpoint = (x_max - x_min)/2
+    y_midpoint = (y_max - y_min)/2
+    positions['x'] = positions['x'] - (x_min + x_midpoint)
+    positions['y'] = positions['y'] - (y_min + y_midpoint)
+
+    # scale to boundary
+    max = positions.max()
+    min = positions.min()
+    x_max = max['x']
+    y_max = max['y']
+    x_min = min['x']
+    y_min = min['y']
+    max_cord = np.max([x_max, y_max])
+    scale_factor = boundary / max_cord
+    positions['x'] = positions['x'] * scale_factor
+    positions['y'] = positions['y'] * scale_factor
 
     # load decomposition and edges
     decomposition = pd.io.parsers.read_csv(
