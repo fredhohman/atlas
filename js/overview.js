@@ -147,14 +147,14 @@ export function drawLayer3DPoints(layerNum) {
             }
 
             console.log('add lines')
-            console.log(layerData.links)
+            // console.log(layerData.links)
             const arrayToObject = (array, keyField) =>
                 array.reduce((obj, item) => {
                     obj[item[keyField]] = item
                     return obj
                 }, {})
             const layerDataObject = arrayToObject(layerData.nodes, "id")
-            console.log(layerDataObject)
+            // console.log(layerDataObject)
 
             var lineGeometry = new THREE.Geometry();
 
@@ -163,22 +163,27 @@ export function drawLayer3DPoints(layerNum) {
             for (let j = 0; j < layerData.links.length; j++) {
                 const link = layerData.links[j];
 
-                let src = new THREE.Vector3(layerDataObject[link.source].x * xCordScaleConst, -1 * layerDataObject[link.source].y * yCordScaleConst, zCordScale(data.peels[layerNumIndex])),
-                    dst = new THREE.Vector3(layerDataObject[link.target].x * xCordScaleConst, -1 * layerDataObject[link.target].y * yCordScaleConst, zCordScale(data.peels[layerNumIndex]));
+                let src = new THREE.Vector3(layerDataObject[link.source].x * d3.select('#overview-slider-spread').property('value'), -1 * layerDataObject[link.source].y * d3.select('#overview-slider-spread').property('value'), zCordScale(data.peels[layerNumIndex])),
+                    dst = new THREE.Vector3(layerDataObject[link.target].x * d3.select('#overview-slider-spread').property('value'), -1 * layerDataObject[link.target].y * d3.select('#overview-slider-spread').property('value'), zCordScale(data.peels[layerNumIndex]));
                 
                 src.source = link.source;
                 dst.target = link.target;
                 src.peel = data.peels[layerNumIndex];
                 dst.peel = data.peels[layerNumIndex];
                 src.ox = layerDataObject[link.source].x;
-                src.oy = -1*layerDataObject[link.source].y;
+                src.oy = -1 * layerDataObject[link.source].y;
                 dst.ox = layerDataObject[link.target].x;
-                dst.oy = -1*layerDataObject[link.target].y;
+                dst.oy = -1 * layerDataObject[link.target].y;
 
                 lineGeometry.vertices.push(src, dst);
             }
 
             var line = new THREE.LineSegments(lineGeometry, lineMaterial);
+            if (d3.select('#toggle-3d-edges').property('checked')) {
+                line.visible = true;
+            } else {
+                line.visible = false;
+            }
             // line.userData['peel'] = data.peels[layerNumIndex]
             scene.add(line);
             lines.push(line)
@@ -249,10 +254,14 @@ d3.select('#animate-graph')
     .on('click', animateGraph)
     .html('<i class="material-icons md-24 ">play_arrow</i>animate')
 
+d3.select('#toggle-3d-edges')
+    .on('click', toggle3DEdges)
+    // .html('<i class="material-icons md-24 ">play_arrow</i>show edges')
+
 function updateRadius() {
     for (let c = 0; c < circles.length; c++) {
         circles[c].scale.x = this.value
-        circles[c].scale.y = -1 * this.value
+        circles[c].scale.y = this.value
 
     }
 }
@@ -300,6 +309,10 @@ function removeAll3DPoints() {
     for (let c = 0; c < circles.length; c++) {
         scene.remove(circles[c])
     }
+    for (let l = 0; l < lines.length; l++) {
+        scene.remove(lines[l])
+    }
+
 
     layersUp3D = {};
     circles = [];
@@ -307,6 +320,35 @@ function removeAll3DPoints() {
     window.layersUp3D = layersUp3D;
 
 }
+
+export function hideLayerPoints(peel) {
+    for (let c = 0; c < circles.length; c++) {
+        if (circles[c].peel == peel) {
+            circles[c].visible = false;
+        }
+    }
+}
+
+export function showLayerPoints(peel) {
+    for (let c = 0; c < circles.length; c++) {
+        if (circles[c].peel == peel) {
+            circles[c].visible = true;
+        }
+    }
+}
+
+export function toggle3DEdges() {
+    if (d3.select(this).property('checked')) {
+        for (let l = 0; l < lines.length; l++) {
+            lines[l].visible = true;
+        }
+    } else {
+        for (let l = 0; l < lines.length; l++) {
+            lines[l].visible = false;
+        }
+    }
+}
+document.getElementById('toggle-3d-edges').click()
 
 function animateGraph() {
 
