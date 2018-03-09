@@ -169,6 +169,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     // positionToggle.append('input').attr('id', 'position-toggle-' + d.peel).attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
     // positionToggle.append('span').attr('class', 'slider round')
 
+    var graphToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "graph-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input graph-toggle').property('checked', true)
+    var graphToggleLabel = cardText.append('label').attr('for', "graph-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Graph')
+
     var positionToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "position-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input position-toggle')
     var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('redraw')
     // positionToggleLabel.append('span').attr('class', 'toggle--on').text('original positions')
@@ -504,6 +507,22 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 d3.select(this).classed('fixed', false)
             })
 
+            function toggleGraph() {
+                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
+                var selectedLinks = d3.selectAll('.link-' + contourLayerNum)
+                if (d3.select(this).property('checked')) {
+                    selectedNodes.attr('visibility', 'visible')
+                    selectedLinks.attr('visibility', 'visible')
+                } else {
+                    selectedNodes.attr('visibility', 'hidden')
+                    selectedLinks.attr('visibility', 'hidden')
+                }
+            }
+            d3.selectAll('.graph-toggle').on('click', toggleGraph)
+            // document.get('.graph-toggle').on('click', toggleGraph)
+
+
             function toggleClones() {
                 console.log('toggle clones')
                 console.log(this)
@@ -633,9 +652,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .rangeRound([-500, 500]);
 
                     contourX.domain(d3.extent(selectedNodesData, function (d) { return d.fdx; })).nice();
-                    console.log(d3.extent(selectedNodesData, function (d) { return d.fdx; }))
                     contourY.domain(d3.extent(selectedNodesData, function (d) { return d.fdy; })).nice();
-                    console.log(d3.extent(selectedNodesData, function (d) { return d.fdy; }))
 
                     var g = d3.select('#interactive-node-link-' + contourLayerNum + '-svg').select('g')
 
@@ -653,39 +670,42 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
                         .attr("fill", "none")
-                        .attr("stroke", ribbonColorPeel(contourLayerNum))
+                        // .attr("stroke", ribbonColorPeel(contourLayerNum))
+                        .attr("stroke", 'black')
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
                             .x(function (d) { return d.fdx; })
                             .y(function (d) { return d.fdy; })
-                            .size([500, 500])
-                            .bandwidth(40)
+                            // .size([500, 500])
+                            .bandwidth(80)
+                            .thresholds(7)
                             (selectedNodesData))
                         .enter().append("path")
-                        .attr("d", d3.geoPath());
-                    console.log(graphLayerHeight, graphLayerMargin)
-                    g.append("g")
-                        .attr('class', 'contour-x-axis')
-                        // .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
-                        .call(d3.axisBottom(contourX))
-                        .select(".tick:last-of-type text")
-                        .select(function () { return this.parentNode.appendChild(this.cloneNode()); })
-                        .attr("y", -3)
-                        .attr("dy", null)
-                        .attr("font-weight", "bold")
-                        .text("x");
+                        .attr("d", d3.geoPath())
+                        .attr("fill", function (d) { return '#eeeeee' })
 
-                    g.append("g")
-                        .attr('class', 'contour-y-axis')
-                        .attr("transform", "translate(" + graphLayerMargin.left + ",0)")
-                        .call(d3.axisLeft(contourY))
-                        .select(".tick:last-of-type text")
-                        .select(function () { return this.parentNode.appendChild(this.cloneNode()); })
-                        .attr("x", 3)
-                        .attr("text-anchor", "start")
-                        .attr("font-weight", "bold")
-                        .text("y");
+                    // g.append("g")
+                    //     .attr('class', 'contour-x-axis')
+                    //     // .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
+                    //     .call(d3.axisBottom(contourX))
+                    //     .select(".tick:last-of-type text")
+                    //     .select(function () { return this.parentNode.appendChild(this.cloneNode()); })
+                    //     .attr("y", -3)
+                    //     .attr("dy", null)
+                    //     .attr("font-weight", "bold")
+                    //     .text("x");
+
+                    // g.append("g")
+                    //     .attr('class', 'contour-y-axis')
+                    //     .attr("transform", "translate(" + graphLayerMargin.left + ",0)")
+                    //     .call(d3.axisLeft(contourY))
+                    //     .select(".tick:last-of-type text")
+                    //     .select(function () { return this.parentNode.appendChild(this.cloneNode()); })
+                    //     .attr("x", 3)
+                    //     .attr("text-anchor", "start")
+                    //     .attr("font-weight", "bold")
+                    //     .text("y");
 
                 } else {
                     d3.select('#contour-' + contourLayerNum).remove()
