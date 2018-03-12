@@ -25,7 +25,8 @@ if __name__ == '__main__':
         '../data/' + args['-data'] + '/' + args['-data'] + '-positions.csv',
         delimiter=',',
         header=None,
-        names=['id','x','y']
+        names=['id','x','y'],
+        index_col='id'
         )
     print(positions.shape)
 
@@ -79,7 +80,7 @@ if __name__ == '__main__':
 
         temp_v_ids = set()
 
-        print('creating links')
+        print('creating ' + str(len(decomposition)) + ' links')
         for edge in decomposition.itertuples(name=None):
             # tuple(id, source, target, peel)
 
@@ -93,18 +94,15 @@ if __name__ == '__main__':
                 temp_v_ids.add(edge[2])
 
         # print(len(temp_v_ids))
-        
-        print('creating nodes')
+
+        print('creating ' + str(len(temp_v_ids)) + ' nodes')
         for v in temp_v_ids:
-            v_idx = positions.index[positions['id'] == int(v)].tolist()[0]
+
             graph['nodes'].append({
                 'id': int(v),
-                # 'x': positions.loc[v_idx]['x'],
-                # 'y': -1*positions.loc[v_idx]['y']
+                'x': positions.loc[v]['x'],
+                'y': -1*positions.loc[v]['y']
                 })
-
-        print('links: ', len(graph['links']))
-        print('nodes: ', len(graph['nodes']))
 
         # save graph as json
         print('saving graph layer')
