@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # open graph decomposition info json
     graph_decomposition_info_path = '../data/' + args['-data'] + '/' + args['-data'] + '-decomposition-info.json'
     graph_decomposition_info = json.load(open(graph_decomposition_info_path))
-    print(graph_decomposition_info)
+    print('graph-decomposition-info:', graph_decomposition_info)
 
     # define our data
     data = {}
@@ -43,7 +43,7 @@ if __name__ == '__main__':
             peels.append(peel)
 
     peels = sorted(peels)
-    print(peels)
+    print('peels:', peels)
 
     # iterate through graph layer json files, create igraph, computer stats for each layer
     for peel in peels:
@@ -70,15 +70,15 @@ if __name__ == '__main__':
 
         print('computing force directed layout')
         layout = g_layer.layout("fr", maxiter=100)
-        print('finished computing force directed layout')
 
         # print(graph_layer)
-
+        print('assigning coordinates')
         for i, coords in enumerate(layout):
             graph_layer['nodes'][i]['fdx'] = coords[0]
             graph_layer['nodes'][i]['fdy'] = coords[1]
 
         # define layer data
+        print('computing layer data')
         layer = {}
         layer['peel'] = peel
         layer['edges'] = g_layer.ecount()

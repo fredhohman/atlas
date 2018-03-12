@@ -3,6 +3,7 @@ import json
 import sys
 import matplotlib.pyplot as plt
 
+
 def getopts(argv):
     opts = {}
     while argv:

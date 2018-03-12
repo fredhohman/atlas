@@ -18,16 +18,18 @@ if __name__ == '__main__':
     print(args)
 
     # load decomposition and edges
+    print('loading decomposition')
     decomposition = pd.io.parsers.read_csv(
         '../data/' + args['-data'] + '/' + args['-data'] + '-decomposition.csv', 
         delimiter=',',
         header=None,
         names=['source', 'target', 'peel']
         )
-    print(decomposition.shape)
+    print('decomposition:', decomposition.shape)
     node_peels = {}
 
     # get clones for each node in a list
+    print('get clones')
     for edge in decomposition.itertuples(name=None):
         # tuple(id, source, target, peel)
 

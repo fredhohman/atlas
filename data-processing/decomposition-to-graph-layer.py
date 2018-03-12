@@ -20,6 +20,7 @@ if __name__ == '__main__':
     boundary = 500
 
     # load vertices and positions
+    print('loading positions')
     positions = pd.io.parsers.read_csv(
         '../data/' + args['-data'] + '/' + args['-data'] + '-positions.csv',
         delimiter=',',
@@ -29,6 +30,7 @@ if __name__ == '__main__':
     print(positions.shape)
 
     # zero center
+    print('zero centering original positions')
     max = positions.max()
     min = positions.min()
     x_max = max['x']
@@ -41,6 +43,7 @@ if __name__ == '__main__':
     positions['y'] = positions['y'] - (y_min + y_midpoint)
 
     # scale to boundary
+    print('scaling original positions')
     max = positions.max()
     min = positions.min()
     x_max = max['x']
@@ -53,13 +56,14 @@ if __name__ == '__main__':
     positions['y'] = positions['y'] * scale_factor
 
     # load decomposition and edges
+    print('loading decomposition')
     decomposition = pd.io.parsers.read_csv(
         '../data/' + args['-data'] + '/' + args['-data'] + '-decomposition.csv',
         delimiter=',',
         header=None,
         names=['source', 'target', 'peel']
         )
-    print(decomposition.shape)
+    print('decomposition shape:', decomposition.shape)
 
     peels = sorted(decomposition['peel'].unique())
     print('peels:', peels)
@@ -75,24 +79,35 @@ if __name__ == '__main__':
 
         temp_v_ids = set()
 
+        print('creating links')
         for edge in decomposition.itertuples(name=None):
             # tuple(id, source, target, peel)
 
             if edge[3] == peel:
-                graph['links'].append( { 'source': int(edge[1]), 'target': int(edge[2]), 'p': int(edge[3]) } )
+                graph['links'].append({
+                    'source': int(edge[1]),
+                    'target': int(edge[2]),
+                    'p': int(edge[3])
+                    })
                 temp_v_ids.add(edge[1])
                 temp_v_ids.add(edge[2])
 
         # print(len(temp_v_ids))
         
+        print('creating nodes')
         for v in temp_v_ids:
             v_idx = positions.index[positions['id'] == int(v)].tolist()[0]
-            graph['nodes'].append( { 'id': int(v),'x': positions.loc[v_idx]['x'], 'y': -1*positions.loc[v_idx]['y'] } )
+            graph['nodes'].append({
+                'id': int(v),
+                # 'x': positions.loc[v_idx]['x'],
+                # 'y': -1*positions.loc[v_idx]['y']
+                })
 
         print('links: ', len(graph['links']))
         print('nodes: ', len(graph['nodes']))
 
         # save graph as json
+        print('saving graph layer')
         # num_of_leading_zeros = len(str(np.max(peels)))
         with open('../data/' + args['-data'] + '/'  + args['-data'] + '-layer-' + str(peel) + '.json', 'w') as outfile:
             json.dump(graph, outfile)
