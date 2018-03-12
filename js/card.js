@@ -1,7 +1,7 @@
 // card.js
 import * as contour from 'd3-contour';
 import * as d3 from 'd3';
-// import { geoStereographic } from 'd3';
+import * as d3ScaleChromatic from "d3-scale-chromatic";
 import tip from 'd3-tip';
 import { dataPath, dataPathJSON, dataPathLayerJSON, imagePathLayerOrg, imagePathLayerFD, imagePathLayerContour } from './index.js'
 
@@ -169,8 +169,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     // positionToggle.append('input').attr('id', 'position-toggle-' + d.peel).attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
     // positionToggle.append('span').attr('class', 'slider round')
 
-    var graphToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "graph-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input graph-toggle').property('checked', true)
-    var graphToggleLabel = cardText.append('label').attr('for', "graph-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Graph')
+    var edgesToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "edges-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input edges-toggle').property('checked', true)
+    var edgesToggleLabel = cardText.append('label').attr('for', "edges-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Edges')
+
+    var nodesToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "nodes-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input nodes-toggle').property('checked', true)
+    var nodesToggleLabel = cardText.append('label').attr('for', "nodes-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Nodes')
 
     var positionToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "position-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input position-toggle')
     var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('redraw')
@@ -183,6 +186,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
     var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
+    cardText.append('br')
     cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 150).attr('value', 80).attr('id', 'contour-toggle-bandwidth-' + d.peel)
     cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 20).attr('value', 5).attr('id', 'contour-toggle-threshold-' + d.peel)
 
@@ -510,21 +514,27 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 d3.select(this).classed('fixed', false)
             })
 
-            function toggleGraph() {
+            function toggleEdges() {
                 var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
-                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
                 var selectedLinks = d3.selectAll('.link-' + contourLayerNum)
                 if (d3.select(this).property('checked')) {
-                    selectedNodes.attr('visibility', 'visible')
                     selectedLinks.attr('visibility', 'visible')
                 } else {
-                    selectedNodes.attr('visibility', 'hidden')
                     selectedLinks.attr('visibility', 'hidden')
                 }
             }
-            d3.selectAll('.graph-toggle').on('click', toggleGraph)
-            // document.get('.graph-toggle').on('click', toggleGraph)
+            d3.selectAll('.edges-toggle').on('click', toggleEdges)
 
+            function toggleNodes() {
+                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
+                if (d3.select(this).property('checked')) {
+                    selectedNodes.attr('visibility', 'visible')
+                } else {
+                    selectedNodes.attr('visibility', 'hidden')
+                }
+            }
+            d3.selectAll('.nodes-toggle').on('click', toggleNodes)
 
             function toggleClones() {
                 console.log('toggle clones')
@@ -637,6 +647,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
             function toggleContour() {
                 console.log('draw contour')
+                if (!(document.getElementById('position-toggle-'+ d.peel).checked)) {
+                    document.getElementById('position-toggle-'+ d.peel).click()
+                }
 
                 var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
 
@@ -644,16 +657,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                     var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
                     var selectedNodesData = selectedNodes.data()
-                    console.log('extent', d3.extent(selectedNodesData, function (d) { return d.fdx; }))
-                    console.log('extent', d3.extent(selectedNodesData, function (d) { return d.fdy; }))
-                    console.log(contourLayerNum, selectedNodesData)
 
                     var contourX = d3.scaleLinear()
-                        // .rangeRound([graphLayerMargin.left, graphLayerWidth - graphLayerMargin.right]);
                         .rangeRound([-500, 500]);
 
                     var contourY = d3.scaleLinear()
-                        // .rangeRound([graphLayerHeight - graphLayerMargin.bottom, graphLayerMargin.top]);
                         .rangeRound([-500, 500]);
 
                     contourX.domain(d3.extent(selectedNodesData, function (d) { return d.fdx; })).nice();
@@ -661,38 +669,41 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                     var g = d3.select('#interactive-node-link-' + contourLayerNum + '-svg').select('g')
 
-                    g.append("g")
-                        .attr("stroke", "white")
-                        .attr("stroke-width", 0.5)
-                        .selectAll("circle")
-                        .data(selectedNodesData)
-                        .enter().append("circle")
-                        .attr("cx", function (d) { return d.fdx; })
-                        .attr("cy", function (d) { return d.fdy; })
-                        .attr("r", 2)
-                        .attr("opacity", 1.0)
-                        .attr("fill", 'black');
+                    // g.append("g")
+                    //     .attr("stroke", "white")
+                    //     .attr("stroke-width", 0.5)
+                    //     .selectAll("circle")
+                    //     .data(selectedNodesData)
+                    //     .enter().append("circle")
+                    //     .attr("cx", function (d) { return d.fdx; })
+                    //     .attr("cy", function (d) { return d.fdy; })
+                    //     .attr("r", 2)
+                    //     .attr("opacity", 1.0)
+                    //     .attr("fill", 'black');
 
+                    const boundary = 500;
                     var bandwidth = d3.select("#contour-toggle-bandwidth-" + contourLayerNum).property('value');
-                    console.log('bandwidth', bandwidth)
+                    var threshold = d3.select("#contour-toggle-threshold-" + contourLayerNum).property('value');
+
+                    var contourColor = d3.scaleSequential(d3ScaleChromatic.interpolateGreys).domain([0,0.001]) // Points per square pixel.
 
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
-                    .attr('transform', 'translate(-500,-500)')
+                    .attr('transform', 'translate(-' + boundary + ', -' + boundary + ')')
                         .attr("fill", "none")
                         // .attr("stroke", ribbonColorPeel(contourLayerNum))
                         .attr("stroke", 'black')
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
-                            .x(function (d) { return d.fdx + 500; })
-                            .y(function (d) { return d.fdy + 500; })
-                            .size([1000, 1000])
+                            .x(function (d) { return d.fdx + boundary; })
+                            .y(function (d) { return d.fdy + boundary; })
+                            .size([2*boundary, 2*boundary])
                             .bandwidth(bandwidth)
-                            .thresholds(7)
+                            .thresholds(threshold)
                             (selectedNodesData))
                         .enter().append("path")
+                        .attr("fill", function (d) { return contourColor(d.value) })
                         .attr("d", d3.geoPath())
-                        .attr("fill", function (d) { return '#eeeeee' })
 
                     // g.append("g")
                     //     .attr('class', 'contour-x-axis')
