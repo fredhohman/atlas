@@ -109,7 +109,7 @@ html, body {
     text-align: left;
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 200px;
+    flex-basis: 220px;
     border-left: 1px solid var(--ui-border-color);
     border-right: 1px solid var(--ui-border-color);
     overflow: auto; /* scroll bar when resizing browser height after load */

@@ -183,6 +183,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
     var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
+    cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 150).attr('value', 80).attr('id', 'contour-toggle-bandwidth-' + d.peel)
+    cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 20).attr('value', 5).attr('id', 'contour-toggle-threshold-' + d.peel)
+
     // contourToggleLabel.append('span').attr('class', 'toggle--on').text('hide contour')
     // contourToggleLabel.append('span').attr('class', 'toggle--off').text('show contour')
 
@@ -286,7 +289,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             // var xmax = d3.max(graphLayerData.nodes, function (d) { return d.y })
             // var ymin = d3.min(graphLayerData.nodes, function (d) { return d.x })
             // var xmin = d3.min(graphLayerData.nodes, function (d) { return d.y })
-            // var max_cord = d3.max([xmax, ymax])
+            // var max_cord = d3.max([xm3.select("#contour-toggle-bandwidth-"ax, ymax])
             // var scale_factor = boundary / max_cord
 
             // graphLayerData.nodes.forEach(function (d) {
@@ -337,12 +340,12 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 .enter()
                 .append("circle")
                 .attr('class', 'node-' + d.peel)
-                .attr("r", 6)
+                .attr("r", 4)
                 .attr('cx', function (d) { return d.x })
                 .attr('cy', function (d) { return d.y })
                 .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
                 .attr('stroke', '#ffffff')
-                .attr('stroke-width', 1.5)
+                .attr('stroke-width', 1)
 
             // add zoom 
             var zoomHandler = d3.zoom()
@@ -531,7 +534,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
 
                 var maxPeels = d3.max(selectedNodes.data(), function(d) { return d.peels.length })
-                var cloneSizeScale = d3.scaleLinear().domain([1, maxPeels]).range([4,8])
+                var cloneSizeScale = d3.scaleLinear().domain([1, maxPeels]).range([4,7])
 
                 // style clones
                 if (d3.select(this).property('checked')) {
@@ -641,6 +644,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                     var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
                     var selectedNodesData = selectedNodes.data()
+                    console.log('extent', d3.extent(selectedNodesData, function (d) { return d.fdx; }))
+                    console.log('extent', d3.extent(selectedNodesData, function (d) { return d.fdy; }))
                     console.log(contourLayerNum, selectedNodesData)
 
                     var contourX = d3.scaleLinear()
@@ -668,17 +673,21 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .attr("opacity", 1.0)
                         .attr("fill", 'black');
 
+                    var bandwidth = d3.select("#contour-toggle-bandwidth-" + contourLayerNum).property('value');
+                    console.log('bandwidth', bandwidth)
+
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
+                    .attr('transform', 'translate(-500,-500)')
                         .attr("fill", "none")
                         // .attr("stroke", ribbonColorPeel(contourLayerNum))
                         .attr("stroke", 'black')
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
-                            .x(function (d) { return d.fdx; })
-                            .y(function (d) { return d.fdy; })
-                            // .size([500, 500])
-                            .bandwidth(80)
+                            .x(function (d) { return d.fdx + 500; })
+                            .y(function (d) { return d.fdy + 500; })
+                            .size([1000, 1000])
+                            .bandwidth(bandwidth)
                             .thresholds(7)
                             (selectedNodesData))
                         .enter().append("path")
