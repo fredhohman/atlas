@@ -56,6 +56,9 @@ if __name__ == '__main__':
     positions['x'] = positions['x'] * scale_factor
     positions['y'] = positions['y'] * scale_factor
 
+    print('converting positions to dict')
+    positions = positions.to_dict(orient='index')
+
     # load decomposition and edges
     print('loading decomposition')
     decomposition = pd.io.parsers.read_csv(
@@ -100,8 +103,8 @@ if __name__ == '__main__':
 
             graph['nodes'].append({
                 'id': int(v),
-                'x': positions.loc[v]['x'],
-                'y': -1*positions.loc[v]['y']
+                'x': positions[v]['x'],
+                'y': -1*positions[v]['y']
                 })
 
         # save graph as json
