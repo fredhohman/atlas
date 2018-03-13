@@ -23,7 +23,7 @@ d3.json(dataPathJSON, function(error, data) {
     console.log(data)
     window.data = data
     
-    var ribbonMargin = { top: 30, right: 45, bottom: 20, left: 45 };
+    var ribbonMargin = { top: 30, right: 55, bottom: 20, left: 55 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
     var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom
                      - document.getElementsByClassName('ribbon-title')[0].clientHeight - 20 
@@ -34,10 +34,10 @@ d3.json(dataPathJSON, function(error, data) {
     // var aspectRatio = '32:2';
     // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
 
-    var ribbon = d3.select("#ribbon").append("svg")
+    var ribbonWrapper = d3.select("#ribbon").append("svg")
         .attr("width", ribbonWidth + ribbonMargin.left + ribbonMargin.right)
         .attr("height", ribbonHeight + ribbonMargin.top + ribbonMargin.bottom)
-        .append("g")
+        var ribbon = ribbonWrapper.append("g")
         .attr("transform", "translate(" + ribbonMargin.left + "," + ribbonMargin.top + ")");
 
     var ribbonTextColor = '#222222'
@@ -62,12 +62,6 @@ d3.json(dataPathJSON, function(error, data) {
     // save color palette from data once and bind to window, little cheeky
     window.ribbonColorPeel = ribbonColorPeel;
 
-
-    function addRibbonSVG() {
-        // is this a good idea...
-    }
-    // addRibbonSVG();
-
     var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
         return 'e: <span class="tooltip-number">' + d.edges + '</span></br>'
         + 'v: <span class="tooltip-number">' + d.vertices + '</span></br>'
@@ -91,7 +85,7 @@ d3.json(dataPathJSON, function(error, data) {
           .attr('height', y.bandwidth())
         //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
           .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
-          .style('stroke', '#dddddd')
+          .style('stroke', '#eeeeee')
           .style('stroke-width', 1)
           .on('mouseover', function (d) {
               bulletTooltip.show(d);
@@ -174,6 +168,49 @@ d3.json(dataPathJSON, function(error, data) {
     //     .attr('cx', function(d) { return xLinear(d.clones)})
     //     .attr('cy', function(d) { return y(d.peel) + y.bandwidth()/2})
     //     .style('fill', '#444444')
+
+
+    //                ribbonWrapper.append('g').attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
+    // .selectAll('.indicator')
+    //       .data(data.layers)
+    //     .enter().append('text')
+    //     // .attr('')
+    //     .attr('class', 'indicator')
+    //       .attr('width', '2')
+    //       .text('<')
+    //     .attr('y', function (d) { return y(d.peel) + (y.bandwidth() - tickOffset/2) })
+    //     .attr('x', function (d) { return 0 })
+    //       .attr('height', y.bandwidth()*(1/7) + tickOffset)
+    //       .style('fill', '#444444')
+    //       .on('click', function (d) { 
+    //           if (!(d.peel in layersUp3D)) {
+    //               return drawLayer3DPoints(d.peel)
+    //           } else {
+    //               alert('Layer ' + d.peel + ' is already being shown!')
+    //           }
+    //        })
+
+    // ribbonWrapper.append('g').attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
+    // .selectAll('.indicator')
+    //       .data(data.layers)
+    //     .enter().append('text')
+    //     // .attr('')
+    //     .attr('class', 'indicator')
+    //       .attr('width', '2')
+    //       .text('>')
+    //     .attr('y', function (d) { return y(d.peel) + (y.bandwidth() - tickOffset/2) })
+    //     .attr('x', function (d) { return 8 })
+    //       .attr('height', y.bandwidth()*(1/7) + tickOffset)
+    //       .style('fill', '#444444')
+    //       .on('click', function (d) { 
+    //           if (!(d.peel in cardsUp)) {
+    //               return addCard(d)
+    //           } else {
+    //               alert('Layer ' + d.peel + ' is already being shown!')
+    //           }
+    //        })
+
+
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
