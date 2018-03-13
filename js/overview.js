@@ -210,6 +210,10 @@ export function drawAll3DPointsWithLayers() {
                 drawLayer3DPoints(data.peels[peel])
             }
         }
+    Object.keys(layersUp3D).forEach(key => {
+      d3.select("#indicator-left-" + key).style("visibility", "visible");
+    });
+    
     })
 }
 
