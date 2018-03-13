@@ -9,6 +9,7 @@ html, body {
 :root {
     --darkest: #222222;
     --darker: #444444;
+    --dark: #666666;
   
     --white: #ffffff;
   
@@ -582,7 +583,8 @@ h3 {
 
 .clone {
     /* transition: 1000ms; */
-    fill: var(--darker);
+    /* fill: var(--dark); */
+    fill: var(--dark);
 }
 
 .selected {
@@ -941,3 +943,9 @@ hr {
     transform: scale(2);
   }
 } */
+
+
+.indicator {
+    font-family: serif;
+    font-size: 12px;
+}

@@ -45,6 +45,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     cardMessage();
 
+    let edgeOpacity = 0.5;
+    let edgeColor = '#cccccc';
+    let nodeColor = "#cccccc";
+    let highlightColor = "#FFC107";
+
     var layers = d3.select('#layers')
         .append('div')
         .attr('class', 'card-border-wrapper')
@@ -326,8 +331,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; })
                 .attr("stroke-width", 0.6)
-                .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
-                .style("stroke-opacity", 0.5)
+                .attr("stroke", edgeColor)
+                // .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
+                .style("stroke-opacity", edgeOpacity)
 
             var cloneTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
                 return '<span class="tooltip-number">' + d.peels.join(', ') + '</span>'
@@ -347,7 +353,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 .attr("r", 4)
                 .attr('cx', function (d) { return d.x })
                 .attr('cy', function (d) { return d.y })
-                .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
+                // .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
+                .attr("fill", nodeColor)
                 .attr('stroke', '#ffffff')
                 .attr('stroke-width', 1)
 
@@ -436,7 +443,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
             function getNodeColor(node, neighbors) {
                 if (Array.isArray(neighbors) && neighbors.indexOf(node.id) > -1) {
-                    return ribbonColorPeel(d.peel);
+                    // return ribbonColorPeel(d.peel);
+                    return highlightColor;
                 }
                 return 'rgba(221,221,221,0.3)';
             }
@@ -444,7 +452,13 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             //     return neighbors.indexOf(node.id) ? 'green' : 'black'
             // }
             function getLinkColor(node, link) {
-                return isNeighborLink(node, link) ? ribbonColorPeel(d.peel) : 'rgba(221,221,221,0.3)';
+                // return isNeighborLink(node, link) ? ribbonColorPeel(d.peel) : 'rgba(221,221,221,0.3)';
+                return isNeighborLink(node, link) ? highlightColor : "rgba(221,221,221,0.3)";
+            }
+            
+            function getLinkOpacity(node, link) {
+              // return isNeighborLink(node, link) ? ribbonColorPeel(d.peel) : 'rgba(221,221,221,0.3)';
+              return isNeighborLink(node, link) ? 1 : edgeOpacity;
             }
 
             function selectNode(selectedNode) {
@@ -456,6 +470,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 // .attr('fill', node => getTextColor(node, neighbors))
                 linkSVGs
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
+                    .style('stroke-opacity', function (link) { return getLinkOpacity(selectedNode, link) })
             }
 
             nodeSVGs.on('mouseover', function (node) {
@@ -502,8 +517,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             })
 
             nodeSVGs.on('mouseout', function () {
-                nodeSVGs.attr('fill', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
-                linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
+                // nodeSVGs.attr('fill', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
+                // linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
+                nodeSVGs.attr('fill', nodeColor); // hacky, referring to original d passed into drawLayerGraph
+                linkSVGs.attr('stroke', edgeColor); // hacky, referring to original d passed into drawLayerGraph
                 // cloneTooltip.hide();
             })
 
@@ -568,7 +585,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 } else {
                     // default node styling
                     selectedNodes.classed('clone', false)
-                    selectedNodes.attr('fill', function () { return ribbonColorPeel(contourLayerNum) })
+                    // selectedNodes.attr('fill', function () { return ribbonColorPeel(contourLayerNum) })
+                    selectedNodes.attr('fill', nodeColor)
                     selectedNodes.attr('r', 6)
                 }
             }
