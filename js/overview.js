@@ -68,6 +68,8 @@ export function drawLayer3DPoints(layerNum) {
     console.log('drawing layer ' + layerNum + ' 3D points')
     layersUp3D[layerNum] = 'up'
 
+    d3.select("#indicator-left-" + layerNum).style("visibility", "visible");
+
     d3.json(dataPathJSON, function (error, data) {
 
         if (error) {
@@ -312,7 +314,9 @@ function removeAll3DPoints() {
     for (let l = 0; l < lines.length; l++) {
         scene.remove(lines[l])
     }
-
+    Object.keys(layersUp3D).forEach(key => {
+        d3.select("#indicator-left-" + key).style("visibility", "hidden");
+    });
 
     layersUp3D = {};
     circles = [];

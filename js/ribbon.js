@@ -170,45 +170,65 @@ d3.json(dataPathJSON, function(error, data) {
     //     .style('fill', '#444444')
 
 
-    //                ribbonWrapper.append('g').attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
-    // .selectAll('.indicator')
-    //       .data(data.layers)
-    //     .enter().append('text')
-    //     // .attr('')
-    //     .attr('class', 'indicator')
-    //       .attr('width', '2')
-    //       .text('<')
-    //     .attr('y', function (d) { return y(d.peel) + (y.bandwidth() - tickOffset/2) })
-    //     .attr('x', function (d) { return 0 })
-    //       .attr('height', y.bandwidth()*(1/7) + tickOffset)
-    //       .style('fill', '#444444')
-    //       .on('click', function (d) { 
-    //           if (!(d.peel in layersUp3D)) {
-    //               return drawLayer3DPoints(d.peel)
-    //           } else {
-    //               alert('Layer ' + d.peel + ' is already being shown!')
-    //           }
-    //        })
+    ribbonWrapper
+      .append("g")
+      .attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
+      .selectAll(".indicator")
+      .data(data.layers)
+      .enter()
+      .append("text")
+      .attr("class", "indicator")
+      .attr("id", function(d) {
+        return "indicator-left-" + d.peel;
+      })
+      .attr("width", "2")
+      .text("<")
+      .attr("y", function(d) {
+        return y(d.peel) + (y.bandwidth() - tickOffset / 2);
+      })
+      .attr("x", function(d) {
+        return 0;
+      })
+      .attr("height", y.bandwidth() * (1 / 7) + tickOffset)
+      .style("fill", "#444444")
+      .on("click", function(d) {
+        if (!(d.peel in layersUp3D)) {
+          return drawLayer3DPoints(d.peel);
+        } else {
+          alert("Layer " + d.peel + " is already being shown!");
+        }
+      })
+      .style("visibility", 'hidden');
 
-    // ribbonWrapper.append('g').attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
-    // .selectAll('.indicator')
-    //       .data(data.layers)
-    //     .enter().append('text')
-    //     // .attr('')
-    //     .attr('class', 'indicator')
-    //       .attr('width', '2')
-    //       .text('>')
-    //     .attr('y', function (d) { return y(d.peel) + (y.bandwidth() - tickOffset/2) })
-    //     .attr('x', function (d) { return 8 })
-    //       .attr('height', y.bandwidth()*(1/7) + tickOffset)
-    //       .style('fill', '#444444')
-    //       .on('click', function (d) { 
-    //           if (!(d.peel in cardsUp)) {
-    //               return addCard(d)
-    //           } else {
-    //               alert('Layer ' + d.peel + ' is already being shown!')
-    //           }
-    //        })
+    ribbonWrapper
+      .append("g")
+      .attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
+      .selectAll(".indicator")
+      .data(data.layers)
+      .enter()
+      .append("text")
+      .attr("class", "indicator")
+      .attr("id", function(d) {
+        return "indicator-right-" + d.peel;
+      })
+      .attr("width", "2")
+      .text(">")
+      .attr("y", function(d) {
+        return y(d.peel) + (y.bandwidth() - tickOffset / 2);
+      })
+      .attr("x", function(d) {
+        return 8;
+      })
+      .attr("height", y.bandwidth() * (1 / 7) + tickOffset)
+      .style("fill", "#444444")
+      .on("click", function(d) {
+        if (!(d.peel in cardsUp)) {
+          return addCard(d);
+        } else {
+          alert("Layer " + d.peel + " is already being shown!");
+        }
+      })
+      .style("visibility", 'hidden');
 
 
 

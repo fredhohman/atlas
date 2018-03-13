@@ -40,6 +40,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;
     cardsUp[d.peel] = 'up'
+
+    d3.select('#indicator-right-' + d.peel).style('visibility', 'visible')
+
     cardMessage();
 
     var layers = d3.select('#layers')
@@ -772,6 +775,7 @@ function closeCard(d) {
     delete cardsUp[d.peel]
     d3.select('#card-' + d.peel).remove();
     delete zoomHandlerUp[d.peel]
+    d3.select("#indicator-right-" + d.peel).style("visibility", "hidden");
     // console.log(document.getElementsByClassName('y-axis'))
     cardMessage();
 }
