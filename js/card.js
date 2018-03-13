@@ -154,13 +154,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
         cardText.append('hr')
         
         var cliqueMessage = cardText.append('span')
-            .attr('class', 'smalltext-header card-text-item')
+            .attr('class', 'smalltext-header card-text-item-value')
 
         cliqueMessage
-            .text('clique: ')
-            .append('span')
-            .attr('class', 'card-text-item-value')
-            .html(cardTextValueFormat(d.edges / (d.vertices * (d.vertices - 1) / 2)) + '% <br>(' + (d.vertices * (d.vertices - 1) / 2 - d.edges) + ' missing edges)')
+          .text("clique minus " + ((d.vertices * (d.vertices - 1) / 2 - d.edges) + ' edges') )
     }
 
     cardText.append('hr')

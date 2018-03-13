@@ -500,7 +500,7 @@ h3 {
     /* color: var(--darkest); */
 }
 .card-text-item-value {
-    font-weight: 400;
+    font-weight: 400 !important; /* card clique message should not be bold*/
 }
 
 #no-card-message {
