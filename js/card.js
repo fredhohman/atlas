@@ -187,8 +187,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
     var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
     cardText.append('br')
-    cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 150).attr('value', 80).attr('id', 'contour-toggle-bandwidth-' + d.peel)
-    cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 20).attr('value', 5).attr('id', 'contour-toggle-threshold-' + d.peel)
+    cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 200).attr('value', 50).attr('id', 'contour-toggle-bandwidth-' + d.peel).attr('class', 'contour-toggle-bandwidth')
+    cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 20).attr('value', 5).attr('id', 'contour-toggle-threshold-' + d.peel).attr('class', 'contour-toggle-threshold')
 
     // contourToggleLabel.append('span').attr('class', 'toggle--on').text('hide contour')
     // contourToggleLabel.append('span').attr('class', 'toggle--off').text('show contour')
@@ -645,15 +645,16 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 }
             }
 
-            function toggleContour() {
+            function toggleContour(contourLayerNum) {
                 console.log('draw contour')
+
                 if (!(document.getElementById('position-toggle-'+ d.peel).checked)) {
                     document.getElementById('position-toggle-'+ d.peel).click()
                 }
 
-                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
+                // var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
 
-                if (d3.select(this).property('checked')) {
+                if (d3.select('#contour-toggle-' + contourLayerNum).property('checked')) {
 
                     var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
                     var selectedNodesData = selectedNodes.data()
@@ -685,7 +686,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     var bandwidth = d3.select("#contour-toggle-bandwidth-" + contourLayerNum).property('value');
                     var threshold = d3.select("#contour-toggle-threshold-" + contourLayerNum).property('value');
 
-                    var contourColor = d3.scaleSequential(d3ScaleChromatic.interpolateGreys).domain([0,0.001]) // Points per square pixel.
+                    var contourColor = d3.scaleSequential(d3ScaleChromatic.interpolateGreys).domain([0, threshold])
 
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
                     .attr('transform', 'translate(-' + boundary + ', -' + boundary + ')')
@@ -702,7 +703,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                             .thresholds(threshold)
                             (selectedNodesData))
                         .enter().append("path")
-                        .attr("fill", function (d) { return contourColor(d.value) })
+                        .attr("fill", function (d, i) { return contourColor(i) })
                         .attr("d", d3.geoPath())
 
                     // g.append("g")
@@ -734,7 +735,20 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 }
 
             }
-            d3.selectAll('.contour-toggle').on('click', toggleContour)
+            d3.selectAll('.contour-toggle').on('click', function() {
+                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
+                toggleContour(contourLayerNum);
+            })
+            d3.selectAll('.contour-toggle-bandwidth').on('change', function() {
+                var contourLayerNum = Number(d3.select(this).attr('id').split('-')[3]) // a little sketchy
+                removeLayerGraphContour(contourLayerNum);
+                toggleContour(contourLayerNum);
+            })
+            d3.selectAll('.contour-toggle-threshold').on('change', function() {
+                var contourLayerNum = Number(d3.select(this).attr('id').split('-')[3]) // a little sketchy
+                removeLayerGraphContour(contourLayerNum);
+                toggleContour(contourLayerNum);
+            })
 
         })
     }
@@ -747,7 +761,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     function removeLayerGraphContour(peel) {
         console.log('remove interactive contour for layer ' + peel)
-        d3.select("#contour-interactive-" + peel + '-svg').remove()
+        d3.select("#contour-" + peel).remove();
     }
 
     // set initial view
