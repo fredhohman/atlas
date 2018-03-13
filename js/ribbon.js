@@ -28,7 +28,7 @@ d3.json(dataPathJSON, function(error, data) {
     var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom
                      - document.getElementsByClassName('ribbon-title')[0].clientHeight - 20 
                     // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
-    var ribbonHeight = 30*d3.max(data.peels) //- ribbonMargin.top - ribbonMargin.bottom 
+    var ribbonHeight = 25*d3.max(data.peels) //- ribbonMargin.top - ribbonMargin.bottom 
 
     // responsive tests
     // var aspectRatio = '32:2';
@@ -43,7 +43,7 @@ d3.json(dataPathJSON, function(error, data) {
     var ribbonTextColor = '#222222'
     var xLinear = d3.scaleLinear().range([0, ribbonWidth]);
     var xLog = d3.scaleLog().range([0, ribbonWidth])
-    var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.3);
+    var y = d3.scaleBand().range([ribbonHeight, 0]).padding(0.5);
 
     xLinear.domain([0, d3.max(data.layers, function(d) { return d.edges })])
     xLog.domain([1, d3.max(data.layers, function (d) { return d.edges })])
@@ -57,8 +57,13 @@ d3.json(dataPathJSON, function(error, data) {
         .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
 
     // color bullet by clustering coefficient
-    var ribbonColorClustering = d3.scaleSequential(d3ScaleChromatic.interpolateBlues)
-        .domain([0,1])
+    // var ribbonColorClustering = d3.scaleSequential(d3ScaleChromatic.interpolateBlues)
+    //     .domain([0,1])
+    var ribbonColorClustering = d3
+      .scaleLinear()
+      .domain([0, 1])
+      .interpolate(d3.interpolateHcl)
+      .range([d3.rgb("#E1F5FE"), d3.rgb("#01579B")]);
 
     // save color palette from data once and bind to window, little cheeky
     window.ribbonColorPeel = ribbonColorPeel;
@@ -88,8 +93,8 @@ d3.json(dataPathJSON, function(error, data) {
           .attr('height', y.bandwidth())
         //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
           .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
-          .style('stroke', '#eeeeee')
-          .style('stroke-width', 1)
+        //   .style('stroke', '#eeeeee')
+        //   .style('stroke-width', 1)
           .on('mouseover', function (d) {
               bulletTooltip.show(d);
             })
@@ -109,8 +114,8 @@ d3.json(dataPathJSON, function(error, data) {
         .enter().append('rect')
           .attr('class', 'bullet-inner')
         .attr('width', function (d) { return xLinear(d.vertices) })
-          .attr('y', function(d) { return y(d.peel) + (y.bandwidth() * (6/13)) })
-          .attr('height', y.bandwidth() * (1/13))
+          .attr('y', function(d) { return y(d.peel) + (y.bandwidth() * (3/7)) })
+          .attr('height', y.bandwidth() * (1/7))
           .style('fill', '#444444')
         //   .style('stroke', '#ffffff')
         //   .style('stroke-width', '1')
@@ -129,7 +134,7 @@ d3.json(dataPathJSON, function(error, data) {
            })
 
     // rectangle tick
-    var tickOffset = 10;
+    var tickOffset = 6;
     ribbon.selectAll('.bullet-tick')
           .data(data.layers)
         .enter().append('rect')
@@ -236,7 +241,7 @@ d3.json(dataPathJSON, function(error, data) {
           .call(d3.axisLeft(y))
           .selectAll('.tick text')
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
-        //   .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
+          .style('font-weight', function (d) { return data.peels.includes(d) ? '500' : '300' })
 
     d3.select('.y-axis').selectAll(".tick text")
         .on("click", function (d, i) {
@@ -282,17 +287,23 @@ d3.json(dataPathJSON, function(error, data) {
               .data(data.layers)
               .enter()
               .append("text")
+              .attr('text-anchor', 'start')
               .attr("class", "components")
               .text(function(d) {
                 return d.components;
               })
               .attr("x", function(d) {
-                return xLinear(d.edges) + 5;
+                  if (d.peel === 1) {
+                      return xLinear(d.vertices) + 5;
+                  } else{
+                    return xLinear(d.edges) + 5;
+                  }
               })
               .attr("y", function(d) {
                 return y(d.peel) + y.bandwidth() * (6 / 13) + 5;
               })
               .style("fill", "#cccccc")
+              .style('font-size', '13')
               .on("mouseover", function(d) {
                 bulletTooltip.show(d);
               })
