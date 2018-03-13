@@ -127,7 +127,10 @@ export function drawLayer3DPoints(layerNum) {
                 circle.position.z = zCordScale(data.peels[layerNumIndex])
 
                 // circle.position.z = 1;
-                circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[layerNumIndex])))
+                // circle.material.color.setHex(RGBtoHex(ribbonColorPeel(data.peels[layerNumIndex])))
+                // circle.material.color.setHex('0xcccccc');
+                let clusterColor = d3.select("#bullet-" + data.peels[layerNumIndex]).style('fill');
+                circle.material.color.setHex(RGBtoHex(clusterColor));
                 circle.userData['id'] = node.id
                 circle.userData['peel'] = data.peels[layerNumIndex]
                 circle.userData['x'] = node.x
@@ -213,7 +216,7 @@ export function drawAll3DPointsWithLayers() {
     Object.keys(layersUp3D).forEach(key => {
       d3.select("#indicator-left-" + key).style("visibility", "visible");
     });
-    
+
     })
 }
 

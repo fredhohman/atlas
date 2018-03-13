@@ -49,6 +49,7 @@ d3.json(dataPathJSON, function(error, data) {
     xLog.domain([1, d3.max(data.layers, function (d) { return d.edges })])
     // y.domain(data.layers.map(function (d) { return d.peel })) // no spaces in ribbon y-axis
     y.domain(Array.from(new Array(d3.max(data.layers, function(d) { return d.peel })), (x, i) => i+1)) // spaces in ribbon y-axis
+
     // color bullet by graph layer
     var ribbonColorPeel = d3.scaleLinear()
         .domain(d3.extent(data.peels))
@@ -61,6 +62,7 @@ d3.json(dataPathJSON, function(error, data) {
 
     // save color palette from data once and bind to window, little cheeky
     window.ribbonColorPeel = ribbonColorPeel;
+    window.ribbonColorClustering = ribbonColorClustering;
 
     var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
         return 'e: <span class="tooltip-number">' + d.edges + '</span></br>'
@@ -80,6 +82,7 @@ d3.json(dataPathJSON, function(error, data) {
           .data(data.layers)
         .enter().append('rect')
           .attr('class', "bullet")
+          .attr('id', function(d) { return "bullet-" + d.peel })
         .attr('width', function (d) { return xLinear(d.edges) })
           .attr('y', function(d) { return y(d.peel) })
           .attr('height', y.bandwidth())
