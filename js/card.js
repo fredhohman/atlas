@@ -648,8 +648,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             function toggleContour(contourLayerNum) {
                 console.log('draw contour')
 
-                if (!(document.getElementById('position-toggle-'+ d.peel).checked)) {
-                    document.getElementById('position-toggle-'+ d.peel).click()
+                if (!(document.getElementById('position-toggle-'+ contourLayerNum).checked)) {
+                    document.getElementById('position-toggle-'+ contourLayerNum).click()
                 }
 
                 // var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
