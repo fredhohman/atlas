@@ -92,11 +92,9 @@ d3.json(dataPathJSON, function(error, data) {
           .style('stroke-width', 1)
           .on('mouseover', function (d) {
               bulletTooltip.show(d);
-            //   showLayerInOverview(d)
             })
         .on('mouseout', function (d) {
             bulletTooltip.hide();
-            //   hideLayerInOverview();
         })
         .on('click', function (d) {
             if (!(d.peel in cardsUp)) {
@@ -118,11 +116,9 @@ d3.json(dataPathJSON, function(error, data) {
         //   .style('stroke-width', '1')
           .on('mouseover', function (d) {
               bulletTooltip.show(d);
-            //   showLayerInOverview(d);
             })
           .on('mouseout', function (d) {
               bulletTooltip.hide();
-            //   hideLayerInOverview();
             })
           .on('click', function (d) {
               if (!(d.peel in cardsUp)) {
@@ -148,11 +144,9 @@ d3.json(dataPathJSON, function(error, data) {
         //   .style('stroke-width', '1')
           .on('mouseover', function (d) {
               bulletTooltip.show(d);
-            //   showLayerInOverview(d)
             })
           .on('mouseout', function (d) {
               bulletTooltip.hide();
-            //   hideLayerInOverview()
             })
           .on('click', function (d) { 
               if (!(d.peel in cardsUp)) {
@@ -263,28 +257,57 @@ d3.json(dataPathJSON, function(error, data) {
             }
 
         })
-        // .on('mouseover', function (d) {
-        //     var obj = data.layers.find(function (obj) { return obj.peel === d; });
-        //     showLayerInOverview(obj)
-        // })
-        // .on("mouseout", hideLayerInOverview())
 
-    var componentsData = {}
-    for (const layer in data.layers) {
-        if (data.layers.hasOwnProperty(layer)) {
-            componentsData[data.layers[layer].peel] = data.layers[layer].components                       
-        }
-    }
+    // old components axis
+    // var componentsData = {}
+    // for (const layer in data.layers) {
+    //     if (data.layers.hasOwnProperty(layer)) {
+    //         componentsData[data.layers[layer].peel] = data.layers[layer].components                       
+    //     }
+    // }
+    // ribbon.append('g')
+    //     .attr('class', 'component-axis')
+    //     .attr("transform", "translate(" + ribbonWidth + " ,0)")
+    //     .call(d3.axisRight(y))
+    //     .selectAll('.tick text')
+    //     .style('fill', function (d) { return data.peels.includes(d) ? '#222222' : '#cccccc' })
+    //     .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
+    //     // .attr('text-anchor', 'end')
+    //     .text(function (d, i) { return componentsData[d] })
 
-    ribbon.append('g')
-        .attr('class', 'component-axis')
-        .attr("transform", "translate(" + ribbonWidth + " ,0)")
-        .call(d3.axisRight(y))
-        .selectAll('.tick text')
-        .style('fill', function (d) { return data.peels.includes(d) ? '#222222' : '#cccccc' })
-        .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
-        // .attr('text-anchor', 'end')
-        .text(function (d, i) { return componentsData[d] })
+
+
+            ribbon
+              .selectAll(".components")
+              .data(data.layers)
+              .enter()
+              .append("text")
+              .attr("class", "components")
+              .text(function(d) {
+                return d.components;
+              })
+              .attr("x", function(d) {
+                return xLinear(d.edges) + 5;
+              })
+              .attr("y", function(d) {
+                return y(d.peel) + y.bandwidth() * (6 / 13) + 5;
+              })
+              .style("fill", "#cccccc")
+              .on("mouseover", function(d) {
+                bulletTooltip.show(d);
+              })
+              .on("mouseout", function(d) {
+                bulletTooltip.hide();
+              })
+              .on("click", function(d) {
+                if (!(d.peel in cardsUp)) {
+                  return addCard(d);
+                } else {
+                  alert("Layer " + d.peel + " is already being shown!");
+                }
+              });
+
+
 
     // draggable ribbon
     let startX = 0, startWidth;
@@ -328,7 +351,7 @@ d3.json(dataPathJSON, function(error, data) {
         layersDiv.style.width = (startWidth - delta) + "px";
         // layersDiv.style.height = 500 + "px";
         d3.selectAll('.interactive-node-link').attr('width', '100%') // a little hacky but works for now
-        console.log('drag')
+        // console.log('drag')
 
         var event = new Event('ribbonDragEnd')
         window.dispatchEvent(event);
@@ -399,11 +422,13 @@ d3.json(dataPathJSON, function(error, data) {
                     d3.selectAll('.bullet-inner').transition().duration(1000).attr('width', function (d) { return xLog(d.vertices) })
                     d3.selectAll('.bullet-tick').transition().duration(1000).attr('x', function (d) { return xLog(d.clones) })
                     d3.select('.x-axis').transition().duration(1000).call(d3.axisTop(xLog).ticks(2))
+                    d3.selectAll('.components').transition().duration(1000).attr('x', function(d) { return xLog(d.edges) + 5 })
                 } else {
                     d3.selectAll('.bullet').transition().duration(1000).attr('width', function (d) { return xLinear(d.edges) })
                     d3.selectAll('.bullet-inner').transition().duration(1000).attr('width', function (d) { return xLinear(d.vertices) })
                     d3.selectAll('.bullet-tick').transition().duration(1000).attr('x', function (d) { return xLinear(d.clones) })
                     d3.select('.x-axis').transition().duration(1000).call(d3.axisTop(xLinear).ticks(3))
+                    d3.selectAll('.components').transition().duration(1000).attr('x', function(d) { return xLinear(d.edges) + 5 })
                 }
                 break;
 
