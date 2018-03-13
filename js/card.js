@@ -704,7 +704,15 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     var bandwidth = d3.select("#contour-toggle-bandwidth-" + contourLayerNum).property('value');
                     var threshold = d3.select("#contour-toggle-threshold-" + contourLayerNum).property('value');
 
-                    var contourColor = d3.scaleSequential(d3ScaleChromatic.interpolateGreys).domain([0, threshold])
+                    // var contourColor = d3.scaleSequential(d3ScaleChromatic.interpolateGreys).domain([0, threshold])
+                        var contourColor = d3
+                          .scaleLinear()
+                          .domain([0, threshold])
+                          .interpolate(d3.interpolateHcl)
+                          .range([
+                            d3.rgb("#E3F2FD"),
+                            d3.rgb("#0D47A1")
+                          ]);
 
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
                     .attr('transform', 'translate(-' + boundary + ', -' + boundary + ')')
