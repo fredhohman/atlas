@@ -169,27 +169,19 @@ d3.json(dataPathJSON, function(error, data) {
     //     .attr('cy', function(d) { return y(d.peel) + y.bandwidth()/2})
     //     .style('fill', '#444444')
 
-
     ribbonWrapper
       .append("g")
-      .attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
+      .attr("transform", "translate(" + 8 + "," + (ribbonMargin.top - 5) + ")")
       .selectAll(".indicator")
       .data(data.layers)
       .enter()
-      .append("text")
+    .append("path")
+      .attr("d", d3.symbol().type(d3.symbolTriangle).size(30))
+      .attr('transform', function(d,i) { return "translate(0," + (y(d.peel) + (y.bandwidth() - tickOffset / 2)) + ") rotate(270)"; })
       .attr("class", "indicator")
       .attr("id", function(d) {
         return "indicator-left-" + d.peel;
       })
-      .attr("width", "2")
-      .text("<")
-      .attr("y", function(d) {
-        return y(d.peel) + (y.bandwidth() - tickOffset / 2);
-      })
-      .attr("x", function(d) {
-        return 0;
-      })
-      .attr("height", y.bandwidth() * (1 / 7) + tickOffset)
       .style("fill", "#444444")
       .on("click", function(d) {
         if (!(d.peel in layersUp3D)) {
@@ -202,24 +194,21 @@ d3.json(dataPathJSON, function(error, data) {
 
     ribbonWrapper
       .append("g")
-      .attr("transform", "translate(" + 3 + "," + ribbonMargin.top + ")")
+      .attr("transform", "translate(" + 16 + "," + (ribbonMargin.top - 5) + ")")
       .selectAll(".indicator")
       .data(data.layers)
       .enter()
-      .append("text")
+        .append("path")
+      .attr("d", d3.symbol().type(d3.symbolTriangle).size(30))
+      .attr('transform', function(d,i) { return "translate(0," + (y(d.peel) + (y.bandwidth() - tickOffset / 2)) + ") rotate(90)"; })
+      .attr("class", "indicator")
+      .attr("id", function(d) {
+        return "indicator-left-" + d.peel;
+      })
       .attr("class", "indicator")
       .attr("id", function(d) {
         return "indicator-right-" + d.peel;
       })
-      .attr("width", "2")
-      .text(">")
-      .attr("y", function(d) {
-        return y(d.peel) + (y.bandwidth() - tickOffset / 2);
-      })
-      .attr("x", function(d) {
-        return 8;
-      })
-      .attr("height", y.bandwidth() * (1 / 7) + tickOffset)
       .style("fill", "#444444")
       .on("click", function(d) {
         if (!(d.peel in cardsUp)) {
@@ -229,8 +218,6 @@ d3.json(dataPathJSON, function(error, data) {
         }
       })
       .style("visibility", 'hidden');
-
-
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
