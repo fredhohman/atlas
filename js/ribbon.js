@@ -57,13 +57,11 @@ d3.json(dataPathJSON, function(error, data) {
         .range([d3.rgb("#0000ff"), d3.rgb('#00ff80')]);
 
     // color bullet by clustering coefficient
-    // var ribbonColorClustering = d3.scaleSequential(d3ScaleChromatic.interpolateBlues)
-    //     .domain([0,1])
     var ribbonColorClustering = d3
       .scaleLinear()
       .domain([0, 1])
       .interpolate(d3.interpolateHcl)
-      .range([d3.rgb("#E1F5FE"), d3.rgb("#01579B")]);
+      .range([d3.rgb("#ECEFF1"), d3.rgb("#546E7A")]);
 
     // save color palette from data once and bind to window, little cheeky
     window.ribbonColorPeel = ribbonColorPeel;
@@ -288,7 +286,7 @@ d3.json(dataPathJSON, function(error, data) {
               .enter()
               .append("text")
               .attr('text-anchor', 'start')
-              .attr("class", "components")
+              .attr("class", "component")
               .text(function(d) {
                 return d.components;
               })
@@ -381,14 +379,14 @@ d3.json(dataPathJSON, function(error, data) {
     d3.selectAll('.ribbon-checkbox').on('click', function () {
 
         console.log('checkbox clicked')
-        var clickedCheckbox = d3.select(this).attr('id').split('-')[0]
-        var clickedCheckboxBoolean = d3.select(this).property('checked')
-        console.log(clickedCheckbox, clickedCheckboxBoolean)
+        var clickedCheckbox = d3.select(this).attr('for').split('-')[0]
+        var clickedCheckboxBoolean = d3.select('#' + clickedCheckbox +'-checkbox').property('checked')
+        // console.log(clickedCheckbox, clickedCheckboxBoolean)
 
         switch (clickedCheckbox) {
-
+            // bug here: true and false are inverted, needs the ! to flip to correct position
             case 'edges':
-                if (clickedCheckboxBoolean) {
+                if (!clickedCheckboxBoolean) {
                     d3.selectAll('.bullet').style('opacity', 1)
                 } else {
                     d3.selectAll('.bullet').style('opacity', 0)
@@ -396,7 +394,7 @@ d3.json(dataPathJSON, function(error, data) {
                 break;
 
             case 'nodes':
-                if (clickedCheckboxBoolean) {
+                if (!clickedCheckboxBoolean) {
                     d3.selectAll('.bullet-inner').style('opacity', 1)
                 } else {
                     d3.selectAll('.bullet-inner').style('opacity', 0)
@@ -404,7 +402,7 @@ d3.json(dataPathJSON, function(error, data) {
                 break;
 
             case 'clones':
-                if (clickedCheckboxBoolean) {
+                if (!clickedCheckboxBoolean) {
                     d3.selectAll('.bullet-tick').style('opacity', 1)
                 } else {
                     d3.selectAll('.bullet-tick').style('opacity', 0)
@@ -412,15 +410,15 @@ d3.json(dataPathJSON, function(error, data) {
                 break;
 
             case 'components':
-                if (clickedCheckboxBoolean) {
-                    d3.selectAll('.component-axis').style('opacity', 1)
+                if (!clickedCheckboxBoolean) {
+                    d3.selectAll('.component').style('opacity', 1)
                 } else {
-                    d3.selectAll('.component-axis').style('opacity', 0)
+                    d3.selectAll('.component').style('opacity', 0)
                 }
                 break;
 
             case 'clustering':
-                if (clickedCheckboxBoolean) {
+                if (!clickedCheckboxBoolean) {
                     d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorClustering(d.clustering) })
                 } else {
                     d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorPeel(d.peel) })
@@ -428,18 +426,38 @@ d3.json(dataPathJSON, function(error, data) {
                 break;
 
             case 'log':
-                if (clickedCheckboxBoolean) {
+                if (!clickedCheckboxBoolean) {
                     d3.selectAll('.bullet').transition().duration(1000).attr('width', function (d) { return xLog(d.edges) })
                     d3.selectAll('.bullet-inner').transition().duration(1000).attr('width', function (d) { return xLog(d.vertices) })
                     d3.selectAll('.bullet-tick').transition().duration(1000).attr('x', function (d) { return xLog(d.clones) })
                     d3.select('.x-axis').transition().duration(1000).call(d3.axisTop(xLog).ticks(2))
-                    d3.selectAll('.components').transition().duration(1000).attr('x', function(d) { return xLog(d.edges) + 5 })
+                    d3
+                      .selectAll(".component")
+                      .transition()
+                      .duration(1000)
+                      .attr("x", function(d) {
+                        if (d.peel === 1) {
+                          return xLog(d.vertices) + 5;
+                        } else {
+                          return xLog(d.edges) + 5;
+                        }
+                      });
                 } else {
                     d3.selectAll('.bullet').transition().duration(1000).attr('width', function (d) { return xLinear(d.edges) })
                     d3.selectAll('.bullet-inner').transition().duration(1000).attr('width', function (d) { return xLinear(d.vertices) })
                     d3.selectAll('.bullet-tick').transition().duration(1000).attr('x', function (d) { return xLinear(d.clones) })
                     d3.select('.x-axis').transition().duration(1000).call(d3.axisTop(xLinear).ticks(3))
-                    d3.selectAll('.components').transition().duration(1000).attr('x', function(d) { return xLinear(d.edges) + 5 })
+                    d3
+                      .selectAll(".component")
+                      .transition()
+                      .duration(1000)
+                      .attr("x", function(d) {
+                        if (d.peel === 1) {
+                          return xLinear(d.vertices) + 5;
+                        } else {
+                          return xLinear(d.edges) + 5;
+                        }
+                      });
                 }
                 break;
 
