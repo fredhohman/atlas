@@ -74,83 +74,104 @@ d3.json(dataPathJSON, function(error, data) {
     // var bulletTick = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) { return d.clones; });
     // ribbon.call(bulletTick)
 
-    ribbon.selectAll('.bullet')
-          .data(data.layers)
-        .enter().append('rect')
-          .attr('class', "bullet")
-          .attr('id', function(d) { return "bullet-" + d.peel })
-        .attr('width', function (d) { return xLinear(d.edges) })
-          .attr('y', function(d) { return y(d.peel) })
-          .attr('height', y.bandwidth())
-        //   .style('fill', function(d) { return ribbonColorPeel(d.peel) })
-          .style('fill', function (d) { return ribbonColorClustering(d.clustering) })
-        //   .style('stroke', '#eeeeee')
-        //   .style('stroke-width', 1)
-          .on('mouseover', function (d) {
-              bulletTooltip.show(d);
-            })
-        .on('mouseout', function (d) {
-            bulletTooltip.hide();
-        })
-        .on('click', function (d) {
-            if (!(d.peel in cardsUp)) {
-                return addCard(d)
-            } else {
-                alert('Layer ' + d.peel + ' is already being shown!')
-            }
-        })
+    ribbon
+      .selectAll(".bullet")
+      .data(data.layers)
+      .enter()
+      .append("rect")
+      .attr("class", "bullet")
+      .attr("id", function(d) {
+        return "bullet-" + d.peel;
+      })
+      .attr("width", function(d) {
+        return xLinear(d.edges);
+      })
+      .attr("y", function(d) {
+        return y(d.peel);
+      })
+      .attr("height", y.bandwidth())
+      .style("fill", function(d) {
+        return ribbonColorClustering(d.clustering);
+      })
+      //   .style('stroke', '#eeeeee')
+      //   .style('stroke-width', 1)
+      .on("mouseover", function(d) {
+        bulletTooltip.show(d);
+      })
+      .on("mouseout", function(d) {
+        bulletTooltip.hide();
+      })
+      .on("click", function(d) {
+        if (!(d.peel in cardsUp)) {
+          return addCard(d);
+        } else {
+          alert("Layer " + d.peel + " is already being shown!");
+        }
+      });
 
-    ribbon.selectAll('.bullet-inner')
-          .data(data.layers)
-        .enter().append('rect')
-          .attr('class', 'bullet-inner')
-        .attr('width', function (d) { return xLinear(d.vertices) })
-          .attr('y', function(d) { return y(d.peel) + (y.bandwidth() * (3/7)) })
-          .attr('height', y.bandwidth() * (1/7))
-          .style('fill', '#444444')
-        //   .style('stroke', '#ffffff')
-        //   .style('stroke-width', '1')
-          .on('mouseover', function (d) {
-              bulletTooltip.show(d);
-            })
-          .on('mouseout', function (d) {
-              bulletTooltip.hide();
-            })
-          .on('click', function (d) {
-              if (!(d.peel in cardsUp)) {
-                  return addCard(d)
-              } else {
-                  alert('Layer ' + d.peel + ' is already being shown!')
-              }
-           })
+    ribbon
+      .selectAll(".bullet-inner")
+      .data(data.layers)
+      .enter()
+      .append("rect")
+      .attr("class", "bullet-inner")
+      .attr("width", function(d) {
+        return xLinear(d.vertices);
+      })
+      .attr("y", function(d) {
+        return y(d.peel) + y.bandwidth() * (3 / 7);
+      })
+      .attr("height", y.bandwidth() * (1 / 7))
+      .style("fill", "#444444")
+      //   .style('stroke', '#ffffff')
+      //   .style('stroke-width', '1')
+      .on("mouseover", function(d) {
+        bulletTooltip.show(d);
+      })
+      .on("mouseout", function(d) {
+        bulletTooltip.hide();
+      })
+      .on("click", function(d) {
+        if (!(d.peel in cardsUp)) {
+          return addCard(d);
+        } else {
+          alert("Layer " + d.peel + " is already being shown!");
+        }
+      });
 
     // rectangle tick
     var tickOffset = 6;
-    ribbon.selectAll('.bullet-tick')
-          .data(data.layers)
-        .enter().append('rect')
-          .attr('class', 'bullet-tick')
-          .attr('width', '2')
-        .attr('y', function (d) { return y(d.peel) + (y.bandwidth() * (3/7) - tickOffset/2) })
-           // convert clone percentage to actual count
-        .attr('x', function (d) { return xLinear(d.clones) })
-          .attr('height', y.bandwidth()*(1/7) + tickOffset)
-          .style('fill', '#444444')
-        //   .style('stroke', '#ffffff')
-        //   .style('stroke-width', '1')
-          .on('mouseover', function (d) {
-              bulletTooltip.show(d);
-            })
-          .on('mouseout', function (d) {
-              bulletTooltip.hide();
-            })
-          .on('click', function (d) { 
-              if (!(d.peel in cardsUp)) {
-                  return addCard(d)
-              } else {
-                  alert('Layer ' + d.peel + ' is already being shown!')
-              }
-           })
+    ribbon
+      .selectAll(".bullet-tick")
+      .data(data.layers)
+      .enter()
+      .append("rect")
+      .attr("class", "bullet-tick")
+      .attr("width", "2")
+      .attr("y", function(d) {
+        return y(d.peel) + (y.bandwidth() * (3 / 7) - tickOffset / 2);
+      })
+      // convert clone percentage to actual count
+      .attr("x", function(d) {
+        return xLinear(d.clones);
+      })
+      .attr("height", y.bandwidth() * (1 / 7) + tickOffset)
+      .style("fill", "#444444")
+      //   .style('stroke', '#ffffff')
+      //   .style('stroke-width', '1')
+      .on("mouseover", function(d) {
+        bulletTooltip.show(d);
+      })
+      .on("mouseout", function(d) {
+        bulletTooltip.hide();
+      })
+      .on("click", function(d) {
+        if (!(d.peel in cardsUp)) {
+          return addCard(d);
+        } else {
+          alert("Layer " + d.peel + " is already being shown!");
+        }
+      });
 
     // circle tick
     // ribbon.selectAll('.bullet-tick')
@@ -168,9 +189,13 @@ d3.json(dataPathJSON, function(error, data) {
       .selectAll(".indicator")
       .data(data.layers)
       .enter()
-    .append("path")
-      .attr("d", d3.symbol().type(d3.symbolTriangle).size(30))
-      .attr('transform', function(d,i) { return "translate(0," + (y(d.peel) + (y.bandwidth() - tickOffset / 2)) + ") rotate(270)"; })
+      .append("path")
+      .attr("d", d3.symbol()
+          .type(d3.symbolTriangle)
+          .size(30))
+      .attr("transform", function(d, i) {
+        return "translate(0," + (y(d.peel) + (y.bandwidth() - tickOffset / 2)) + ") rotate(270)";
+      })
       .attr("class", "indicator")
       .attr("id", function(d) {
         return "indicator-left-" + d.peel;
@@ -183,7 +208,7 @@ d3.json(dataPathJSON, function(error, data) {
           alert("Layer " + d.peel + " is already being shown!");
         }
       })
-      .style("visibility", 'hidden');
+      .style("visibility", "hidden");
 
     ribbonWrapper
       .append("g")
@@ -191,9 +216,13 @@ d3.json(dataPathJSON, function(error, data) {
       .selectAll(".indicator")
       .data(data.layers)
       .enter()
-        .append("path")
-      .attr("d", d3.symbol().type(d3.symbolTriangle).size(30))
-      .attr('transform', function(d,i) { return "translate(0," + (y(d.peel) + (y.bandwidth() - tickOffset / 2)) + ") rotate(90)"; })
+      .append("path")
+      .attr("d", d3.symbol()
+          .type(d3.symbolTriangle)
+          .size(30))
+      .attr("transform", function(d, i) {
+        return "translate(0," + (y(d.peel) + (y.bandwidth() - tickOffset / 2)) + ") rotate(90)";
+      })
       .attr("class", "indicator")
       .attr("id", function(d) {
         return "indicator-left-" + d.peel;
@@ -210,7 +239,7 @@ d3.json(dataPathJSON, function(error, data) {
           alert("Layer " + d.peel + " is already being shown!");
         }
       })
-      .style("visibility", 'hidden');
+      .style("visibility", "hidden");
 
     ribbon.append('g')
           .attr('transform', "translate(0," + 0 + ")")
@@ -227,32 +256,42 @@ d3.json(dataPathJSON, function(error, data) {
     d3.select('.drag-left').attr('id', 'ribbonDragLeft')
     d3.select('.drag-right').attr('id', 'ribbonDragRight')
 
-    ribbon.append('g')
-          .attr('class', 'y-axis')
-          .call(d3.axisLeft(y))
-          .selectAll('.tick text')
-          .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
-          .style('font-weight', function (d) { return data.peels.includes(d) ? '500' : '300' })
-          .style('cursor', function (d) { return data.peels.includes(d) ? 'pointer' : 'auto' })
+    ribbon
+      .append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y))
+      .selectAll(".tick text")
+      .style("fill", function(d) {
+        return data.peels.includes(d) ? "#222222" : "#cccccc";
+      })
+      .style("font-weight", function(d) {
+        return data.peels.includes(d) ? "500" : "300";
+      })
+      .style("cursor", function(d) {
+        return data.peels.includes(d) ? "pointer" : "auto";
+      });
 
-    d3.select('.y-axis').selectAll(".tick text")
-        .on("click", function (d, i) {
-            if (keysDownOrUp[91] || keysDownOrUp[93]) { 
-                // command key down add to 3D
-                console.log('tick dbl clicked', d, i)
-                console.log(keysDownOrUp)
-                drawLayer3DPoints(d);
-            } else {
-                // add 2D card
-                console.log('tick clicked', d, i)
-                if (!(d in cardsUp)) {
-                    var obj = data.layers.find(function (obj) { return obj.peel === d; });
-                    addCard(obj);
-                } else {
-                    alert('Layer ' + d + ' is already being shown!')
-                }
-            }
-        })
+    d3.select(".y-axis")
+      .selectAll(".tick text")
+      .on("click", function(d, i) {
+        if (keysDownOrUp[91] || keysDownOrUp[93]) {
+          // command key down add to 3D
+          console.log("tick dbl clicked", d, i);
+          console.log(keysDownOrUp);
+          drawLayer3DPoints(d);
+        } else {
+          // add 2D card
+          console.log("tick clicked", d, i);
+          if (!(d in cardsUp)) {
+            var obj = data.layers.find(function(obj) {
+              return obj.peel === d;
+            });
+            addCard(obj);
+          } else {
+            alert("Layer " + d + " is already being shown!");
+          }
+        }
+      });
 
     ribbon
         .selectAll(".components")
