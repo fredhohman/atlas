@@ -25,14 +25,7 @@ d3.json(dataPathJSON, function(error, data) {
     
     var ribbonMargin = { top: 30, right: 55, bottom: 20, left: 55 };
     var ribbonWidth = document.getElementById("ribbon").clientWidth - ribbonMargin.left - ribbonMargin.right
-    var ribbonHeight = document.getElementById("ribbon").clientHeight - ribbonMargin.top - ribbonMargin.bottom
-                     - document.getElementsByClassName('ribbon-title')[0].clientHeight - 20 
-                    // negative last term is a "bug", shrinks svg so scroll bar doesn't appear
-    var ribbonHeight = 25*d3.max(data.peels) //- ribbonMargin.top - ribbonMargin.bottom 
-
-    // responsive tests
-    // var aspectRatio = '32:2';
-    // var viewBox = '0 0 ' + aspectRatio.split(':').join(' ');
+    var ribbonHeight = 25*d3.max(data.peels)
 
     var ribbonWrapper = d3.select("#ribbon").append("svg")
         .attr("width", ribbonWidth + ribbonMargin.left + ribbonMargin.right)
@@ -240,6 +233,7 @@ d3.json(dataPathJSON, function(error, data) {
           .selectAll('.tick text')
           .style('fill', function (d) {return data.peels.includes(d) ? '#222222' : '#cccccc' })
           .style('font-weight', function (d) { return data.peels.includes(d) ? '500' : '300' })
+          .style('cursor', function (d) { return data.peels.includes(d) ? 'pointer' : 'auto' })
 
     d3.select('.y-axis').selectAll(".tick text")
         .on("click", function (d, i) {
@@ -258,65 +252,43 @@ d3.json(dataPathJSON, function(error, data) {
                     alert('Layer ' + d + ' is already being shown!')
                 }
             }
-
         })
 
-    // old components axis
-    // var componentsData = {}
-    // for (const layer in data.layers) {
-    //     if (data.layers.hasOwnProperty(layer)) {
-    //         componentsData[data.layers[layer].peel] = data.layers[layer].components                       
-    //     }
-    // }
-    // ribbon.append('g')
-    //     .attr('class', 'component-axis')
-    //     .attr("transform", "translate(" + ribbonWidth + " ,0)")
-    //     .call(d3.axisRight(y))
-    //     .selectAll('.tick text')
-    //     .style('fill', function (d) { return data.peels.includes(d) ? '#222222' : '#cccccc' })
-    //     .style('opacity', function (d) { return data.peels.includes(d) ? '1' : '0' })
-    //     // .attr('text-anchor', 'end')
-    //     .text(function (d, i) { return componentsData[d] })
-
-
-
-            ribbon
-              .selectAll(".components")
-              .data(data.layers)
-              .enter()
-              .append("text")
-              .attr('text-anchor', 'start')
-              .attr("class", "component")
-              .text(function(d) {
-                return d.components;
-              })
-              .attr("x", function(d) {
-                  if (d.peel === 1) {
-                      return xLinear(d.vertices) + 5;
-                  } else{
-                    return xLinear(d.edges) + 5;
-                  }
-              })
-              .attr("y", function(d) {
-                return y(d.peel) + y.bandwidth() * (6 / 13) + 5;
-              })
-              .style("fill", "#cccccc")
-              .style('font-size', '13')
-              .on("mouseover", function(d) {
-                bulletTooltip.show(d);
-              })
-              .on("mouseout", function(d) {
-                bulletTooltip.hide();
-              })
-              .on("click", function(d) {
-                if (!(d.peel in cardsUp)) {
-                  return addCard(d);
-                } else {
-                  alert("Layer " + d.peel + " is already being shown!");
-                }
-              });
-
-
+    ribbon
+        .selectAll(".components")
+        .data(data.layers)
+        .enter()
+        .append("text")
+        .attr("text-anchor", "start")
+        .attr("class", "component")
+        .text(function(d) {
+        return d.components;
+        })
+        .attr("x", function(d) {
+        if (d.peel === 1) {
+            return xLinear(d.vertices) + 5;
+        } else {
+            return xLinear(d.edges) + 5;
+        }
+        })
+        .attr("y", function(d) {
+        return y(d.peel) + y.bandwidth() * (6 / 13) + 5;
+        })
+        .style("fill", "#cccccc")
+        .style("font-size", "13")
+        .on("mouseover", function(d) {
+        bulletTooltip.show(d);
+        })
+        .on("mouseout", function(d) {
+        bulletTooltip.hide();
+        })
+        .on("click", function(d) {
+        if (!(d.peel in cardsUp)) {
+            return addCard(d);
+        } else {
+            alert("Layer " + d.peel + " is already being shown!");
+        }
+        });
 
     // draggable ribbon
     let startX = 0, startWidth;
@@ -467,7 +439,6 @@ d3.json(dataPathJSON, function(error, data) {
                 
         }
     })
-
 })
 
 function showLayerInOverview(d) {
