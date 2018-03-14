@@ -41,7 +41,8 @@ html, body {
 }
 
 #header {
-    background: var(--darkest);
+    /* background: var(--darkest); */
+    background: #37474F;
     color: var(--white);
     font-size: 18px;
     font-weight: 200;
@@ -584,11 +585,12 @@ h3 {
 .clone {
     /* transition: 1000ms; */
     /* fill: var(--dark); */
-    fill: var(--dark);
+    /* fill: var(--dark); */
+    fill: #FF9800;
 }
 
 .selected {
-    fill: red !important;
+    fill: #2196F3 !important;
 }
 
 

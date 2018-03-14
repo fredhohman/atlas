@@ -46,9 +46,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     cardMessage();
 
     let edgeOpacity = 0.5;
-    let edgeColor = '#cccccc';
-    let nodeColor = "#cccccc";
+    let edgeColor = '#bbbbbb';
+    let nodeColor = "#bbbbbb";
     let highlightColor = "#FFC107";
+    let cloneColor = "#FF9800";
+    let selectionColor = "#2196F3";
 
     var layers = d3.select('#layers')
         .append('div')
@@ -461,6 +463,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
               return isNeighborLink(node, link) ? 1 : edgeOpacity;
             }
 
+            function getLinkWidth(node, link) {
+              // return isNeighborLink(node, link) ? ribbonColorPeel(d.peel) : 'rgba(221,221,221,0.3)';
+              return isNeighborLink(node, link) ? 1.2 : 0.6;
+            }
+
             function selectNode(selectedNode) {
                 const neighbors = getNeighbors(selectedNode)
 
@@ -471,6 +478,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 linkSVGs
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
                     .style('stroke-opacity', function (link) { return getLinkOpacity(selectedNode, link) })
+                    .style('stroke-width', function (link) { return getLinkWidth(selectedNode, link); })
             }
 
             nodeSVGs.on('mouseover', function (node) {
@@ -519,8 +527,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             nodeSVGs.on('mouseout', function () {
                 // nodeSVGs.attr('fill', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
                 // linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
-                nodeSVGs.attr('fill', nodeColor); // hacky, referring to original d passed into drawLayerGraph
-                linkSVGs.attr('stroke', edgeColor); // hacky, referring to original d passed into drawLayerGraph
+                nodeSVGs.attr('fill', nodeColor);
+                linkSVGs.attr('stroke', edgeColor).style('stroke-opacity', edgeOpacity).style("stroke-width", 0.6);
                 // cloneTooltip.hide();
             })
 
@@ -718,7 +726,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     .attr('transform', 'translate(-' + boundary + ', -' + boundary + ')')
                         .attr("fill", "none")
                         // .attr("stroke", ribbonColorPeel(contourLayerNum))
-                        .attr("stroke", 'black')
+                        // .attr("stroke", 'black')
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
