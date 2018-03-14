@@ -321,93 +321,91 @@ function removeAll3DPoints() {
 }
 
 export function hideLayerPoints(peel) {
-    for (let c = 0; c < circles.length; c++) {
-        if (circles[c].peel == peel) {
-            circles[c].visible = false;
-        }
+  for (let c = 0; c < circles.length; c++) {
+    if (circles[c].peel == peel) {
+      circles[c].visible = false;
     }
+  }
 }
 
 export function showLayerPoints(peel) {
-    for (let c = 0; c < circles.length; c++) {
-        if (circles[c].peel == peel) {
-            circles[c].visible = true;
-        }
+  for (let c = 0; c < circles.length; c++) {
+    if (circles[c].peel == peel) {
+      circles[c].visible = true;
     }
+  }
 }
 
 export function toggle3DEdges() {
-    if (d3.select(this).property('checked')) {
-        for (let l = 0; l < lines.length; l++) {
-            lines[l].visible = true;
-        }
-    } else {
-        for (let l = 0; l < lines.length; l++) {
-            lines[l].visible = false;
-        }
+  if (d3.select(this).property("checked")) {
+    for (let l = 0; l < lines.length; l++) {
+      lines[l].visible = true;
     }
+  } else {
+    for (let l = 0; l < lines.length; l++) {
+      lines[l].visible = false;
+    }
+  }
 }
-document.getElementById('toggle-3d-edges').click()
+document.getElementById("toggle-3d-edges").click();
 
 function animateGraph() {
-    console.log('animate')
-    // console.log(heightSlider.property('value'))
-    
-    var start = 1
-    var end = 1000
-    var duration = 2
-    var increment = (end - start) / (60 * duration)
-    var counter = 0
-    
-    function tick() {
-        heightSlider.property('value', start + counter * increment)
-        counter += 1
-        
-        if (start + increment * counter < end) {
-            window.requestAnimationFrame(tick);
-            updateZPosition.call({ 'value': start + counter * increment })
-        }
+  console.log("animate");
+  // console.log(heightSlider.property('value'))
+
+  var start = 1;
+  var end = 1000;
+  var duration = 2;
+  var increment = (end - start) / (60 * duration);
+  var counter = 0;
+
+  function tick() {
+    heightSlider.property("value", start + counter * increment);
+    counter += 1;
+
+    if (start + increment * counter < end) {
+      window.requestAnimationFrame(tick);
+      updateZPosition.call({ value: start + counter * increment });
     }
-    
-    window.requestAnimationFrame(tick)
-    
+  }
+
+  window.requestAnimationFrame(tick);
 }
 
 function RGBtoHex(rgbColor) {
-    var rgbColor = rgbColor.split("(")[1].split(")")[0];
-    rgbColor = rgbColor.split(",");
-    var hexColor = rgbColor.map(function (x) {             //For each array element
-        x = parseInt(x).toString(16);      //Convert to a base16 string
-        return (x.length == 1) ? "0" + x : x;  //Add zero if we get only one character
-    })
-    hexColor = "0x" + hexColor.join("");
-    return hexColor
+  var rgbColor = rgbColor.split("(")[1].split(")")[0];
+  rgbColor = rgbColor.split(",");
+  var hexColor = rgbColor.map(function(x) {
+    // For each array element
+    x = parseInt(x).toString(16); //Convert to a base16 string
+    return x.length == 1 ? "0" + x : x; //Add zero if we get only one character
+  });
+  hexColor = "0x" + hexColor.join("");
+  return hexColor;
 }
 
 // projector = new Projector.Projector();
 
 function onDocumentMouseDown(event) {
-    console.log('clicked')
-    // event.preventDefault();
-    // var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
-    // projector.unprojectVector( vector, camera );
-    // var ray = new THREE.Ray( camera.position, vector.subSelf( camera.position ).normalize() );
-    // var intersects = ray.intersectObjects( objects );
-    // if ( intersects.length > 0 ) {
-    //     intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
-    //     console.log(clicked)
-    // }
+  console.log("clicked");
+  // event.preventDefault();
+  // var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+  // projector.unprojectVector( vector, camera );
+  // var ray = new THREE.Ray( camera.position, vector.subSelf( camera.position ).normalize() );
+  // var intersects = ray.intersectObjects( objects );
+  // if ( intersects.length > 0 ) {
+  //     intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
+  //     console.log(clicked)
+  // }
 }
 
 // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
-var animate = function () {
-    
-    requestAnimationFrame(animate);
-    controls.update();
-    circles.map(x => x.lookAt(camera.position));
-    renderer.render(scene, camera);
-    
+var animate = function() {
+  requestAnimationFrame(animate);
+  controls.update();
+  circles.map(x => x.lookAt(camera.position));
+  renderer.render(scene, camera);
 };
 
 animate();
