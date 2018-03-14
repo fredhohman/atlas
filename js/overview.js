@@ -194,7 +194,7 @@ export function drawLayer3DPoints(layerNum) {
 
 export function drawAll3DPointsWithLayers() {
     console.log('drawing all 3D layers')
-
+    
     d3.json(dataPathJSON, function (error, data) {
         if (error) {
             return console.error(error);
@@ -214,48 +214,48 @@ export function drawAll3DPointsWithLayers() {
 
 // overview header sliders
 d3.select("#overview-slider-size")
-  .attr("max", 10)
-  .attr("min", 0.1)
-  .attr("step", 0.1)
-  .property("value", 1)
-  .on("input", updateRadius)
-  .on("change", updateRadius);
+.attr("max", 10)
+.attr("min", 0.1)
+.attr("step", 0.1)
+.property("value", 1)
+.on("input", updateRadius)
+.on("change", updateRadius);
 
 var heightSlider = d3.select("#overview-slider-height")
-  .attr("max", 3 * zCordHeight)
-  .attr("min", 1)
-  .attr("step", 0.01)
-  .property("value", 1)
-  .on("input", updateZPosition);
+.attr("max", 3 * zCordHeight)
+.attr("min", 1)
+.attr("step", 0.01)
+.property("value", 1)
+.on("input", updateZPosition);
 
 d3.select("#overview-slider-spread")
-  .attr("max", 2)
-  .attr("min", 0)
-  .attr("step", 0.05)
-  .property("value", 1)
-  .on("input", updateXPosition);
+.attr("max", 2)
+.attr("min", 0)
+.attr("step", 0.05)
+.property("value", 1)
+.on("input", updateXPosition);
 
 d3.select('#reset-camera-button')
-  .on('click', resetOverviewCamera)
-  .html('<i class="material-icons md-24 ">videocam</i> top view')
+.on('click', resetOverviewCamera)
+.html('<i class="material-icons md-24 ">videocam</i> top view')
 // .html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px;">Reset</span>')
 
 d3.select('#add-all-3d-layers')
-  .on('click', drawAll3DPointsWithLayers)
-  .html('<i class="material-icons md-24 ">add</i>show all')
+.on('click', drawAll3DPointsWithLayers)
+.html('<i class="material-icons md-24 ">add</i>show all')
 // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Add All</span>')  
 
 d3.select('#remove-all-3d-layers')
-  .on('click', removeAll3DPoints)
-  .html('<i class="material-icons md-24 ">remove</i>hide all')
+.on('click', removeAll3DPoints)
+.html('<i class="material-icons md-24 ">remove</i>hide all')
 // .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Remove All</span>')  
 
 d3.select('#animate-graph')
-  .on('click', animateGraph)
-  .html('<i class="material-icons md-24 ">play_arrow</i>animate')
+.on('click', animateGraph)
+.html('<i class="material-icons md-24 ">play_arrow</i>animate')
 
 d3.select('#toggle-3d-edges')
-  .on('click', toggle3DEdges)
+.on('click', toggle3DEdges)
 // .html('<i class="material-icons md-24 ">play_arrow</i>show edges')
 
 function updateRadius() {
@@ -305,10 +305,10 @@ function resetOverviewCamera() {
 
 function removeAll3DPoints() {
     for (let c = 0; c < circles.length; c++) {
-        scene.remove(circles[c])
+        scene.remove(circles[c]);
     }
     for (let l = 0; l < lines.length; l++) {
-        scene.remove(lines[l])
+        scene.remove(lines[l]);
     }
     Object.keys(layersUp3D).forEach(key => {
         d3.select("#indicator-left-" + key).style("visibility", "hidden");
@@ -321,91 +321,91 @@ function removeAll3DPoints() {
 }
 
 export function hideLayerPoints(peel) {
-  for (let c = 0; c < circles.length; c++) {
-    if (circles[c].peel == peel) {
-      circles[c].visible = false;
+    for (let c = 0; c < circles.length; c++) {
+        if (circles[c].peel == peel) {
+            circles[c].visible = false;
+        }
     }
-  }
 }
 
 export function showLayerPoints(peel) {
-  for (let c = 0; c < circles.length; c++) {
-    if (circles[c].peel == peel) {
-      circles[c].visible = true;
+    for (let c = 0; c < circles.length; c++) {
+        if (circles[c].peel == peel) {
+            circles[c].visible = true;
+        }
     }
-  }
 }
 
 export function toggle3DEdges() {
-  if (d3.select(this).property("checked")) {
-    for (let l = 0; l < lines.length; l++) {
-      lines[l].visible = true;
+    if (d3.select(this).property("checked")) {
+        for (let l = 0; l < lines.length; l++) {
+            lines[l].visible = true;
+        }
+    } else {
+        for (let l = 0; l < lines.length; l++) {
+            lines[l].visible = false;
+        }
     }
-  } else {
-    for (let l = 0; l < lines.length; l++) {
-      lines[l].visible = false;
-    }
-  }
 }
 document.getElementById("toggle-3d-edges").click();
 
 function animateGraph() {
-  console.log("animate");
-  // console.log(heightSlider.property('value'))
-
-  var start = 1;
-  var end = 1000;
-  var duration = 2;
-  var increment = (end - start) / (60 * duration);
-  var counter = 0;
-
-  function tick() {
-    heightSlider.property("value", start + counter * increment);
-    counter += 1;
-
-    if (start + increment * counter < end) {
-      window.requestAnimationFrame(tick);
-      updateZPosition.call({ value: start + counter * increment });
+    console.log("animate");
+    // console.log(heightSlider.property('value'))
+    
+    var start = 1;
+    var end = 1000;
+    var duration = 2;
+    var increment = (end - start) / (60 * duration);
+    var counter = 0;
+    
+    function tick() {
+        heightSlider.property("value", start + counter * increment);
+        counter += 1;
+        
+        if (start + increment * counter < end) {
+            window.requestAnimationFrame(tick);
+            updateZPosition.call({ value: start + counter * increment });
+        }
     }
-  }
-
-  window.requestAnimationFrame(tick);
+    
+    window.requestAnimationFrame(tick);
 }
 
 function RGBtoHex(rgbColor) {
-  var rgbColor = rgbColor.split("(")[1].split(")")[0];
-  rgbColor = rgbColor.split(",");
-  var hexColor = rgbColor.map(function(x) {
-    // For each array element
-    x = parseInt(x).toString(16); //Convert to a base16 string
-    return x.length == 1 ? "0" + x : x; //Add zero if we get only one character
-  });
-  hexColor = "0x" + hexColor.join("");
-  return hexColor;
+    var rgbColor = rgbColor.split("(")[1].split(")")[0];
+    rgbColor = rgbColor.split(",");
+    var hexColor = rgbColor.map(function(x) {
+        // For each array element
+        x = parseInt(x).toString(16); //Convert to a base16 string
+        return x.length == 1 ? "0" + x : x; //Add zero if we get only one character
+    });
+    hexColor = "0x" + hexColor.join("");
+    return hexColor;
 }
 
 // projector = new Projector.Projector();
 
 function onDocumentMouseDown(event) {
-  console.log("clicked");
-  // event.preventDefault();
-  // var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
-  // projector.unprojectVector( vector, camera );
-  // var ray = new THREE.Ray( camera.position, vector.subSelf( camera.position ).normalize() );
-  // var intersects = ray.intersectObjects( objects );
-  // if ( intersects.length > 0 ) {
-  //     intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
-  //     console.log(clicked)
-  // }
+    console.log("clicked");
+    // event.preventDefault();
+    // var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+    // projector.unprojectVector( vector, camera );
+    // var ray = new THREE.Ray( camera.position, vector.subSelf( camera.position ).normalize() );
+    // var intersects = ray.intersectObjects( objects );
+    // if ( intersects.length > 0 ) {
+    //     intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
+    //     console.log(clicked)
+    // }
 }
 
 // document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
 var animate = function() {
-  requestAnimationFrame(animate);
-  controls.update();
-  circles.map(x => x.lookAt(camera.position));
-  renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    controls.update();
+    circles.map(x => x.lookAt(camera.position));
+    renderer.render(scene, camera);
 };
 
 animate();
