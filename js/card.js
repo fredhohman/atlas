@@ -405,7 +405,14 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     return { x: t.attr("x"), y: t.attr("y") };
                 })
                 .on("start", dragstarted)
-                .on("drag", dragged);
+                .on("drag", dragged)
+                .on('end', function() {
+                    var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1] // careful here, always looks as first class of circle node-i where i is a peel
+                    if (d3.select('#contour-toggle-' + peel).property('checked')) {
+                        removeLayerGraphContour(peel);
+                        toggleContour(peel);
+                    }
+                })
             nodeSVGs.call(drag)
 
             // stops the propagation of the click event
@@ -491,7 +498,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .append('span')
                         .attr('class', 'clone-label')
                         .text(function (datum, i) {
-                            console.log(datum, i)
                             if (i != node.peels.length - 1) {
                                 return datum + ', '
                             } else {
