@@ -101,10 +101,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     cardText.append('hr')
 
-    // var positionToggle = cardText.append('label').attr('class', 'switch')
-    // positionToggle.append('input').attr('id', 'position-toggle-' + d.peel).attr('class', 'position-toggle').attr('type', 'checkbox').property('checked', false)
-    // positionToggle.append('span').attr('class', 'slider round')
-
     var edgesToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "edges-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input edges-toggle').property('checked', true)
     var edgesToggleLabel = cardText.append('label').attr('for', "edges-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Edges')
 
@@ -113,12 +109,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var positionToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "position-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input position-toggle')
     var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('redraw')
-    // positionToggleLabel.append('span').attr('class', 'toggle--on').text('original positions')
-    // positionToggleLabel.append('span').attr('class', 'toggle--off').text('redrawn')
-
-    // var contourToggle = cardText.append('label').attr('class', 'switch')
-    // contourToggle.append('input').attr('id', 'contour-toggle-' + d.peel).attr('class', 'contour-toggle').attr('type', 'checkbox').property('checked', false)
-    // contourToggle.append('span').attr('class', 'slider round')
 
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
     var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
@@ -126,51 +116,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 200).attr('value', 50).attr('id', 'contour-toggle-bandwidth-' + d.peel).attr('class', 'contour-toggle-bandwidth')
     cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 20).attr('value', 5).attr('id', 'contour-toggle-threshold-' + d.peel).attr('class', 'contour-toggle-threshold')
 
-    // contourToggleLabel.append('span').attr('class', 'toggle--on').text('hide contour')
-    // contourToggleLabel.append('span').attr('class', 'toggle--off').text('show contour')
-
-    // var cloneToggle = cardText.append('label').attr('class', 'switch')
-    // cloneToggle.append('input').attr('id', 'clone-toggle-' + d.peel).attr('class', 'clone-toggle').attr('type', 'checkbox').property('checked', false)
-    // cloneToggle.append('span').attr('class', 'slider round')
-
     var cloneToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "clone-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input clone-toggle')
     var cloneToggleLabel = cardText.append('label').attr('for', "clone-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('clones')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--on').text('hide clones')
-    // cloneToggleLabel.append('span').attr('class', 'toggle--off').text('show clones')
 
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
-
-
-    // cardBottom.append('div')
-    //     .attr('id', 'original-layer-image-' + d.peel)
-    //     .attr('class', 'card-image-wrapper tabcontent')
-    //     .append('img')
-    //     .attr('src', imagePathLayerOrg(d.peel))
-    //     //   .attr('width', '100%')
-    //     .style('display', 'block')
-    //     .style('max-height', '100%')
-    //     .style('margin', 'auto')
-
-    // cardBottom.append('div')
-    //     .attr('id', 'force-directed-layer-image-' + d.peel)
-    //     .attr('class', 'card-image-wrapper tabcontent')
-    //     .append('img')
-    //     .attr('src', imagePathLayerFD(d.peel))
-    //     //   .attr('width', '100%')
-    //     .style('display', 'block')
-    //     .style('max-height', '100%')
-    //     .style('margin', 'auto')
-
-    // cardBottom.append('div')
-    //     .attr('id', 'contour-layer-image-' + d.peel)
-    //     .attr('class', 'card-image-wrapper tabcontent')
-    //     .append('img')
-    //     .attr('src', imagePathLayerContour(d.peel))
-    //     //   .attr('width', '100%')
-    //     .style('display', 'block')
-    //     .style('max-height', '100%')
-    //     .style('margin', 'auto')
 
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
