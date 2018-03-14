@@ -7,9 +7,7 @@
   <title>Graph Playground</title>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <!-- <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" /> -->
   <link rel="stylesheet" href="css/style.css">
-  <!-- <link rel="stylesheet" href="css/buttons"> -->
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -19,133 +17,123 @@
 <body>
   <div class="wrapper">
     <header id="header">
-      <div id="header-text"><span id="header-text-span">Graph Playground</span></div>
+      <div id="header-text">
+        <span id="header-text-span">Graph Playground</span>
+      </div>
     </header>
-          <!-- <nav id=nav>
-            <div id="graph-data-wrapper">
-              <h1 id="graph-name">
-                Bible
-              </h1>
-              <div id="vertices">
-                vertices:
-                <span id="vertices-value">N/A</span>
-              </div>
-              <div id="edges">
-                edges:
-                <span id="edges-value">N/A</span>
-              </div>
-            </div>
-            <div id="graph-description">
-              No description available.
-            </div>
-          </nav> -->
     <div id=middle>
-        <div id="glass"></div>
-        <div id="overview">
-          <div id="overview-header">
-                        <div id="graph-data-wrapper">
-                          <div id="graph-name-wrapper">
-                            <h1 id="graph-name">Graph Name</h1>
-                          </div>
-                          <div id="vertices">
-                            <span id="vertices-title" class="smalltext-header">vertices</span>
-                            <span id="vertices-value">N/A</span>
-                          </div>
-                          <div id="edges">
-                            <span id="edges-title" class="smalltext-header">edges</span>
-                            <span id="edges-value">N/A</span>
-                          </div>
-                        </div>
-                        <div id="overview-slider-wrapper">
-                        <div class="overview-header-ui-element-wrapper">
-                        <h3 class="smalltext-header">node size</h3>
-                        <input type="range" class="overview-slider" id="overview-slider-size">
-                        </div>
-
-                        <div class="overview-header-ui-element-wrapper">
-                        <h3 class="smalltext-header">height</h3>
-                        <input type="range" class="overview-slider" id="overview-slider-height">
-                        </div>
-
-                        <div class="overview-header-ui-element-wrapper">
-                        <h3 class="smalltext-header">spread</h3>
-                        <input type="range" class="overview-slider" id="overview-slider-spread">
-                        </div>
-
-                        <div class="overview-header-ui-element-wrapper">
-                          <button class="overview-header-button" id="reset-camera-button"></button>
-                        </div>
-
-                        <div class="overview-header-ui-element-wrapper">
-                          <button class="overview-header-button" id="add-all-3d-layers"></button>
-                        </div>
-
-                        <div class="overview-header-ui-element-wrapper">
-                          <button class="overview-header-button" id="remove-all-3d-layers"></button>
-                        </div>
-
-                        <div class="overview-header-ui-element-wrapper">
-                          <button class="overview-header-button" id="animate-graph"></button>
-                        </div>
-
-                        <div class="overview-header-ui-element-wrapper">
-                          <input type="checkbox" id="toggle-3d-edges" class="switch-input toggle-3d-edges">
-                          <label for="toggle-3d-edges" class="switch-label smalltext-header">
-                          toggle edges
-                          </label>
-                          <!-- <button class="overview-header-button" id="toggle-edges"></button> -->
-                        </div>
-
-                        </div>
-
-                        <!-- <div id="graph-description">
-                          No description available.
-                        </div> -->
-          </div>
-          <div id="overview-canvas-wrapper">
-
-          </div>
-          <!-- <h2>Overview</h2> -->
-          
-        </div>
-        <div id="ribbon">
-          <!-- <h2 class="ribbon-title">Ribbon</h2> -->
-          <!-- <h2 class="ribbon-title"><i class="material-icons md-24">drag_handle</i></h2> -->
-          <h2 class="ribbon-title">
-
-            <div class="drag-left">
-              <i class="material-icons md-24">chevron_left</i>
+      <div id="glass"></div>
+      <div id="overview">
+        <div id="overview-header">
+          <div id="graph-data-wrapper">
+            <div id="graph-name-wrapper">
+              <h1 id="graph-name">Graph Name</h1>
             </div>
-          
-            <button class="accordion">
-              <i class="material-icons md-24">menu</i>
-            </button>
-          
-            <div class="drag-right">
-              <i class="material-icons md-24">chevron_right</i>
+            <div id="vertices">
+              <span id="vertices-title" class="smalltext-header">vertices</span>
+              <span id="vertices-value">N/A</span>
             </div>
-          
-            <!-- <i class="material-icons md-24 drag-right">keyboard_arrow_right</i> -->
-          </h2>
-          <div class="panel">
-            <h3 id="panel-title">Options</h3>
-            <input type='checkbox' id='edges-checkbox' class='switch-input' checked><label for="edges-checkbox" class="switch-label smalltext-header ribbon-checkbox">edges</label><br>
-            <input type='checkbox' id='nodes-checkbox' class='switch-input' checked><label for="nodes-checkbox" class="switch-label smalltext-header ribbon-checkbox">nodes</label><br>
-            <input type='checkbox' id='clones-checkbox' class='switch-input' checked><label for="clones-checkbox" class="switch-label smalltext-header ribbon-checkbox">clones</label><br>
-            <input type='checkbox' id='components-checkbox' class='switch-input' checked><label for="components-checkbox" class="switch-label smalltext-header ribbon-checkbox">components</label><br>
-            <input type='checkbox' id='clustering-checkbox' class='switch-input' checked><label for="clustering-checkbox" class="switch-label smalltext-header ribbon-checkbox">clustering</label><br>
-            <input type='checkbox' id='log-checkbox' class='switch-input'><label for="log-checkbox" class="switch-label smalltext-header ribbon-checkbox">log</label><br>
+            <div id="edges">
+              <span id="edges-title" class="smalltext-header">edges</span>
+              <span id="edges-value">N/A</span>
+            </div>
+          </div>
+          <div id="overview-slider-wrapper">
+            <div class="overview-header-ui-element-wrapper">
+              <h3 class="smalltext-header">node size</h3>
+              <input type="range" class="overview-slider" id="overview-slider-size">
+            </div>
+
+            <div class="overview-header-ui-element-wrapper">
+              <h3 class="smalltext-header">height</h3>
+              <input type="range" class="overview-slider" id="overview-slider-height">
+            </div>
+
+            <div class="overview-header-ui-element-wrapper">
+              <h3 class="smalltext-header">spread</h3>
+              <input type="range" class="overview-slider" id="overview-slider-spread">
+            </div>
+
+            <div class="overview-header-ui-element-wrapper">
+              <button class="overview-header-button" id="reset-camera-button"></button>
+            </div>
+
+            <div class="overview-header-ui-element-wrapper">
+              <button class="overview-header-button" id="add-all-3d-layers"></button>
+            </div>
+
+            <div class="overview-header-ui-element-wrapper">
+              <button class="overview-header-button" id="remove-all-3d-layers"></button>
+            </div>
+
+            <div class="overview-header-ui-element-wrapper">
+              <button class="overview-header-button" id="animate-graph"></button>
+            </div>
+
+            <div class="overview-header-ui-element-wrapper">
+              <input type="checkbox" id="toggle-3d-edges" class="switch-input toggle-3d-edges">
+              <label for="toggle-3d-edges" class="switch-label smalltext-header">
+                toggle edges
+              </label>
+            </div>
+
           </div>
 
         </div>
-        <div id="layers">
-          <!-- <h2>Layers</h2> -->
-          <div id="no-card-message">
-            <i class="material-icons md-36 bounce">keyboard_arrow_left</i>
-            <span class="bounce-padding">Select a layer</span>
+        <div id="overview-canvas-wrapper">
+
+        </div>
+
+      </div>
+      <div id="ribbon">
+        <!-- <h2 class="ribbon-title">Ribbon</h2> -->
+        <!-- <h2 class="ribbon-title"><i class="material-icons md-24">drag_handle</i></h2> -->
+        <h2 class="ribbon-title">
+
+          <div class="drag-left">
+            <i class="material-icons md-24">chevron_left</i>
           </div>
+
+          <button class="accordion">
+            <i class="material-icons md-24">menu</i>
+          </button>
+
+          <div class="drag-right">
+            <i class="material-icons md-24">chevron_right</i>
+          </div>
+
+        </h2>
+        <div class="panel">
+          <h3 id="panel-title">Options</h3>
+          <input type='checkbox' id='edges-checkbox' class='switch-input' checked>
+          <label for="edges-checkbox" class="switch-label smalltext-header ribbon-checkbox">edges</label>
+          <br>
+          <input type='checkbox' id='nodes-checkbox' class='switch-input' checked>
+          <label for="nodes-checkbox" class="switch-label smalltext-header ribbon-checkbox">nodes</label>
+          <br>
+          <input type='checkbox' id='clones-checkbox' class='switch-input' checked>
+          <label for="clones-checkbox" class="switch-label smalltext-header ribbon-checkbox">clones</label>
+          <br>
+          <input type='checkbox' id='components-checkbox' class='switch-input' checked>
+          <label for="components-checkbox" class="switch-label smalltext-header ribbon-checkbox">components</label>
+          <br>
+          <input type='checkbox' id='clustering-checkbox' class='switch-input' checked>
+          <label for="clustering-checkbox" class="switch-label smalltext-header ribbon-checkbox">clustering</label>
+          <br>
+          <input type='checkbox' id='log-checkbox' class='switch-input'>
+          <label for="log-checkbox" class="switch-label smalltext-header ribbon-checkbox">log</label>
+          <br>
+        </div>
+
+      </div>
+      <div id="layers">
+        <!-- <h2>Layers</h2> -->
+        <div id="no-card-message">
+          <i class="material-icons md-36 bounce">keyboard_arrow_left</i>
+          <span class="bounce-padding">Select a layer</span>
         </div>
       </div>
+    </div>
     <!-- <footer id="footer">Footer</footer> -->
   </div>
 
