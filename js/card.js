@@ -28,14 +28,6 @@ d3.json(dataPathJSON, function (error, data) {
     d3.select("#graph-description").text(data.description);
 })
 
-function reloadPage() {
-    window.location.reload();
-}
-
-d3.select('#header-text-span')
-    .on('click', reloadPage)
-    .style('cursor', 'pointer')
-
 export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;

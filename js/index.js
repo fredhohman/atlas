@@ -4,10 +4,12 @@ import * as d3 from "d3";
 console.log("index.js loaded");
 
 // global data and image paths
-// const dataDirName = 'lesmis'
-// const dataDirName = 'moreno_names'
-const dataDirName = "astroph";
-// const dataDirName = 'stackexchange'
+// const dataDirName = 'lesmis' // good but small
+// const dataDirName = 'moreno_names' //good but small
+const dataDirName = "astroph"; //good
+// const dataDirName = 'stackexchange' // bad
+// const dataDirName = 'dblp' // bad
+// const dataDirName = 'patentcite' // good and medium/big
 
 export const dataPath = "data/" + dataDirName + "/";
 export const dataPathJSON = "data/" + dataDirName + "/" + dataDirName + ".json";
@@ -31,3 +33,12 @@ export function imagePathOverview2DBackground() {
 }
 
 window.d3 = d3;
+
+function reloadPage() {
+  window.location.reload();
+}
+
+d3
+  .select("#header-text-span")
+  .on("click", reloadPage)
+  .style("cursor", "pointer");
