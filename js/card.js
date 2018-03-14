@@ -13,6 +13,9 @@ window.cardsUp = cardsUp;
 let zoomHandlerUp = {};
 window.zoomHandlerUp = zoomHandlerUp;
 
+export let selectedNodeIDs = {}
+window.selectedNodeIDs = selectedNodeIDs;
+
 export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;
@@ -412,7 +415,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                                     var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
                                     scale = scale.substring(0, scale.length - 1)
                                     graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.fdx, node.fdy) // transition card that is clicked
-                                    nodeSVGs.filter(function (n) { return n === node }).classed('selected', true).classed('pulse', true)
+                                    nodeSVGs.filter(function (n) { return n === node }).classed('selected', true)
+                                    console.log(node)
+                                    selectedNodeIDs[node.id + "-" + d.peel] = "selected";
+                                    selectedNodeIDs[node.id + '-' + datum] = 'selected'
+                                    console.log(selectedNodeIDs);
                                     addCard(obj, initNode = node, scale = scale);
                                 })
                             } else{
@@ -434,9 +441,19 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             })
 
             nodeSVGs.on('click', function (d) {
-                console.log('clicked', this, d)
+                console.log('clicked')
                 let selectedOrNot = d3.select(this).classed("selected");
-                d3.select(this).classed('selected', function() { return d3.select(this).classed('selected') ? false : true; })
+                d3.select(this).classed('selected', function() {
+                    if (d3.select(this).classed('selected')) {
+                        var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1]
+                        delete selectedNodeIDs[d3.select(this).data()[0].id + '-' + peel]
+                        return false
+                    } else{
+                        var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1]
+                        selectedNodeIDs[d3.select(this).data()[0].id + '-' + peel] = 'selected'
+                        return true
+                    }
+                })
             })
 
             function toggleEdges() {
