@@ -484,6 +484,7 @@ h3 {
     /* background-color: red; */
     box-sizing: border-box; 
     padding: 10px;
+    overflow: scroll;
 }
 
 .card-image-wrapper {
@@ -586,11 +587,12 @@ h3 {
     /* transition: 1000ms; */
     /* fill: var(--dark); */
     /* fill: var(--dark); */
-    fill: #FF9800;
+    fill: #FF7043;
 }
 
 .selected {
-    fill: #2196F3 !important;
+    stroke: #2196F3 !important;
+    stroke-width: 2px;
 }
 
 
@@ -709,8 +711,8 @@ input:checked + .slider:before {
 }
 
 .ribbon-checkbox {
-    margin-bottom: 4px;
-    margin-top: 4px;
+    /* margin-bottom: 4px; */
+    /* margin-top: 4px; */
     padding-right: 3px;
     cursor: pointer;
 }

@@ -472,7 +472,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 const neighbors = getNeighbors(selectedNode)
 
                 nodeSVGs
-                    .attr('fill', function (node) { return getNodeColor(node, neighbors) })
+                    .attr('stroke', function (node) { return getNodeColor(node, neighbors) })
                 // textElements
                 // .attr('fill', node => getTextColor(node, neighbors))
                 linkSVGs
@@ -527,16 +527,15 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             nodeSVGs.on('mouseout', function () {
                 // nodeSVGs.attr('fill', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
                 // linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
-                nodeSVGs.attr('fill', nodeColor);
+                nodeSVGs.attr('stroke', '#ffffff');
                 linkSVGs.attr('stroke', edgeColor).style('stroke-opacity', edgeOpacity).style("stroke-width", 0.6);
                 // cloneTooltip.hide();
             })
 
             nodeSVGs.on('click', function (d) {
-                console.log('clicked')
-                d.fx = null;
-                d.fy = null;
-                d3.select(this).classed('fixed', false)
+                console.log('clicked', this, d)
+                let selectedOrNot = d3.select(this).classed("selected");
+                d3.select(this).classed('selected', function() { return d3.select(this).classed('selected') ? false : true; })
             })
 
             function toggleEdges() {
