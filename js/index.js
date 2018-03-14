@@ -41,4 +41,17 @@ function reloadPage() {
 d3
   .select("#header-text-span")
   .on("click", reloadPage)
-  .style("cursor", "pointer");
+  // .style("cursor", "pointer");
+
+d3.json(dataPathJSON, function(error, data) {
+  if (error) {
+    return console.error(error);
+  }
+
+  // set nav data
+  var navNumFormat = d3.format(",");
+  d3.select("#graph-value").text(data.name);
+  d3.select("#vertices-value").text(navNumFormat(data.vertices));
+  d3.select("#edges-value").text(navNumFormat(data.edges));
+  d3.select("#graph-description").text(data.description);
+});

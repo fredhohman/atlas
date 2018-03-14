@@ -14,20 +14,6 @@ window.cardsUp = cardsUp;
 let zoomHandlerUp = {};
 window.zoomHandlerUp = zoomHandlerUp;
 
-d3.json(dataPathJSON, function (error, data) {
-
-    if (error) {
-        return console.error(error);
-    }
-
-    // set nav data
-    var navNumFormat = d3.format(',');
-    d3.select("#graph-name").text(data.name);
-    d3.select("#vertices-value").text(navNumFormat(data.vertices));
-    d3.select("#edges-value").text(navNumFormat(data.edges));
-    d3.select("#graph-description").text(data.description);
-})
-
 export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;
