@@ -143,7 +143,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
         console.log('draw graph', d)
 
         var graphLayerMargin = { top: 0, right: 0, bottom: 0, left: 0 };
-        var graphLayerWidth = document.getElementById("interactive-node-link-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right //- 6
+        var graphLayerWidth = document.getElementById("interactive-node-link-" + d.peel).clientWidth - graphLayerMargin.left - graphLayerMargin.right
         var graphLayerHeight = document.getElementById("interactive-node-link-" + d.peel).clientHeight - graphLayerMargin.top - graphLayerMargin.bottom
 
         var graphLayerSVG = d3.select("#interactive-node-link-" + d.peel)
@@ -201,20 +201,29 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 .attr("class", "everything")
 
             //draw lines for the links 
-            var linkSVGs = g.append("g")
-                .attr("class", "links")
-                .selectAll("line")
-                .data(graphLayerData.links)
-                .enter().append("line")
-                .attr('class', 'link-' + d.peel)
-                .attr("x1", function (d) { return d.source.x; })
-                .attr("y1", function (d) { return d.source.y; })
-                .attr("x2", function (d) { return d.target.x; })
-                .attr("y2", function (d) { return d.target.y; })
-                .attr("stroke-width", 0.6)
-                .attr("stroke", edgeColor)
-                // .attr("stroke", function (d) { return ribbonColorPeel(d.p) })
-                .style("stroke-opacity", edgeOpacity)
+            var linkSVGs = g
+              .append("g")
+              .attr("class", "links")
+              .selectAll("line")
+              .data(graphLayerData.links)
+              .enter()
+              .append("line")
+              .attr("class", "link-" + d.peel)
+              .attr("x1", function(d) {
+                return d.source.x;
+              })
+              .attr("y1", function(d) {
+                return d.source.y;
+              })
+              .attr("x2", function(d) {
+                return d.target.x;
+              })
+              .attr("y2", function(d) {
+                return d.target.y;
+              })
+              .attr("stroke-width", 0.6)
+              .attr("stroke", edgeColor)
+              .style("stroke-opacity", edgeOpacity);
 
             var cloneTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
                 return '<span class="tooltip-number">' + d.peels.join(', ') + '</span>'
@@ -224,20 +233,24 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             window.cloneTooltip = cloneTooltip
 
             // draw circles for the nodes 
-            var nodeSVGs = g.append("g")
-                .attr("class", "nodes")
-                .selectAll("circle")
-                .data(graphLayerData.nodes)
-                .enter()
-                .append("circle")
-                .attr('class', 'node-' + d.peel)
-                .attr("r", 4)
-                .attr('cx', function (d) { return d.x })
-                .attr('cy', function (d) { return d.y })
-                // .attr("fill", function () { return ribbonColorPeel(d.peel) }) // hacky, referring to original d passed into drawLayerGraph
-                .attr("fill", nodeColor)
-                .attr('stroke', '#ffffff')
-                .attr('stroke-width', 1)
+            var nodeSVGs = g
+              .append("g")
+              .attr("class", "nodes")
+              .selectAll("circle")
+              .data(graphLayerData.nodes)
+              .enter()
+              .append("circle")
+              .attr("class", "node-" + d.peel)
+              .attr("r", 4)
+              .attr("cx", function(d) {
+                return d.x;
+              })
+              .attr("cy", function(d) {
+                return d.y;
+              })
+              .attr("fill", nodeColor)
+              .attr("stroke", "#ffffff")
+              .attr("stroke-width", 1);
 
             // add zoom 
             var zoomHandler = d3.zoom()
@@ -246,7 +259,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
             zoomHandlerUp[d.peel] = zoomHandler
-            // if ((zzomX.x != 0) || (zoomY != 0) || (zoomScale != 0.4)) {
             if (initNode) {
                 // card clicked from clone 
                 var foundClone = graphLayerData.nodes.filter(function (node) { return node.id === initNode.id})[0]
@@ -336,9 +348,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 }
                 return 'rgba(221,221,221,0.3)';
             }
+
             // function getTextColor(node, neighbors) {
             //     return neighbors.indexOf(node.id) ? 'green' : 'black'
             // }
+            
             function getLinkColor(node, link) {
                 // return isNeighborLink(node, link) ? ribbonColorPeel(d.peel) : 'rgba(221,221,221,0.3)';
                 return isNeighborLink(node, link) ? highlightColor : "rgba(221,221,221,0.3)";
@@ -562,8 +576,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     document.getElementById('position-toggle-'+ contourLayerNum).click()
                 }
 
-                // var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
-
                 if (d3.select('#contour-toggle-' + contourLayerNum).property('checked')) {
 
                     var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
@@ -579,18 +591,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     contourY.domain(d3.extent(selectedNodesData, function (d) { return d.fdy; })).nice();
 
                     var g = d3.select('#interactive-node-link-' + contourLayerNum + '-svg').select('g')
-
-                    // g.append("g")
-                    //     .attr("stroke", "white")
-                    //     .attr("stroke-width", 0.5)
-                    //     .selectAll("circle")
-                    //     .data(selectedNodesData)
-                    //     .enter().append("circle")
-                    //     .attr("cx", function (d) { return d.fdx; })
-                    //     .attr("cy", function (d) { return d.fdy; })
-                    //     .attr("r", 2)
-                    //     .attr("opacity", 1.0)
-                    //     .attr("fill", 'black');
 
                     const boundary = 500;
                     var bandwidth = d3.select("#contour-toggle-bandwidth-" + contourLayerNum).property('value');
@@ -609,8 +609,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
                     .attr('transform', 'translate(-' + boundary + ', -' + boundary + ')')
                         .attr("fill", "none")
-                        // .attr("stroke", ribbonColorPeel(contourLayerNum))
-                        // .attr("stroke", 'black')
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
@@ -624,6 +622,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .attr("fill", function (d, i) { return contourColor(i) })
                         .attr("d", d3.geoPath())
 
+                    // option axes
                     // g.append("g")
                     //     .attr('class', 'contour-x-axis')
                     //     // .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
@@ -706,4 +705,3 @@ function cardMessage() {
         d3.select('#no-card-message').style('display', 'none')
     }
 }
-
