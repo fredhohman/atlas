@@ -1,4 +1,3 @@
-// card.js
 import * as contour from 'd3-contour';
 import * as d3 from 'd3';
 import * as d3ScaleChromatic from "d3-scale-chromatic";
@@ -40,52 +39,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
 
-    // var tabs = cardTop.append('div')
-    //     .attr('class', 'card-tabs-wrapper tab')
-
-    // function changeTab(evt, cardName, peel) {
-    //     console.log("change tab")
-    //     console.log(evt, peel)
-
-    //     var i, tabcontent, tablinks;
-
-    //     tabcontent = document.getElementById("card-" + peel).getElementsByClassName("tabcontent");
-    //     for (i = 0; i < tabcontent.length; i++) {
-    //         tabcontent[i].style.display = "none";
-    //         removeLayerGraph(peel);
-    //         removeLayerGraphContour(peel);
-    //     }
-
-    //     tablinks = document.getElementById("card-" + peel).getElementsByClassName("tablinks");
-    //     for (i = 0; i < tablinks.length; i++) {
-    //         tablinks[i].className = tablinks[i].className.replace(" active", "");
-    //     }
-
-    //     document.getElementById(cardName).style.display = "block";
-    //     evt.currentTarget.className += " active";
-
-    // }
-
-    // var originalLayerImg = tabs.append('button')
-    //     .attr('class', 'card-tabs tablinks')
-    //     .text('Original')
-    //     .on('click', function () { changeTab(event, 'original-layer-image-' + d.peel, d.peel) })
-
-    // var forceDirectedLayerImg = tabs.append('button')
-    //     .attr('class', 'card-tabs tablinks')
-    //     .text('Force directed')
-    //     .on('click', function () { changeTab(event, 'force-directed-layer-image-' + d.peel, d.peel) })
-
-    // var contourLayerImg = tabs.append('button')
-    //     .attr('class', 'card-tabs tablinks')
-    //     .text('Contour')
-    //     .on('click', function () { changeTab(event, 'contour-layer-image-' + d.peel, d.peel) })
-
-    // var interactiveLayer = tabs.append('button')
-    //     .attr('class', 'card-tabs tablinks active') // set initial view
-    //     .text('Interactive')
-    //     .on('click', function () { changeTab(event, 'interactive-node-link-' + d.peel, d.peel); drawLayerGraph(d) })
-
     var cardTextValueFormat = d3.format(",.3f")
     var cardTextValueFormat = d3.format(",.3f")
 
@@ -100,8 +53,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     cardTitle.append('h3')
         .attr('class', 'card-title')
         .text('Layer ' + d.peel)
-
-    // cardText.append('span').style('display','inline-block').style('padding-bottom', '10px').append('input').attr('type', 'text').attr('name', 'layer-label').attr('value', '').style('height', '20px')
 
     cardText.append('span')
         .attr('class', 'smalltext-header card-text-item')

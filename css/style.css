@@ -258,24 +258,6 @@ h1 {
     fill: var(--darkest);
 }
 
-.tab a.active {
-    /* color:rgb(252, 234, 37)!important; */
-    /* background-color:#ffffff!important; */
-}
-
-.tabs .tab a:hover {
-    /* background-color: #bcaaa4!important; */
-    color: var(--darkest) !important;
-}
-
-.tabs .tab a {
-    color: var(--darker) !important;
-}
-
-.tabs .indicator {
-    background-color: var(--darker) !important;
-}
-
 /* dragging ribbon */
 
 .ribbonDrag {
@@ -559,51 +541,6 @@ h3 {
 .add-ribbon-icon-wrapper {
     text-align: center;
     padding-bottom: 10px;
-}
-
-/* old layer card tabs */
-
-.tab {
-    /* overflow: hidden; */
-    /* background-color: #f1f1f1; */
-}
-
-/* Style the buttons that are used to open the tab content */
-
-.tab button {
-    font-size: 12px;
-    color: #666666;
-    font-weight: 600;
-    background-color: inherit;
-    /* float: left; */
-    border: none;
-    outline: none;
-    cursor: pointer;
-    /* padding: 14px 16px; */
-    /* transition: 0.3s; */
-    padding-bottom: 8px;
-}
-
-/* Change background color of buttons on hover */
-
-.tab button:hover {
-    /* background-color: #ddd; */
-    /* border-bottom: solid 2px #222222 !important; */
-    color: var(--darkest);
-}
-
-/* Create an active/current tablink class */
-
-.tab button.active {
-    /* background-color: #ccc; */
-    border-bottom: solid 2px var(--darkest);
-    color: var(--darkest);
-}
-
-/* Style the tab content */
-
-.tabcontent {
-    display: none;
 }
 
 /* node styling */
