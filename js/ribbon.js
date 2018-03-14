@@ -333,13 +333,13 @@ d3.json(dataPathJSON, function(error, data) {
     let startX = 0, startWidth;
 
     var ribbonDragLeft = document.getElementById('ribbonDragLeft');
-    console.log(ribbonDragLeft)
+    // console.log(ribbonDragLeft)
     var glass = document.getElementById('glass');
     ribbonDragLeft.addEventListener('mousedown', startDrag, false);
     glass.addEventListener('mouseup', endDrag, false);
 
     var ribbonDragRight = document.getElementById('ribbonDragRight');
-    console.log(ribbonDragRight)
+    // console.log(ribbonDragRight)
     var glass = document.getElementById('glass');
     ribbonDragRight.addEventListener('mousedown', startDrag, false);
     glass.addEventListener('mouseup', endDrag, false);

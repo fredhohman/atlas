@@ -1,7 +1,4 @@
-// index.js
 import * as d3 from "d3";
-
-console.log("index.js loaded");
 
 // global data and image paths
 // const dataDirName = 'lesmis' // good but small
@@ -38,16 +35,14 @@ function reloadPage() {
   window.location.reload();
 }
 
-d3
-  .select("#header-text-span")
-  .on("click", reloadPage)
-  // .style("cursor", "pointer");
+d3.select("#header-text-span").on("click", reloadPage);
+// .style("cursor", "pointer");
 
 d3.json(dataPathJSON, function(error, data) {
   if (error) {
     return console.error(error);
   }
-
+  
   // set nav data
   var navNumFormat = d3.format(",");
   d3.select("#graph-value").text(data.name);
@@ -55,3 +50,7 @@ d3.json(dataPathJSON, function(error, data) {
   d3.select("#edges-value").text(navNumFormat(data.edges));
   d3.select("#graph-description").text(data.description);
 });
+
+d3
+  .select("#header-icon-link")
+  .attr("href", "https://github.com/fredhohman/graph-playground");

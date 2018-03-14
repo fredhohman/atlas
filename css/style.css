@@ -169,6 +169,14 @@ html, body {
     text-align: right;
 }
 
+#header-icon-link {
+    cursor: pointer;
+}
+
+#header-icon-link:link, #header-icon-link:visited, #header-icon-link:link:hover, #header-icon-link:focus, #header-icon-link:active {
+    color: #ffffff;
+}
+
 #graph-wrapper {
     flex: 1;
     display: flex;
