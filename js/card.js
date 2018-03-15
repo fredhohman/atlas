@@ -124,6 +124,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     var cloneToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "clone-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input clone-toggle')
     var cloneToggleLabel = cardText.append('label').attr('for', "clone-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('clones')
 
+    var nodeID = cardText.append('div')
+        .attr('class', 'node-id')
+
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
 
@@ -351,7 +354,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     // return ribbonColorPeel(d.peel);
                     return highlightColor;
                 }
-                return 'rgba(221,221,221,0.3)';
+                return '#ffffff';
             }
 
             // function getTextColor(node, neighbors) {
@@ -373,13 +376,38 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
               return isNeighborLink(node, link) ? 1.2 : 0.6;
             }
 
+            let labelSVGs;
             function selectNode(selectedNode) {
                 const neighbors = getNeighbors(selectedNode)
 
                 nodeSVGs
                     .attr('stroke', function (node) { return getNodeColor(node, neighbors) })
+
+                let neighborsData = graphLayerData.nodes.filter(function(node) { return neighbors.includes(node.id) })
+
+                    labelSVGs = g
+                      .append("g")
+                      .attr("class", "labels")
+                      .selectAll("text")
+                      .data(neighborsData)
+                      .enter()
+                      .append("text")
+                      .attr("x", function(d) {
+                        return d.fdx + 10;
+                      })
+                      .attr("y", function(d) {
+                        return d.fdy;
+                      })
+                      .attr('alignment-baseline', 'middle')
+                      .text(function(d) { return d.name })
+                      .style('font-size', 12)
+                      .style('font-weight', 500)
+                      .style('stroke', '#ffffff')
+                      .style('stroke-width', 0.3)
+
                 // textElements
                 // .attr('fill', node => getTextColor(node, neighbors))
+                
                 linkSVGs
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
                     .style('stroke-opacity', function (link) { return getLinkOpacity(selectedNode, link) })
@@ -389,6 +417,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             nodeSVGs.on('mouseover', function (node) {
                 selectNode(node);
                 if (node.peels.length > 1) {
+                    // console.log(node)
+                    nodeID.html(node.name)
                     cloneDisplay.html('')
                     cloneDisplay.selectAll('clone-label')
                         .data(node.peels)
@@ -437,6 +467,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 // linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
                 nodeSVGs.attr('stroke', '#ffffff');
                 linkSVGs.attr('stroke', edgeColor).style('stroke-opacity', edgeOpacity).style("stroke-width", 0.6);
+                labelSVGs.remove();
                 // cloneTooltip.hide();
             })
 
