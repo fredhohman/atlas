@@ -384,6 +384,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     .attr('stroke', function (node) { return getNodeColor(node, neighbors) })
 
                 let neighborsData = graphLayerData.nodes.filter(function(node) { return neighbors.includes(node.id) })
+                let FDLayout = d3.select('#position-toggle-' + d.peel).property('checked')
 
                     labelSVGs = g
                       .append("g")
@@ -393,10 +394,19 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                       .enter()
                       .append("text")
                       .attr("x", function(d) {
-                        return d.fdx + 10;
+                          if (FDLayout) {
+                            return d.fdx + 10;
+                          } else {
+                            return d.x + 10;
+                          }
+
                       })
                       .attr("y", function(d) {
-                        return d.fdy;
+                          if (FDLayout) {
+                            return d.fdy;
+                          } else {
+                            return d.y;
+                          }
                       })
                       .attr('alignment-baseline', 'middle')
                       .text(function(d) { return d.name })
@@ -407,7 +417,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                 // textElements
                 // .attr('fill', node => getTextColor(node, neighbors))
-                
+
                 linkSVGs
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
                     .style('stroke-opacity', function (link) { return getLinkOpacity(selectedNode, link) })
