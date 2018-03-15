@@ -19,3 +19,8 @@ echo -e '\n'
 
 echo 'process-positions.py'
 python process-positions.py -data $1
+echo -e '\n'
+echo -e '\n'
+
+# echo 'add-vertex-positions.py'
+# python add-vertex-positions.py -data $1
