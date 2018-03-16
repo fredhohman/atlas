@@ -249,6 +249,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
               .enter()
               .append("circle")
               .attr("class", "node-" + d.peel)
+              .attr('id', function(node) { return 'node' + node.id + '-' + d.peel})
               .attr("r", 4)
               .attr("cx", function(d) {
                 return d.x;
@@ -322,9 +323,35 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             // called when the drag event occurs (object should be moved)
             function dragged(d) {
                 var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1] // careful here, always looks as first class of circle node-i where i is a peel
+                var draggingNode = d3.select(this).attr('id')
+                var draggingNodeID = draggingNode.split('node')[1].split('-')[0]
+                var multiNodeSelection = [];
+                for (let i = 0; i < Object.keys(selectedNodeIDs).length; i++) {
+                  if (draggingNodeID === Object.keys(selectedNodeIDs)[i].split("-")[0]) {
+                      multiNodeSelection.push( '#node' + Object.keys(selectedNodeIDs)[i] )
+                  }
+                }
+
+                if (multiNodeSelection.length > 0) {
+                    var selectionData = d3.selectAll(multiNodeSelection.join(", ")).data()
+                }
+
                 if (d3.select('#position-toggle-' + peel).property('checked')) {
+                    
                     d.fdx += d3.event.dx;
                     d.fdy += d3.event.dy;
+                    
+                    // for (let i = 0; i < selectionData.length; i++) {
+                    //   const element = selectionData[i];
+                    //    element.fdx += d3.event.dx;
+                    //    element.fdy += d3.event.dy;
+                    // }
+
+                    // selectionData.forEach(function(a) { 
+                    //     a.fdx += d3.event.dx;
+                    //     a.fdy += d3.event.dy;
+                    // })
+
                 } else {
                     d.x += d3.event.dx;
                     d.y += d3.event.dy;
@@ -357,6 +384,14 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 return '#ffffff';
             }
 
+            function getNodeWidth(node, neighbors) {
+                if (Array.isArray(neighbors) && neighbors.indexOf(node.id) > -1) {
+                    // return ribbonColorPeel(d.peel);
+                    return 1.5;
+                }
+                return 1.0;
+            }
+
             // function getTextColor(node, neighbors) {
             //     return neighbors.indexOf(node.id) ? 'green' : 'black'
             // }
@@ -382,38 +417,42 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                 nodeSVGs
                     .attr('stroke', function (node) { return getNodeColor(node, neighbors) })
+                    .attr('stroke-width', function (node) { return getNodeWidth(node, neighbors) })
 
-                let neighborsData = graphLayerData.nodes.filter(function(node) { return neighbors.includes(node.id) })
-                let FDLayout = d3.select('#position-toggle-' + d.peel).property('checked')
+                // check if we have labels or not
+                if ('name' in graphLayerData.nodes[0]) {
+                    let neighborsData = graphLayerData.nodes.filter(function(node) { return neighbors.includes(node.id) })
+                    let FDLayout = d3.select('#position-toggle-' + d.peel).property('checked')
 
-                    labelSVGs = g
-                      .append("g")
-                      .attr("class", "labels")
-                      .selectAll("text")
-                      .data(neighborsData)
-                      .enter()
-                      .append("text")
-                      .attr("x", function(d) {
-                          if (FDLayout) {
-                            return d.fdx + 10;
-                          } else {
-                            return d.x + 10;
-                          }
+                        labelSVGs = g
+                        .append("g")
+                        .attr("class", "labels")
+                        .selectAll("text")
+                        .data(neighborsData)
+                        .enter()
+                        .append("text")
+                        .attr("x", function(d) {
+                            if (FDLayout) {
+                                return d.fdx + 10;
+                            } else {
+                                return d.x + 10;
+                            }
 
-                      })
-                      .attr("y", function(d) {
-                          if (FDLayout) {
-                            return d.fdy;
-                          } else {
-                            return d.y;
-                          }
-                      })
-                      .attr('alignment-baseline', 'middle')
-                      .text(function(d) { return d.name })
-                      .style('font-size', 12)
-                      .style('font-weight', 500)
-                      .style('stroke', '#ffffff')
-                      .style('stroke-width', 0.3)
+                        })
+                        .attr("y", function(d) {
+                            if (FDLayout) {
+                                return d.fdy;
+                            } else {
+                                return d.y;
+                            }
+                        })
+                        .attr('alignment-baseline', 'middle')
+                        .text(function(d) { return d.name })
+                        .style('font-size', 12)
+                        .style('font-weight', 500)
+                        .style('stroke', '#ffffff')
+                        .style('stroke-width', 0.3)
+                }
 
                 // textElements
                 // .attr('fill', node => getTextColor(node, neighbors))
@@ -422,7 +461,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     .attr('stroke', function (link) { return getLinkColor(selectedNode, link) })
                     .style('stroke-opacity', function (link) { return getLinkOpacity(selectedNode, link) })
                     .style('stroke-width', function (link) { return getLinkWidth(selectedNode, link); })
-            }
+                }
 
             nodeSVGs.on('mouseover', function (node) {
                 selectNode(node);
@@ -454,7 +493,16 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                                     var obj = tempData.layers.find(function (obj) { return obj.peel === datum; });
                                     var scale = g.attr('transform').split(' ')[1].split('scale(')[1]
                                     scale = scale.substring(0, scale.length - 1)
-                                    graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.fdx, node.fdy) // transition card that is clicked
+                                    // transition card that is clicked
+                                    if (d3.select('#position-toggle-' + d.peel).property('checked')) {
+                                        graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.fdx, node.fdy)                                        
+                                    } else {
+                                        let tempPosTogglePath = 'position-toggle-' + d.peel
+                                        document.getElementById(tempPosTogglePath).click()
+                                        graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.fdx, node.fdy)                                        
+                                        // graphLayerSVG.transition().duration(1000).call(zoomHandler.translateTo, node.x, node.y)                                        
+                                    }
+
                                     nodeSVGs.filter(function (n) { return n === node }).classed('selected', true)
                                     console.log(node)
                                     selectedNodeIDs[node.id + "-" + d.peel] = "selected";
@@ -475,9 +523,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             nodeSVGs.on('mouseout', function () {
                 // nodeSVGs.attr('fill', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
                 // linkSVGs.attr('stroke', ribbonColorPeel(d.peel)); // hacky, referring to original d passed into drawLayerGraph
-                nodeSVGs.attr('stroke', '#ffffff');
+                nodeSVGs.attr('stroke', '#ffffff').attr('stroke-width', 1);
                 linkSVGs.attr('stroke', edgeColor).style('stroke-opacity', edgeOpacity).style("stroke-width", 0.6);
-                labelSVGs.remove();
+                if ('name' in graphLayerData.nodes[0]) {
+                    labelSVGs.remove();
+                }
                 // cloneTooltip.hide();
             })
 
@@ -604,6 +654,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             }
 
             function updateNodePositionsTick(peel) {
+                console.log('update positions tickl')
                 if (d3.select('#position-toggle-' + peel).property('checked')) {
 
                     nodeSVGs
