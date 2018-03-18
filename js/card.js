@@ -163,7 +163,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     var nodesToggleLabel = cardText.append('label').attr('for', "nodes-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Nodes')
 
     var positionToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "position-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input position-toggle')
-    var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('redraw')
+    var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Redraw')
+
+    var fdToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "fd-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input fd-toggle')
+    var fdToggleLabel = cardText.append('label').attr('for', "fd-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('fdasdfasd')
 
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
     var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
@@ -181,9 +184,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
-
-    var fdToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "fd-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input fd-toggle')
-    var fdToggleLabel = cardText.append('label').attr('for', "fd-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('fd')
 
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
@@ -654,9 +654,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
                 var selectedLinks = d3.selectAll('.link-' + contourLayerNum)
                 if (d3.select(this).property('checked')) {
-                    selectedLinks.attr('visibility', 'visible')
+                    selectedLinks.classed('visible', true)
+                    selectedLinks.classed("hidden", false);
                 } else {
-                    selectedLinks.attr('visibility', 'hidden')
+                    selectedLinks.classed('hidden', true)
+                    selectedLinks.classed("visible", false);
                 }
             }
             d3.selectAll('.edges-toggle').on('click', toggleEdges)
@@ -665,9 +667,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
                 var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
                 if (d3.select(this).property('checked')) {
-                    selectedNodes.attr('visibility', 'visible')
+                    selectedNodes.classed('visible', true)
+                    selectedNodes.classed("hidden", false);
                 } else {
-                    selectedNodes.attr('visibility', 'hidden')
+                    selectedNodes.classed('hidden', true)
+                    selectedNodes.classed("visible", false);
                 }
             }
             d3.selectAll('.nodes-toggle').on('click', toggleNodes)
@@ -805,9 +809,14 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 if (d3.select('#contour-toggle-' + contourLayerNum).property('checked')) {
 
                     var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
-                    console.log('HERE', Number(d3.select('#comp-slider-' + contourLayerNum).property('value')))
-                    var selectedNodesData = selectedNodes.data().filter(function(n) { return n.cmpt + 2 > Number(d3.select('#comp-slider-' + contourLayerNum).property('value')) })
+                    data.layers.filter(function(l) { return l.peel === contourLayerNum})[0]
 
+                    if (data.layers.filter(function(l) { return l.peel === contourLayerNum})[0].components > 1) {
+                        var selectedNodesData = selectedNodes.data().filter(function(n) { return n.cmpt + 2 > Number(d3.select('#comp-slider-' + contourLayerNum).property('value')) })
+                    } else {
+                        var selectedNodesData = selectedNodes.data()//.filter(function(n) { return n.cmpt + 2 > Number(d3.select('#comp-slider-' + contourLayerNum).property('value')) })
+                    }
+                    
                     var contourX = d3.scaleLinear()
                         .rangeRound([-500, 500]);
 
@@ -920,7 +929,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                           return d.id;
                         }))
                     .force("charge", d3.forceManyBody())
-                    .force("center", d3.forceCenter(0, 0));
+                    // .force("center", d3.forceCenter(0, 0));
 
                   simulation.nodes(fdNodes).on("tick", function() { updateNodePositionsTick(layerNum) });
                   simulation.force("link").links(fdLinks);
@@ -979,9 +988,9 @@ function closeCard(d) {
         }
     }
 
-    simulationUp[d.peel].stop();
-
-
+    if (d.peel in simulationUp) {
+        simulationUp[d.peel].stop();
+    }
 }
 
 function cardMessage() {
