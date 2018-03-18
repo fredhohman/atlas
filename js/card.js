@@ -44,6 +44,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
           d3.select('.card-border-wrapper').style('border-bottom', '1px solid var(--ui-border-color)')
           d3.selectAll(".card").style("height", "400px");
           d3.selectAll(".interactive-node-link").attr("height", "400px");
+
+        //   test to translate the zoom of the shorten card to the center
+        //   console.log(zoomHandlerUp)
+        //   d3.select('#interactive-node-link-2').call(zoomHandlerUp[2].translateTo, 0, 0);
         } else {
             d3.select(".card-border-wrapper").style("border-bottom", "none");
             layers.style("height", document.getElementById("layers").offsetHeight - 4 + "px");
