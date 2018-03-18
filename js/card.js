@@ -17,6 +17,9 @@ window.zoomHandlerUp = zoomHandlerUp;
 export let selectedNodeIDs = {}
 window.selectedNodeIDs = selectedNodeIDs;
 
+let simulationUp = {};
+window.simulationUp = simulationUp;
+
 export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;
@@ -179,6 +182,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     var cloneDisplay = cardText.append('div')
         .attr('class', 'clone-display')
 
+    var fdToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "fd-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input fd-toggle')
+    var fdToggleLabel = cardText.append('label').attr('for', "fd-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('fd')
+
     var interactiveNodeLinkDiv = cardBottom.append('div')
         .attr('id', 'interactive-node-link-' + d.peel)
         .attr('class', 'card-image-wrapper')
@@ -266,6 +272,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
               .enter()
               .append("line")
               .attr("class", "link-" + d.peel)
+              .classed('visible', true)
               .attr("x1", function(d) {
                 return d.source.x;
               })
@@ -319,6 +326,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
               .enter()
               .append("circle")
               .attr("class", "node-" + d.peel)
+              .classed('visible', true)
               .attr('id', function(node) { return 'node' + node.id + '-' + d.peel})
               .attr("r", 4)
               .attr("cx", function(d) {
@@ -336,8 +344,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 console.log('hide components')
                 var currentComponentValue = Number(d3.select(this).property("value"));
 
-                nodeSVGs.attr("visibility", function(n) { return n.cmpt < currentComponentValue - 1 ? 'hidden' : 'visible' });
-                linkSVGs.attr("visibility", function(l) { return l.source.cmpt < currentComponentValue -1 ? 'hidden' : 'visible' })
+                nodeSVGs.classed("hidden", function(n) { return n.cmpt < currentComponentValue - 1 ? true : false });
+                nodeSVGs.classed("visible", function(n) { return n.cmpt >= currentComponentValue - 1 ? true : false });
+                linkSVGs.classed("hidden", function(l) { return l.source.cmpt < currentComponentValue - 1 ? true : false })
+                linkSVGs.classed("visible", function(l) { return l.source.cmpt >= currentComponentValue - 1 ? true : false })
 
                 if (d3.select('#contour-toggle-' + d.peel).property('checked')) {
                     removeLayerGraphContour(d.peel);
@@ -422,6 +432,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 if (multiNodeSelection.length > 0) {
                     var selectionData = d3.selectAll(multiNodeSelection.join(", ")).data()
                 }
+                console.log(d)
+                console.log("multiNodeSelection", selectionData);
 
                 if (d3.select('#position-toggle-' + peel).property('checked')) {
                     
@@ -745,18 +757,30 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             }
 
             function updateNodePositionsTick(peel) {
-                console.log('update positions tickl')
+                // console.log('update positions tick')
                 if (d3.select('#position-toggle-' + peel).property('checked')) {
 
-                    nodeSVGs
-                        .attr("cx", function (d) { return d.fdx; })
-                        .attr("cy", function (d) { return d.fdy; });
+                    if (d3.select('#fd-toggle-' + peel).property('checked')) {
+                        nodeSVGs
+                            .attr("cx", function (d) { return d.x; })
+                            .attr("cy", function (d) { return d.y; });
 
-                    linkSVGs
-                        .attr("x1", function (d) { return d.source.fdx; })
-                        .attr("y1", function (d) { return d.source.fdy; })
-                        .attr("x2", function (d) { return d.target.fdx; })
-                        .attr("y2", function (d) { return d.target.fdy; });
+                        linkSVGs
+                            .attr("x1", function (d) { return d.source.x; })
+                            .attr("y1", function (d) { return d.source.y; })
+                            .attr("x2", function (d) { return d.target.x; })
+                            .attr("y2", function (d) { return d.target.y; });                        
+                    } else {
+                        nodeSVGs
+                            .attr("cx", function (d) { return d.fdx; })
+                            .attr("cy", function (d) { return d.fdy; });
+
+                        linkSVGs
+                            .attr("x1", function (d) { return d.source.fdx; })
+                            .attr("y1", function (d) { return d.source.fdy; })
+                            .attr("x2", function (d) { return d.target.fdx; })
+                            .attr("y2", function (d) { return d.target.fdy; });
+                    }
                 } else {
 
                     nodeSVGs
@@ -870,6 +894,44 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 toggleContour(contourLayerNum);
             })
 
+            // interactive fd
+            function fd() {
+                console.log('fd')
+
+                var fdChecked = d3.select(this).property('checked')
+                var layerNum = Number(d3.select(this).property('id').split('-')[2])
+
+                if (fdChecked) {
+                  var fdNodes = d3.selectAll(".node-" + layerNum + '.visible').data();
+                  var fdLinks = d3.selectAll(".link-" + layerNum + '.visible').data();
+                //   console.log(fdNodes);
+                //   console.log(fdLinks);
+
+                if (d3.select('#position-toggle-' + layerNum).property('checked')) {
+                    for (let i = 0; i < fdNodes.length; i++) {
+                        const element = fdNodes[i];
+                        element.x = element.fdx;
+                        element.y = element.fdy;
+                    }
+                }
+
+                  var simulation = d3.forceSimulation()
+                    .force("link", d3.forceLink().id(function(d) {
+                          return d.id;
+                        }))
+                    .force("charge", d3.forceManyBody())
+                    .force("center", d3.forceCenter(0, 0));
+
+                  simulation.nodes(fdNodes).on("tick", function() { updateNodePositionsTick(layerNum) });
+                  simulation.force("link").links(fdLinks);
+                  simulationUp[layerNum] = simulation;
+
+                } else {
+                    simulationUp[layerNum].stop();
+                }
+            }
+            d3.selectAll('.fd-toggle').on('click', fd)
+
         })
     }
     drawLayerGraph(d);
@@ -916,6 +978,10 @@ function closeCard(d) {
             uncolorSelectedNode(selectedNode);
         }
     }
+
+    simulationUp[d.peel].stop();
+
+
 }
 
 function cardMessage() {
