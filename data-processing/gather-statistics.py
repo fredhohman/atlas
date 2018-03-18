@@ -68,14 +68,46 @@ if __name__ == '__main__':
 
         clustering = g_layer.transitivity_undirected()
 
-        print('computing force directed layout')
-        layout = g_layer.layout("fr", maxiter=100)
+        print('computing graph layer layout')
+        if g_layer.vcount() < 5000:
+            layout = g_layer.layout("fr", maxiter=100)
+            for i, coords in enumerate(layout):
+                graph_layer['nodes'][i]['fdx'] = coords[0]
+                graph_layer['nodes'][i]['fdy'] = coords[1]
 
-        # print(graph_layer)
-        print('assigning coordinates')
-        for i, coords in enumerate(layout):
-            graph_layer['nodes'][i]['fdx'] = coords[0]
-            graph_layer['nodes'][i]['fdy'] = coords[1]
+        if (g_layer.vcount() > 5000) and (g_layer.vcount() < 25000):
+            # layout = g_layer.layout("drl")
+            layout = g_layer.layout("fr", maxiter=50)
+            for i, coords in enumerate(layout):
+                graph_layer['nodes'][i]['fdx'] = coords[0]
+                graph_layer['nodes'][i]['fdy'] = coords[1]
+
+        if (g_layer.vcount() > 25000) and (g_layer.vcount() < 52000):
+            # layout = g_layer.layout("drl")
+            layout = g_layer.layout("fr", maxiter=10)
+            for i, coords in enumerate(layout):
+                graph_layer['nodes'][i]['fdx'] = coords[0]
+                graph_layer['nodes'][i]['fdy'] = coords[1]
+
+        if g_layer.vcount() > 52000:
+            # layout = g_layer.layout("drl")
+            pass
+
+        # add connected component ids to each node
+        print('adding connected component ids')
+        for node in graph_layer['nodes']:
+            for i, cmpt in enumerate(g_layer.components()):
+                
+                for j, n in enumerate(cmpt):
+                    cmpt[j] = g_layer.vs[n]['id']
+
+                if int(node['id']) in cmpt:
+                    node['cmpt'] = i
+                    break
+
+            # print(i, cmpt)
+            # for n in cmpt:
+                # g_layer.vs[n]['cmpt'] = i
 
         # define layer data
         print('computing layer data')
