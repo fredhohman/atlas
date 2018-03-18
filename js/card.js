@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import * as d3ScaleChromatic from "d3-scale-chromatic";
 import tip from 'd3-tip';
 import { dataPath, dataPathJSON, dataPathLayerJSON, imagePathLayerOrg, imagePathLayerFD, imagePathLayerContour } from './index.js'
+import { colorSelectedNodes } from './overview.js'
 
 
 export let cardsUp = {};
@@ -589,6 +590,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                                     selectedNodeIDs[node.id + '-' + datum] = 'selected'
                                     console.log(selectedNodeIDs);
                                     addCard(obj, initNode = node, scale = scale);
+                                    colorSelectedNodes();
                                 })
                             } else{
                                 alert('Layer ' + datum + ' is already being shown!')
@@ -625,6 +627,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         return true
                     }
                 })
+                colorSelectedNodes();
             })
 
             function toggleEdges() {
@@ -896,6 +899,12 @@ function closeCard(d) {
         d3.select(".card-border-wrapper").style("border-bottom", "none");
         d3.select('.card').style("height", document.getElementById("layers").offsetHeight - 4 + "px");
         d3.select(".interactive-node-link").attr("height", document.getElementById("layers").offsetHeight - 4 + "px");
+    }
+
+    for (const selectedNode in selectedNodeIDs) {
+        if (selectedNode.split("-")[1] === String(d.peel)) {
+            delete selectedNodeIDs[selectedNode];
+        }
     }
 }
 
