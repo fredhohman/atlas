@@ -60,10 +60,14 @@ d3.json(dataPathJSON, function(error, data) {
     window.ribbonColorPeel = ribbonColorPeel;
     window.ribbonColorClustering = ribbonColorClustering;
 
-    var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 10]).html(function (d) {
+    var cardTextValueFormat = d3.format(",.3f")
+
+    var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 25]).html(function (d) {
         return 'e: <span class="tooltip-number">' + d.edges + '</span></br>'
         + 'v: <span class="tooltip-number">' + d.vertices + '</span></br>'
-        + 'c: <span class="tooltip-number">' + d.clones + '</span>';
+        + 'cl: <span class="tooltip-number">' + d.clones + '</span></br>'
+        + 'cc: <span class="tooltip-number">' + cardTextValueFormat(d.clustering) + '</span></br>'
+        + 'c: <span class="tooltip-number">' + d.components + '</span>'
     });
     ribbon.call(bulletTooltip)
 
@@ -183,7 +187,7 @@ d3.json(dataPathJSON, function(error, data) {
     //     .attr('cy', function(d) { return y(d.peel) + y.bandwidth()/2})
     //     .style('fill', '#444444')
 
-    ribbonWrapper
+    let leftIndicators = ribbonWrapper
       .append("g")
       .attr("transform", "translate(" + 8 + "," + (ribbonMargin.top - 5) + ")")
       .selectAll(".indicator")

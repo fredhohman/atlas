@@ -38,11 +38,15 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
         .attr('id', 'card-' + d.peel)
         .append('div')
         .attr('class', 'card')
+        // if (cardsUp.length > 1) {
+            // 
+        // } else {
+            // layers.style('height', '50vh')
+        // }
     // .style('border-left', function () { return '5px solid ' + ribbonColorPeel(d.peel) })
 
     var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
 
-    var cardTextValueFormat = d3.format(",.3f")
     var cardTextValueFormat = d3.format(",.3f")
 
     var cardBottom = layers.append('div').attr('class', 'card-bottom-wrapper')
@@ -240,6 +244,27 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             g.call(cloneTooltip)
             window.cloneTooltip = cloneTooltip
 
+            // graphLayerData.links.forEach(function(link) {
+            //     var source = link.source, target = link.target;
+            //     (source.neighbors || (source.neighbors = [])).push(target);
+            //     (target.neighbors || (target.neighbors = [])).push(source);
+            // });
+
+            // function traverse(node, group) {
+            //     if ("group" in node) {
+            //         node.group = Math.min(node.group, group);
+            //     } else {
+            //         node.group = group;
+            //         node.neighbors.forEach(function(d) {
+            //         traverse(d, group);
+            //         });
+            //     }
+            // }
+
+            // console.log(graphLayerData);
+            // traverse(graphLayerData.nodes[0], 0)
+            console.log(graphLayerData)
+  
             // draw circles for the nodes 
             var nodeSVGs = g
               .append("g")
