@@ -436,7 +436,8 @@ d3.json(dataPathJSON, function(error, data) {
                 if (!clickedCheckboxBoolean) {
                     d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorClustering(d.clustering) })
                 } else {
-                    d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorPeel(d.peel) })
+                    // d3.selectAll('.bullet').style('fill', function (d) { return ribbonColorPeel(d.peel) })
+                    d3.selectAll('.bullet').style('fill', function (d) { return '#dddddd' })
                 }
                 break;
 
