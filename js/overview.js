@@ -4,6 +4,7 @@ var TrackballControls = require('three-trackballcontrols');
 // var Projector = require('three.js-projector');
 import { dataPathJSON, dataPathLayerJSON } from './index.js'
 import { GUI } from 'dat.gui/build/dat.gui.js'
+import { selectedNodeIDs } from './card.js'
 // import * as $ from 'jquery';
 
 export var layersUp3D = {};
@@ -121,7 +122,12 @@ export function drawLayer3DPoints(layerNum) {
                 circle.position.z = zCordScale(data.peels[layerNumIndex])
                 
                 let clusterColor = d3.select("#bullet-" + data.peels[layerNumIndex]).style('fill');
-                circle.material.color.setHex(RGBtoHex(clusterColor));
+                if (node.id + '-' + layerNum in selectedNodeIDs) {
+                    // already selected in 2d card
+                    circle.material.color.setHex("0x" + "2196F3");
+                } else {
+                    circle.material.color.setHex(RGBtoHex(clusterColor));
+                }
                 circle.userData['id'] = node.id
                 circle.userData['peel'] = data.peels[layerNumIndex]
                 circle.userData['x'] = node.x
@@ -370,6 +376,26 @@ function animateGraph() {
     }
     
     window.requestAnimationFrame(tick);
+}
+
+export function colorSelectedNode(selectedNode) {
+    console.log('color selected nodes')
+    for (let c = 0; c < circles.length; c++) {
+        if (circles[c].userData['id'] + '-' + circles[c].userData['peel'] === selectedNode) {
+            console.log(circles[c])
+            circles[c].material.color.setHex('0x' + '2196F3');
+        }
+    }
+}
+
+export function uncolorSelectedNode(selectedNode) {
+    console.log('uncolor selected nodes')
+    for (let c = 0; c < circles.length; c++) {
+        if (circles[c].userData['id'] + '-' + circles[c].userData['peel' ]=== selectedNode) {
+            console.log(selectedNode.split('-')[1], d3.select("#bullet-" + selectedNode.split('-')[1]).style('fill'))
+            circles[c].material.color.setHex(RGBtoHex(d3.select("#bullet-" + selectedNode.split('-')[1]).style('fill')));
+        }
+    }
 }
 
 function RGBtoHex(rgbColor) {
