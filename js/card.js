@@ -333,10 +333,16 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
             // component slider
             function hideComps() {
+                console.log('hide components')
                 var currentComponentValue = Number(d3.select(this).property("value"));
 
                 nodeSVGs.attr("visibility", function(n) { return n.cmpt < currentComponentValue - 1 ? 'hidden' : 'visible' });
                 linkSVGs.attr("visibility", function(l) { return l.source.cmpt < currentComponentValue -1 ? 'hidden' : 'visible' })
+
+                if (d3.select('#contour-toggle-' + d.peel).property('checked')) {
+                    removeLayerGraphContour(d.peel);
+                    toggleContour(d.peel);
+                }
             }
             if (!(d.components === 1)) {
                 componentSliderInput.on("input", hideComps);
@@ -775,7 +781,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 if (d3.select('#contour-toggle-' + contourLayerNum).property('checked')) {
 
                     var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
-                    var selectedNodesData = selectedNodes.data()
+                    console.log('HERE', Number(d3.select('#comp-slider-' + contourLayerNum).property('value')))
+                    var selectedNodesData = selectedNodes.data().filter(function(n) { return n.cmpt + 2 > Number(d3.select('#comp-slider-' + contourLayerNum).property('value')) })
 
                     var contourX = d3.scaleLinear()
                         .rangeRound([-500, 500]);
@@ -818,7 +825,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .attr("fill", function (d, i) { return contourColor(i) })
                         .attr("d", d3.geoPath())
 
-                    // option axes
+                    // optional axes
                     // g.append("g")
                     //     .attr('class', 'contour-x-axis')
                     //     // .attr("transform", "translate(0," + (graphLayerHeight - graphLayerMargin.bottom) + ")")
