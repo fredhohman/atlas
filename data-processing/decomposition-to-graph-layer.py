@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
         temp_v_ids = set()
 
-        print('creating ' + str(len(decomposition)) + ' links')
+        print('creating links')
         for edge in decomposition.itertuples(name=None):
             # tuple(id, source, target, peel)
 

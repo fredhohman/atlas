@@ -30,8 +30,8 @@ if __name__ == '__main__':
         graph_layer = json.load(open(graph_layer_data_path))
 
         for node in graph_layer['nodes']:
-            print(str(node['id']))
-            print(word_to_id_map[str(node['id'])])
+            # print(str(node['id']))
+            # print(word_to_id_map[str(node['id'])])
             node['name'] = word_to_id_map[str(node['id'])]
 
         with open(graph_layer_data_path, 'w') as outfile:

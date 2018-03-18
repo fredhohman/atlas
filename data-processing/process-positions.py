@@ -29,72 +29,76 @@ if __name__ == '__main__':
         graph_layer_data_path = '../data/' + args['-data'] + '/' + args['-data'] + '-layer-' + str(peel) + '.json'
         graph_layer = json.load(open(graph_layer_data_path))
 
-        # zero center points
-        # x = [ node['x'] for node in graph_layer['nodes'] ]
-        # y = [ node['y'] for node in graph_layer['nodes'] ] 
-        fdx = [ node['fdx'] for node in graph_layer['nodes'] ]
-        fdy = [ node['fdy'] for node in graph_layer['nodes'] ]
-        
-        # x_max = np.max(x)
-        # y_max = np.max(y)
-        # x_min = np.min(x)
-        # y_min = np.min(y)
-        
-        fdx_max = np.max(fdx)
-        fdy_max = np.max(fdy)
-        fdx_min = np.min(fdx)
-        fdy_min = np.min(fdy)
-        
-        # x_midpoint = (x_max - x_min)/2
-        # y_midpoint = (y_max - y_min)/2
-        fdx_midpoint = (fdx_max - fdx_min)/2
-        fdy_midpoint = (fdy_max - fdy_min)/2
+        if 'fdx' in graph_layer['nodes'][0]:
 
-        for node in graph_layer['nodes']:
-        #     node['x'] = node['x'] - (x_min + x_midpoint)
-        #     node['y'] = node['y'] - (y_min + y_midpoint)
-            node['fdx'] = node['fdx'] - (fdx_min + fdx_midpoint)
-            node['fdy'] = node['fdy'] - (fdy_min + fdy_midpoint)
+            # zero center points
+            # x = [ node['x'] for node in graph_layer['nodes'] ]
+            # y = [ node['y'] for node in graph_layer['nodes'] ] 
+            fdx = [ node['fdx'] for node in graph_layer['nodes'] ]
+            fdy = [ node['fdy'] for node in graph_layer['nodes'] ]
+            
+            # x_max = np.max(x)
+            # y_max = np.max(y)
+            # x_min = np.min(x)
+            # y_min = np.min(y)
+            
+            fdx_max = np.max(fdx)
+            fdy_max = np.max(fdy)
+            fdx_min = np.min(fdx)
+            fdy_min = np.min(fdy)
+            
+            # x_midpoint = (x_max - x_min)/2
+            # y_midpoint = (y_max - y_min)/2
+            fdx_midpoint = (fdx_max - fdx_min)/2
+            fdy_midpoint = (fdy_max - fdy_min)/2
 
-        # scaling
-        # x = [ node['x'] for node in graph_layer['nodes'] ]
-        # y = [ node['y'] for node in graph_layer['nodes'] ] 
-        fdx = [ node['fdx'] for node in graph_layer['nodes'] ]
-        fdy = [ node['fdy'] for node in graph_layer['nodes'] ]
+            for node in graph_layer['nodes']:
+            #     node['x'] = node['x'] - (x_min + x_midpoint)
+            #     node['y'] = node['y'] - (y_min + y_midpoint)
+                node['fdx'] = node['fdx'] - (fdx_min + fdx_midpoint)
+                node['fdy'] = node['fdy'] - (fdy_min + fdy_midpoint)
 
-        # x_max = np.max(x)
-        # y_max = np.max(y)
-        # x_min = np.min(x)
-        # y_min = np.min(y)
-        
-        fdx_max = np.max(fdx)
-        fdy_max = np.max(fdy)
-        fdx_min = np.min(fdx)
-        fdy_min = np.min(fdy)
+            # scaling
+            # x = [ node['x'] for node in graph_layer['nodes'] ]
+            # y = [ node['y'] for node in graph_layer['nodes'] ] 
+            fdx = [ node['fdx'] for node in graph_layer['nodes'] ]
+            fdy = [ node['fdy'] for node in graph_layer['nodes'] ]
 
-        # max_cord = np.max([x_max, y_max])
-        max_fd_cord = np.max([fdx_max, fdy_max])
-        
-        # scale_factor = boundary/max_cord
-        scale_factor_fd = boundary/max_fd_cord
+            # x_max = np.max(x)
+            # y_max = np.max(y)
+            # x_min = np.min(x)
+            # y_min = np.min(y)
+            
+            fdx_max = np.max(fdx)
+            fdy_max = np.max(fdy)
+            fdx_min = np.min(fdx)
+            fdy_min = np.min(fdy)
 
-        for node in graph_layer['nodes']:
-            # node['x'] = scale_factor * node['x']
-            # node['y'] = scale_factor * node['y']
-            node['fdx'] = scale_factor_fd * node['fdx']
-            node['fdy'] = scale_factor_fd * node['fdy']
+            # max_cord = np.max([x_max, y_max])
+            max_fd_cord = np.max([fdx_max, fdy_max])
+            
+            # scale_factor = boundary/max_cord
+            scale_factor_fd = boundary/max_fd_cord
 
-        # plotting checks
-        # plt.figure(figsize=(6,6))
-        # plt.scatter(x=[node['x'] for node in graph_layer['nodes']],y=[node['y'] for node in graph_layer['nodes']])
-        # plt.xlim([-boundary,boundary])
-        # plt.ylim([-boundary,boundary])
-        # plt.show()
-        # plt.figure(figsize=(6,6))
-        # plt.scatter(x=[node['fdx'] for node in graph_layer['nodes']],y=[node['fdy'] for node in graph_layer['nodes']])
-        # plt.xlim([-boundary,boundary])
-        # plt.ylim([-boundary,boundary])
-        # plt.show()
+            for node in graph_layer['nodes']:
+                # node['x'] = scale_factor * node['x']
+                # node['y'] = scale_factor * node['y']
+                node['fdx'] = scale_factor_fd * node['fdx']
+                node['fdy'] = scale_factor_fd * node['fdy']
 
-        with open(graph_layer_data_path, 'w') as outfile:
-            json.dump(graph_layer, outfile)
+            # plotting checks
+            # plt.figure(figsize=(6,6))
+            # plt.scatter(x=[node['x'] for node in graph_layer['nodes']],y=[node['y'] for node in graph_layer['nodes']])
+            # plt.xlim([-boundary,boundary])
+            # plt.ylim([-boundary,boundary])
+            # plt.show()
+            # plt.figure(figsize=(6,6))
+            # plt.scatter(x=[node['fdx'] for node in graph_layer['nodes']],y=[node['fdy'] for node in graph_layer['nodes']])
+            # plt.xlim([-boundary,boundary])
+            # plt.ylim([-boundary,boundary])
+            # plt.show()
+
+            with open(graph_layer_data_path, 'w') as outfile:
+                json.dump(graph_layer, outfile)
+        else:
+            pass
