@@ -38,12 +38,16 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
         .attr('id', 'card-' + d.peel)
         .append('div')
         .attr('class', 'card')
-        // if (cardsUp.length > 1) {
-            // 
-        // } else {
-            // layers.style('height', '50vh')
-        // }
-    // .style('border-left', function () { return '5px solid ' + ribbonColorPeel(d.peel) })
+
+        // size for single card or multiple
+        if (Object.keys(cardsUp).length > 1) {
+          d3.select('.card-border-wrapper').style('border-bottom', '1px solid var(--ui-border-color)')
+          d3.selectAll(".card").style("height", "400px");
+          d3.selectAll(".interactive-node-link").attr("height", "400px");
+        } else {
+            d3.select(".card-border-wrapper").style("border-bottom", "none");
+            layers.style("height", document.getElementById("layers").offsetHeight - 4 + "px");
+        }
 
     var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
 
@@ -878,6 +882,17 @@ function closeCard(d) {
     d3.select("#indicator-right-" + d.peel).style("visibility", "hidden");
     // console.log(document.getElementsByClassName('y-axis'))
     cardMessage();
+
+    // resize for single card or multiple
+    if (Object.keys(cardsUp).length > 1) {
+        d3.select('.card-border-wrapper').style('border-bottom', '1px solid var(--ui-border-color)')
+        d3.selectAll(".card").style("height", "400px");
+        d3.selectAll(".interactive-node-link").attr("height", "400px");
+    } else {
+        d3.select(".card-border-wrapper").style("border-bottom", "none");
+        d3.select('.card').style("height", document.getElementById("layers").offsetHeight - 4 + "px");
+        d3.select(".interactive-node-link").attr("height", document.getElementById("layers").offsetHeight - 4 + "px");
+    }
 }
 
 function cardMessage() {
