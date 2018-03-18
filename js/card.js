@@ -84,17 +84,17 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     cardText.append('span')
         .attr('class', 'smalltext-header card-text-item')
-        .text('components: ')
-        .append('span')
-        .attr('class', 'card-text-item-value')
-        .text(d.components)
-
-    cardText.append('span')
-        .attr('class', 'smalltext-header card-text-item')
         .text('clustering: ')
         .append('span')
         .attr('class', 'card-text-item-value')
         .text(cardTextValueFormat(d.clustering))
+
+    cardText.append('span')
+        .attr('class', 'smalltext-header card-text-item')
+        .text('components: ')
+        .append('span')
+        .attr('class', 'card-text-item-value')
+        .text(d.components)
 
     if (d.components === 1) {
         cardText.append('hr')
@@ -104,6 +104,42 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
         cliqueMessage
           .text("clique minus " + ((d.vertices * (d.vertices - 1) / 2 - d.edges) + ' edges') )
+    } else {
+        cardText.append("hr");
+
+        var largestComp = cardText;
+        largestComp
+            .append("span")
+            .attr("class", "smalltext-header card-text-item")
+            .text("largest component");
+        largestComp
+            .append("span")
+            .attr("class", "smalltext-header card-text-item")
+            .text("edges: ")
+            .append("span")
+            .attr("class", "card-text-item-value")
+            .text(d["largest-component-edges"]);
+
+        largestComp
+            .append("span")
+            .attr("class", "smalltext-header card-text-item")
+            .text("vertices: ")
+            .append("span")
+            .attr("class", "card-text-item-value")
+            .text(d["largest-component-vertices"]);
+
+        var componentSlider = cardText
+            .append("div")
+            .attr("class", "overview-header-ui-element-wrapper");
+        var componentSliderInput = componentSlider
+            .append("input")
+            .attr("type", "range")
+            .attr("class", "overview-slider")
+            .attr("id", "comp-slider-" + d.peel)
+            .attr("max", d.components)
+            .attr("min", 1)
+            .attr("step", 1)
+            .property("value", 1);
     }
 
     cardText.append('hr')
@@ -286,6 +322,17 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
               .attr("stroke", "#ffffff")
               .attr("stroke-width", 1);
 
+            // component slider
+            function hideComps() {
+                var currentComponentValue = Number(d3.select(this).property("value"));
+
+                nodeSVGs.attr("visibility", function(n) { return n.cmpt < currentComponentValue - 1 ? 'hidden' : 'visible' });
+                linkSVGs.attr("visibility", function(l) { return l.source.cmpt < currentComponentValue -1 ? 'hidden' : 'visible' })
+            }
+            if (!(d.components === 1)) {
+                componentSliderInput.on("input", hideComps);
+            }
+    
             // add zoom 
             var zoomHandler = d3.zoom()
                 .scaleExtent([0.25, 8])
