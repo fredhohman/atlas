@@ -5,7 +5,7 @@ import json
 import os
 import igraph as ig
 import pprint
-
+import copy
 
 def getopts(argv):
     opts = {}
@@ -93,21 +93,30 @@ if __name__ == '__main__':
             # layout = g_layer.layout("drl")
             pass
 
+        largest_component = g_layer.subgraph(max(g_layer.components(),key=len))
+
         # add connected component ids to each node
         print('adding connected component ids')
+        comp_list = list(g_layer.components())
+        comp_list.sort(key=len)
+        for i, cl in enumerate(comp_list):
+            for j, n in enumerate(cl):
+                cl[j] = g_layer.vs[n]['id']
+
+        # for i, cmpt in enumerate(components2):
+        #     for j, n in enumerate(cmpt):
+        #         cmpt[j] = g_layer.vs[n]['id']
+
         for node in graph_layer['nodes']:
-            for i, cmpt in enumerate(g_layer.components()):
+            for i, cmpt in enumerate(comp_list):
                 
-                for j, n in enumerate(cmpt):
-                    cmpt[j] = g_layer.vs[n]['id']
+                # for j, n in enumerate(cmpt):
+                #     cmpt[j] = g_layer.vs[n]['id']
 
                 if int(node['id']) in cmpt:
                     node['cmpt'] = i
+                    # print('found')
                     break
-
-            # print(i, cmpt)
-            # for n in cmpt:
-                # g_layer.vs[n]['cmpt'] = i
 
         # define layer data
         print('computing layer data')
@@ -116,8 +125,10 @@ if __name__ == '__main__':
         layer['edges'] = g_layer.ecount()
         layer['vertices'] = g_layer.vcount()
         layer['clones'] = clone_count
-        layer['components'] = len(g_layer.components())
+        layer['components'] = len(comp_list)
         layer['clustering'] = clustering
+        layer['largest-component-edges'] = largest_component.ecount()
+        layer['largest-component-vertices'] = largest_component.vcount()
 
         # add layer data to data
         data['layers'].append(layer)
