@@ -162,12 +162,20 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     var nodesToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "nodes-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input nodes-toggle').property('checked', true)
     var nodesToggleLabel = cardText.append('label').attr('for', "nodes-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Nodes')
 
+    // if (d.) {
+    // var nodesToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "nodes-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input nodes-toggle').property('checked', true)
+    // var nodesToggleLabel = cardText.append('label').attr('for', "nodes-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Nodes')
+    // }
+
     var positionToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "position-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input position-toggle')
     var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Redraw')
 
     var fdToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "fd-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input fd-toggle')
     var fdToggleLabel = cardText.append('label').attr('for', "fd-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('live layout')
-    cardText.append('svg').attr('width', 20).attr('height', 20).append('circle').attr('r', 5).attr('cx', 15).attr('cy', 15).style('fill', 'red').attr('id', 'fd-live-light-' + d.peel)
+    // cardText.append('svg').attr('width', 20).attr('height', 20).append('circle').attr('r', 5).attr('cx', 15).attr('cy', 15).style('fill', 'red').attr('id', 'fd-live-light-' + d.peel)
+    cardText.append('span').attr('class', 'dot').attr('id', 'fd-live-light-' + d.peel).style('visibility', 'hidden')
+    // <span class="dot"></span>
+
 
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
     var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
@@ -462,7 +470,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .attr("x2", function (d) { return d.target.fdx; })
                         .attr("y2", function (d) { return d.target.fdy; });
                     }
-                    
+
                   } else {
                     // dragging single node without a clone in fdx,fdy
                     d.fdx += d3.event.dx;
@@ -474,15 +482,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                   d.y += d3.event.dy;
                   updateNodePositionsTick(peel);
                 }
-
-                    // multiNodeSelectionString
-                    //     .attr("x1", function (d) { return d.source.x; })
-                    //     .attr("y1", function (d) { return d.source.y; })
-                    //     .attr("x2", function (d) { return d.target.x; })
-                    //     .attr("y2", function (d) { return d.target.y; });
-
-
-                // updateNodePositionsTick(peel);
             }
 
             function getNeighbors(node) {
@@ -962,10 +961,11 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                   simulation.force("link").links(fdLinks);
                   simulationUp[layerNum] = simulation;
 
-                d3.select("#fd-live-light-" + layerNum)
+                d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
 
                 } else {
                     simulationUp[layerNum].stop();
+                    d3.select("#fd-live-light-" + layerNum).style('visibility', 'hidden').classed('blink', false)
                 }
             }
             d3.selectAll('.fd-toggle').on('click', fd)

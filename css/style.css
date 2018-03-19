@@ -60,6 +60,7 @@ html, body {
 #header {
     /* background: var(--darkest); */
     background: #37474F;
+    /* background: #003c00; */
     color: var(--white);
     font-size: 18px;
     font-weight: 200;
@@ -156,7 +157,7 @@ html, body {
 }
 
 #header-title {
-    width: 150px;
+    width: 40px;
     /* enforces cursor changes only on title */
     cursor: pointer;
 }
@@ -181,6 +182,7 @@ html, body {
     flex: 1;
     display: flex;
     flex-direction: row;
+    text-align: center;
 }
 
 h1 {
@@ -196,6 +198,7 @@ h1 {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 100px;
 }
 
 #vertices-title, #edges-title, #graph-title {
@@ -204,6 +207,7 @@ h1 {
 
 #vertices-value, #edges-value, #graph-value {
     font-weight: 300;
+    font-size: 16px;
 }
 
 #graph-description {
@@ -408,6 +412,7 @@ h2 {
     /* border-top: 1px solid var(--ui-border-color); */
     /* border-right: 1px solid var(--ui-border-color); */
     border-bottom: 1px solid var(--ui-border-color);
+    /* also update in card.js; when only card is up we hide the border */
     /* border-left: 1px solid var(--ui-border-color); */
     /* border-left: 0; */
     /* margin-left: 2%; */
@@ -486,7 +491,7 @@ h3 {
     /* width: 150px; */
     flex-grow: 0;
     flex-shrink: 0;
-    flex-basis: 150px;
+    flex-basis: 165px;
     /* height: 270px; */
     box-sizing: border-box;
     padding: 10px;
@@ -570,6 +575,14 @@ h3 {
 
 .nodes circle {
     cursor: pointer;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
 }
 
 .fixed {
@@ -781,4 +794,33 @@ hr {
     border: none;
     width: 35px;
     outline: none;
+}
+
+/* live layout indicator */
+
+.dot {
+    margin-left: 5px;
+    height: 10px;
+    width: 10px;
+    background-color: #F44336;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+@-webkit-keyframes blinker {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+.blink {
+    -webkit-animation: blinker 1s 5;
+    -moz-animation: blinker 1s 5;
+    animation: blinker 1s 5;
 }
