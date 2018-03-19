@@ -166,7 +166,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     var positionToggleLabel = cardText.append('label').attr('for', "position-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('Redraw')
 
     var fdToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "fd-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input fd-toggle')
-    var fdToggleLabel = cardText.append('label').attr('for', "fd-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('fdasdfasd')
+    var fdToggleLabel = cardText.append('label').attr('for', "fd-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('live layout')
+    cardText.append('svg').attr('width', 20).attr('height', 20).append('circle').attr('r', 5).attr('cx', 15).attr('cy', 15).style('fill', 'red').attr('id', 'fd-live-light-' + d.peel)
 
     var contourToggle = cardText.append('input').attr('type', 'checkbox').attr('id', "contour-toggle-" + d.peel).attr('name', 'set-name').attr('class', 'switch-input contour-toggle')
     var contourToggleLabel = cardText.append('label').attr('for', "contour-toggle-" + d.peel).attr('class', 'switch-label smalltext-header').text('motif')
@@ -422,40 +423,66 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1] // careful here, always looks as first class of circle node-i where i is a peel
                 var draggingNode = d3.select(this).attr('id')
                 var draggingNodeID = draggingNode.split('node')[1].split('-')[0]
-                var multiNodeSelection = [];
+                var multiNodeSelectionString = [];
                 for (let i = 0; i < Object.keys(selectedNodeIDs).length; i++) {
                   if (draggingNodeID === Object.keys(selectedNodeIDs)[i].split("-")[0]) {
-                      multiNodeSelection.push( '#node' + Object.keys(selectedNodeIDs)[i] )
+                      multiNodeSelectionString.push( '#node' + Object.keys(selectedNodeIDs)[i] )
                   }
                 }
 
-                if (multiNodeSelection.length > 0) {
-                    var selectionData = d3.selectAll(multiNodeSelection.join(", ")).data()
+                if (multiNodeSelectionString.length > 0) {
+                    var multiNodeSelection = d3.selectAll(multiNodeSelectionString.join(", "));
+                    var selectionData = multiNodeSelection.data();
                 }
-                console.log(d)
-                console.log("multiNodeSelection", selectionData);
+                // console.log(d)
+                // console.log("multiNodeSelectionString", multiNodeSelectionString);
 
-                if (d3.select('#position-toggle-' + peel).property('checked')) {
+                if (d3.select("#position-toggle-" + peel).property("checked")) {
+                  if (multiNodeSelectionString.length > 0) {
+                    // dragging single node with a clone in fdx,fdy
+                    for (let i = 0; i < selectionData.length; i++) {
+                      const element = selectionData[i];
+                      element.fdx += d3.event.dx;
+                      element.fdy += d3.event.dy;
+                    }
+
+                    for (let s = 0; s < multiNodeSelectionString.length; s++) {
+                      const element = multiNodeSelectionString[s];
+                      d3.select(element)
+                        .attr("cx", function(d) {
+                          return d.fdx;
+                        })
+                        .attr("cy", function(d) {
+                          return d.fdy;
+                        });
+
+                        d3.selectAll('.link-' + element.split('-')[1])
+                        .attr("x1", function (d) { return d.source.fdx; })
+                        .attr("y1", function (d) { return d.source.fdy; })
+                        .attr("x2", function (d) { return d.target.fdx; })
+                        .attr("y2", function (d) { return d.target.fdy; });
+                    }
                     
+                  } else {
+                    // dragging single node without a clone in fdx,fdy
                     d.fdx += d3.event.dx;
                     d.fdy += d3.event.dy;
-                    
-                    // for (let i = 0; i < selectionData.length; i++) {
-                    //   const element = selectionData[i];
-                    //    element.fdx += d3.event.dx;
-                    //    element.fdy += d3.event.dy;
-                    // }
-
-                    // selectionData.forEach(function(a) { 
-                    //     a.fdx += d3.event.dx;
-                    //     a.fdy += d3.event.dy;
-                    // })
-
+                    updateNodePositionsTick(peel);
+                  }
                 } else {
-                    d.x += d3.event.dx;
-                    d.y += d3.event.dy;
+                  d.x += d3.event.dx;
+                  d.y += d3.event.dy;
+                  updateNodePositionsTick(peel);
                 }
-                updateNodePositionsTick(peel);
+
+                    // multiNodeSelectionString
+                    //     .attr("x1", function (d) { return d.source.x; })
+                    //     .attr("y1", function (d) { return d.source.y; })
+                    //     .attr("x2", function (d) { return d.target.x; })
+                    //     .attr("y2", function (d) { return d.target.y; });
+
+
+                // updateNodePositionsTick(peel);
             }
 
             function getNeighbors(node) {
@@ -814,7 +841,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     if (data.layers.filter(function(l) { return l.peel === contourLayerNum})[0].components > 1) {
                         var selectedNodesData = selectedNodes.data().filter(function(n) { return n.cmpt + 2 > Number(d3.select('#comp-slider-' + contourLayerNum).property('value')) })
                     } else {
-                        var selectedNodesData = selectedNodes.data()//.filter(function(n) { return n.cmpt + 2 > Number(d3.select('#comp-slider-' + contourLayerNum).property('value')) })
+                        var selectedNodesData = selectedNodes.data()
                     }
                     
                     var contourX = d3.scaleLinear()
@@ -934,6 +961,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                   simulation.nodes(fdNodes).on("tick", function() { updateNodePositionsTick(layerNum) });
                   simulation.force("link").links(fdLinks);
                   simulationUp[layerNum] = simulation;
+
+                d3.select("#fd-live-light-" + layerNum)
 
                 } else {
                     simulationUp[layerNum].stop();
