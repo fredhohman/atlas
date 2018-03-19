@@ -790,17 +790,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 // console.log('update positions tick')
                 if (d3.select('#position-toggle-' + peel).property('checked')) {
 
-                    if (d3.select('#fd-toggle-' + peel).property('checked')) {
-                        nodeSVGs
-                            .attr("cx", function (d) { return d.x; })
-                            .attr("cy", function (d) { return d.y; });
-
-                        linkSVGs
-                            .attr("x1", function (d) { return d.source.x; })
-                            .attr("y1", function (d) { return d.source.y; })
-                            .attr("x2", function (d) { return d.target.x; })
-                            .attr("y2", function (d) { return d.target.y; });                        
-                    } else {
+                    // if (d3.select('#fd-toggle-' + peel).property('checked')) {
                         nodeSVGs
                             .attr("cx", function (d) { return d.fdx; })
                             .attr("cy", function (d) { return d.fdy; });
@@ -809,8 +799,18 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                             .attr("x1", function (d) { return d.source.fdx; })
                             .attr("y1", function (d) { return d.source.fdy; })
                             .attr("x2", function (d) { return d.target.fdx; })
-                            .attr("y2", function (d) { return d.target.fdy; });
-                    }
+                            .attr("y2", function (d) { return d.target.fdy; });                        
+                    // } else {
+                    //     nodeSVGs
+                    //         .attr("cx", function (d) { return d.x; })
+                    //         .attr("cy", function (d) { return d.y; });
+
+                    //     linkSVGs
+                    //         .attr("x1", function (d) { return d.source.x; })
+                    //         .attr("y1", function (d) { return d.source.y; })
+                    //         .attr("x2", function (d) { return d.target.x; })
+                    //         .attr("y2", function (d) { return d.target.y; });
+                    // }
                 } else {
 
                     nodeSVGs
@@ -829,7 +829,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 console.log('draw contour')
 
                 if (!(document.getElementById('position-toggle-'+ contourLayerNum).checked)) {
-                    document.getElementById('position-toggle-'+ contourLayerNum).click()
+                    // document.getElementById('position-toggle-'+ contourLayerNum).click()
                 }
 
                 if (d3.select('#contour-toggle-' + contourLayerNum).property('checked')) {
@@ -874,8 +874,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
-                            .x(function (d) { return d.fdx + boundary; })
-                            .y(function (d) { return d.fdy + boundary; })
+                            // .x(function (d) { return d.fdx + boundary; })
+                            .x(function (d) { return d3.select('#position-toggle-' + contourLayerNum).property('checked') ? d.fdx + boundary : d.x + boundary; })
+                            // .y(function (d) { return d.fdy + boundary; })
+                            .y(function (d) { return d3.select('#position-toggle-' + contourLayerNum).property('checked') ? d.fdy + boundary : d.y + boundary; })
                             .size([2*boundary, 2*boundary])
                             .bandwidth(bandwidth)
                             .thresholds(threshold)
@@ -931,16 +933,16 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
             // interactive fd
             function fd() {
-                console.log('fd')
-
+                
                 var fdChecked = d3.select(this).property('checked')
                 var layerNum = Number(d3.select(this).property('id').split('-')[2])
+                console.log("fd", layerNum);
 
                 if (fdChecked) {
                   var fdNodes = d3.selectAll(".node-" + layerNum + '.visible').data();
                   var fdLinks = d3.selectAll(".link-" + layerNum + '.visible').data();
-                //   console.log(fdNodes);
-                //   console.log(fdLinks);
+                  console.log(fdNodes);
+                  console.log(fdLinks);
 
                 if (d3.select('#position-toggle-' + layerNum).property('checked')) {
                     for (let i = 0; i < fdNodes.length; i++) {
@@ -961,7 +963,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                   simulation.force("link").links(fdLinks);
                   simulationUp[layerNum] = simulation;
 
-                d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
+                  d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
 
                 } else {
                     simulationUp[layerNum].stop();
