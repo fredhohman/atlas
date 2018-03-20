@@ -778,6 +778,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 var selectedLinks = d3.selectAll('.link-' + layerNum)
                 console.log(layerNum)
 
+                if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
+                    removeLayerGraphContour(layerNum)
+                }
+
                 if (d3.select(this).property('checked')) {
                     selectedNodes
                         .transition().duration(2000)
@@ -801,6 +805,13 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .attr("x2", function (d) { return d.target.x; })
                         .attr("y2", function (d) { return d.target.y; })
                 }
+
+                if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
+                    setTimeout(function() {
+                      toggleContour(layerNum);
+                    }, 2000);
+                }
+
             }
             d3.selectAll('.position-toggle').on('click', togglePosition)
             // if card is drawn using a init node, click the position toggle to redraw
@@ -877,10 +888,13 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     var g = d3.select('#interactive-node-link-' + contourLayerNum + '-svg').select('g')
 
                     // const boundary = 500;
-                    const boundaryX = d3.max(selectedNodesData, function(d) { return Math.abs(d.x) })
-                    const boundaryY = d3.max(selectedNodesData, function(d) { return Math.abs(d.y) })
-                    const boundary = 500
-                    console.log(boundaryX, boundaryY)
+                    if (d3.select('#position-toggle-' + contourLayerNum).property('checked')) {
+                        var boundaryX = d3.max(selectedNodesData, function(d) { return Math.abs(d.fdx) })
+                        var boundaryY = d3.max(selectedNodesData, function(d) { return Math.abs(d.fdy) })
+                    } else {
+                        var boundaryX = d3.max(selectedNodesData, function(d) { return Math.abs(d.x) })
+                        var boundaryY = d3.max(selectedNodesData, function(d) { return Math.abs(d.y) })
+                    }
 
                     var bandwidth = d3.select("#contour-toggle-bandwidth-" + contourLayerNum).property('value');
                     var threshold = d3.select("#contour-toggle-threshold-" + contourLayerNum).property('value');
