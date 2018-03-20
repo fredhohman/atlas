@@ -330,7 +330,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
             // console.log(graphLayerData);
             // traverse(graphLayerData.nodes[0], 0)
-            console.log(graphLayerData)
+            // console.log(graphLayerData)
   
             // draw circles for the nodes 
             var nodeSVGs = g
@@ -988,8 +988,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 if (fdChecked) {
                   var fdNodes = d3.selectAll(".node-" + layerNum + '.visible').data();
                   var fdLinks = d3.selectAll(".link-" + layerNum + '.visible').data();
-                  console.log(fdNodes);
-                  console.log(fdLinks);
+                //   console.log(fdNodes);
+                //   console.log(fdLinks);
 
                 if (d3.select('#position-toggle-' + layerNum).property('checked')) {
                     for (let i = 0; i < fdNodes.length; i++) {
