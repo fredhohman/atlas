@@ -29,7 +29,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     cardMessage();
 
-    let edgeOpacity = 0.5;
+    let edgeOpacity = 1.0;
     let edgeColor = '#bbbbbb';
     let nodeColor = "#bbbbbb";
     let highlightColor = "#FFC107";
@@ -353,10 +353,28 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 console.log('hide components')
                 var currentComponentValue = Number(d3.select(this).property("value"));
 
-                nodeSVGs.classed("hidden", function(n) { return n.cmpt < currentComponentValue - 1 ? true : false });
-                nodeSVGs.classed("visible", function(n) { return n.cmpt >= currentComponentValue - 1 ? true : false });
-                linkSVGs.classed("hidden", function(l) { return l.source.cmpt < currentComponentValue - 1 ? true : false })
-                linkSVGs.classed("visible", function(l) { return l.source.cmpt >= currentComponentValue - 1 ? true : false })
+                var nodesToggleChecked = d3.select('#nodes-toggle-' + d.peel).property('checked')
+                var edgesToggleChecked = d3.select('#edges-toggle-' + d.peel).property('checked')
+
+                // nodes toggle and edges toggle checked
+                if ((nodesToggleChecked) && (edgesToggleChecked)) {
+                    nodeSVGs.classed("hidden", function(n) { return n.cmpt < currentComponentValue - 1 ? true : false });
+                    nodeSVGs.classed("visible", function(n) { return n.cmpt >= currentComponentValue - 1 ? true : false });
+                    linkSVGs.classed("hidden", function(l) { return l.source.cmpt < currentComponentValue - 1 ? true : false })
+                    linkSVGs.classed("visible", function(l) { return l.source.cmpt >= currentComponentValue - 1 ? true : false })                    
+                }
+
+                // nodes toggle checked, edges toggle unchecked
+                if ((nodesToggleChecked === true) && (edgesToggleChecked === false)) {
+                    nodeSVGs.classed("hidden", function(n) { return n.cmpt < currentComponentValue - 1 ? true : false });
+                    nodeSVGs.classed("visible", function(n) { return n.cmpt >= currentComponentValue - 1 ? true : false });
+                }
+
+                // nodes toggle unchecked, edges toggle checked
+                if ((nodesToggleChecked === false) && (edgesToggleChecked === true)) {
+                    linkSVGs.classed("hidden", function(l) { return l.source.cmpt < currentComponentValue - 1 ? true : false })
+                    linkSVGs.classed("visible", function(l) { return l.source.cmpt >= currentComponentValue - 1 ? true : false })     
+                }
 
                 if (d3.select('#contour-toggle-' + d.peel).property('checked')) {
                     removeLayerGraphContour(d.peel);
@@ -677,26 +695,30 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             })
 
             function toggleEdges() {
-                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
-                var selectedLinks = d3.selectAll('.link-' + contourLayerNum)
+                var layerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedLinks = d3.selectAll('.link-' + layerNum)
+                var currentComponentValue = d3.select('#comp-slider-' + layerNum).property('value')
+
                 if (d3.select(this).property('checked')) {
-                    selectedLinks.classed('visible', true)
-                    selectedLinks.classed("hidden", false);
+                    selectedLinks.classed("hidden", function(l) { return l.source.cmpt < currentComponentValue - 1 ? true : false });
+                    selectedLinks.classed("visible", function(l) { return l.source.cmpt >= currentComponentValue - 1 ? true : false })   ;
                 } else {
-                    selectedLinks.classed('hidden', true)
+                    selectedLinks.classed('hidden', true);
                     selectedLinks.classed("visible", false);
                 }
             }
             d3.selectAll('.edges-toggle').on('click', toggleEdges)
 
             function toggleNodes() {
-                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
-                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
+                var layerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedNodes = d3.selectAll('.node-' + layerNum)
+                var currentComponentValue = d3.select('#comp-slider-' + layerNum).property('value')
+
                 if (d3.select(this).property('checked')) {
-                    selectedNodes.classed('visible', true)
-                    selectedNodes.classed("hidden", false);
+                    selectedNodes.classed("hidden", function(n) { return n.cmpt < currentComponentValue - 1 ? true : false });
+                    selectedNodes.classed("visible", function(n) { return n.cmpt >= currentComponentValue - 1 ? true : false });
                 } else {
-                    selectedNodes.classed('hidden', true)
+                    selectedNodes.classed('hidden', true);
                     selectedNodes.classed("visible", false);
                 }
             }
@@ -706,8 +728,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 console.log('toggle clones')
                 console.log(this)
 
-                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
-                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
+                var layerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedNodes = d3.selectAll('.node-' + layerNum)
 
                 var maxPeels = d3.max(selectedNodes.data(), function(d) { return d.peels.length })
                 var cloneSizeScale = d3.scaleLinear().domain([1, maxPeels]).range([4,7])
@@ -734,7 +756,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 } else {
                     // default node styling
                     selectedNodes.classed('clone', false)
-                    // selectedNodes.attr('fill', function () { return ribbonColorPeel(contourLayerNum) })
+                    // selectedNodes.attr('fill', function () { return ribbonColorPeel(layerNum) })
                     selectedNodes.attr('fill', nodeColor)
                     selectedNodes.attr('r', 6)
                 }
@@ -751,10 +773,10 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             function togglePosition() {
                 console.log('toggle position')
                 console.log(this)
-                var contourLayerNum = Number(d3.select(this).property('id').split('-')[2])
-                var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
-                var selectedLinks = d3.selectAll('.link-' + contourLayerNum)
-                console.log(contourLayerNum)
+                var layerNum = Number(d3.select(this).property('id').split('-')[2])
+                var selectedNodes = d3.selectAll('.node-' + layerNum)
+                var selectedLinks = d3.selectAll('.link-' + layerNum)
+                console.log(layerNum)
 
                 if (d3.select(this).property('checked')) {
                     selectedNodes
@@ -965,9 +987,17 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                   d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
 
+                  if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
+                      removeLayerGraphContour(layerNum);
+                  }
+
                 } else {
                     simulationUp[layerNum].stop();
                     d3.select("#fd-live-light-" + layerNum).style('visibility', 'hidden').classed('blink', false)
+
+                    if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
+                      toggleContour(layerNum);
+                  }
                 }
             }
             d3.selectAll('.fd-toggle').on('click', fd)
