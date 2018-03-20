@@ -300,12 +300,12 @@ h2 {
 /* d3-tip for ribbon */
 
 .d3-tip {
-    line-height: 1;
-    font-weight: 500;
+    line-height: 1.4;
+    /* font-weight: 300; */
     padding: 11px;
     /* background: rgba(0, 0, 0, 0.8); */
     background: var(--darkest);
-    color: var(--white);
+    color: var(--white) !important;
     border-radius: 2px;
 }
 

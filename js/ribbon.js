@@ -62,12 +62,12 @@ d3.json(dataPathJSON, function(error, data) {
 
     var cardTextValueFormat = d3.format(",.3f")
 
-    var bulletTooltip = tip().attr('class', 'd3-tip').direction('e').offset([0, 25]).html(function (d) {
-        return 'e: <span class="tooltip-number">' + d.edges + '</span></br>'
-        + 'v: <span class="tooltip-number">' + d.vertices + '</span></br>'
-        + 'cl: <span class="tooltip-number">' + d.clones + '</span></br>'
-        + 'cc: <span class="tooltip-number">' + cardTextValueFormat(d.clustering) + '</span></br>'
-        + 'c: <span class="tooltip-number">' + d.components + '</span>'
+    var bulletTooltip = tip().attr('class', 'd3-tip smalltext-header').direction('e').offset([0, 25]).html(function (d) {
+        return 'edges: <span class="tooltip-number">' + d.edges + '</span></br>'
+        + 'vertices: <span class="tooltip-number">' + d.vertices + '</span></br>'
+        + 'clones: <span class="tooltip-number">' + d.clones + '</span></br>'
+        + 'clustering: <span class="tooltip-number">' + cardTextValueFormat(d.clustering) + '</span></br>'
+        + 'components: <span class="tooltip-number">' + d.components + '</span>'
     });
     ribbon.call(bulletTooltip)
 
