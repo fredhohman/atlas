@@ -54,7 +54,7 @@ d3.json(dataPathJSON, function(error, data) {
       .scaleLinear()
       .domain([0, 1])
       .interpolate(d3.interpolateHcl)
-      .range([d3.rgb("#ECEFF1"), d3.rgb("#546E7A")]);
+      .range([d3.rgb("#ECEFF1"), d3.rgb("#263238")]);
 
     // save color palette from data once and bind to window, little cheeky
     window.ribbonColorPeel = ribbonColorPeel;
@@ -126,7 +126,7 @@ d3.json(dataPathJSON, function(error, data) {
         return y(d.peel) + y.bandwidth() * (3 / 7);
       })
       .attr("height", y.bandwidth() * (1 / 7))
-      .style("fill", "#444444")
+      .style("fill", function(d) { return d.clustering < 0.5 ? "#444444" : "#eeeeee" })
       //   .style('stroke', '#ffffff')
       //   .style('stroke-width', '1')
       .on("mouseover", function(d) {
@@ -160,7 +160,7 @@ d3.json(dataPathJSON, function(error, data) {
         return xLinear(d.clones);
       })
       .attr("height", y.bandwidth() * (1 / 7) + tickOffset)
-      .style("fill", "#444444")
+      .style("fill", function(d) { return d.clustering < 0.5 ? "#444444" : "#eeeeee" })
       //   .style('stroke', '#ffffff')
       //   .style('stroke-width', '1')
       .on("mouseover", function(d) {
