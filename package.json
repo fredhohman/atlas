@@ -25,7 +25,7 @@
     "d3-tip": "^0.7.1",
     "jquery": "^3.3.1",
     "three": "^0.90.0",
-    "three-trackballcontrols": "0.0.7",
+    "three-trackballcontrols": "0.0.7"
   },
   "devDependencies": {
     "webpack": "^3.10.0",
