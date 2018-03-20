@@ -1,12 +1,46 @@
 import * as d3 from "d3";
 
 // global data and image paths
-// const dataDirName = 'lesmis' // good but small
-// const dataDirName = 'moreno_names' //good but small
-const dataDirName = "astroph"; //good
+
+// small
+// const dataDirName = 'lesmis' // good
+// const dataDirName = 'sec-sale' // good, labels
+// const dataDirName = 'sec-purchase' // good, labels
+// const dataDirName = 'moreno_names' // good
+// const dataDirName = 'ego-gplus' // good
+
+// yelp
+// const dataDirName = 'yelp-k6d5'
+// const dataDirName = "yelp-k6d8"
+// const dataDirName = "yelp-k9d8"
+
+const dataDirName = "yelp-k3d6";
+// const dataDirName = "yelp-k3d7";
+// const dataDirName = "yelp-k3d8";
+// const dataDirName = "yelp-k3d9";
+
+// const dataDirName = "yelp-k4d6";
+// const dataDirName = "yelp-k4d7";
+// const dataDirName = "yelp-k4d8";
+// const dataDirName = "yelp-k4d9";
+
+// const dataDirName = "yelp-k5d6";
+// const dataDirName = "yelp-k5d7";
+// const dataDirName = "yelp-k5d8";
+// const dataDirName = "yelp-k5d9";
+
+// medium
+// const dataDirName = "astroph"; // good
+// const dataDirName = 'word2vec' // good, labels
+// const dataDirName = 'com-amazon' // bad
 // const dataDirName = 'stackexchange' // bad
+// const dataDirName = 'word2vec-twitter' // kinda good, labels
+
+// large
+// const dataDirName = 'google-movie' // average, labels
 // const dataDirName = 'dblp' // bad
-// const dataDirName = 'patentcite' // good and medium/big
+// const dataDirName = 'patentcite' // good
+
 
 export const dataPath = "data/" + dataDirName + "/";
 export const dataPathJSON = "data/" + dataDirName + "/" + dataDirName + ".json";
@@ -34,9 +68,7 @@ window.d3 = d3;
 function reloadPage() {
   window.location.reload();
 }
-
 d3.select("#header-text-span").on("click", reloadPage);
-// .style("cursor", "pointer");
 
 d3.json(dataPathJSON, function(error, data) {
   if (error) {
@@ -51,6 +83,5 @@ d3.json(dataPathJSON, function(error, data) {
   d3.select("#graph-description").text(data.description);
 });
 
-d3
-  .select("#header-icon-link")
+d3.select("#header-icon-link")
   .attr("href", "https://github.com/fredhohman/graph-playground");
