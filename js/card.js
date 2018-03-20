@@ -387,7 +387,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     
             // add zoom 
             var zoomHandler = d3.zoom()
-                .scaleExtent([0.25, 8])
+                .scaleExtent([0.25, 15])
                 // .translateExtent([[-2000, -0.8*2000], [2000, 0.8*2000]])
                 .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
@@ -876,7 +876,12 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                     var g = d3.select('#interactive-node-link-' + contourLayerNum + '-svg').select('g')
 
-                    const boundary = 500;
+                    // const boundary = 500;
+                    const boundaryX = d3.max(selectedNodesData, function(d) { return Math.abs(d.x) })
+                    const boundaryY = d3.max(selectedNodesData, function(d) { return Math.abs(d.y) })
+                    const boundary = 500
+                    console.log(boundaryX, boundaryY)
+
                     var bandwidth = d3.select("#contour-toggle-bandwidth-" + contourLayerNum).property('value');
                     var threshold = d3.select("#contour-toggle-threshold-" + contourLayerNum).property('value');
 
@@ -891,16 +896,16 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                           ]);
 
                     g.insert("g", "g").attr('id', 'contour-' + contourLayerNum)
-                    .attr('transform', 'translate(-' + boundary + ', -' + boundary + ')')
+                    .attr('transform', 'translate(-' + boundaryX + ', -' + boundaryY + ')')
                         .attr("fill", "none")
                         .attr("stroke-linejoin", "round")
                         .selectAll("path")
                         .data(contour.contourDensity()
                             // .x(function (d) { return d.fdx + boundary; })
-                            .x(function (d) { return d3.select('#position-toggle-' + contourLayerNum).property('checked') ? d.fdx + boundary : d.x + boundary; })
+                            .x(function (d) { return d3.select('#position-toggle-' + contourLayerNum).property('checked') ? d.fdx + boundaryX : d.x + boundaryX; })
                             // .y(function (d) { return d.fdy + boundary; })
-                            .y(function (d) { return d3.select('#position-toggle-' + contourLayerNum).property('checked') ? d.fdy + boundary : d.y + boundary; })
-                            .size([2*boundary, 2*boundary])
+                            .y(function (d) { return d3.select('#position-toggle-' + contourLayerNum).property('checked') ? d.fdy + boundaryY : d.y + boundaryY; })
+                            .size([2*boundaryX, 2*boundaryY])
                             .bandwidth(bandwidth)
                             .thresholds(threshold)
                             (selectedNodesData))
