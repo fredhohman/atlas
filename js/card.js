@@ -59,7 +59,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     var cardTop = layers.append('div').attr('class', 'card-top-wrapper')
 
-    var cardTextValueFormat = d3.format(",.3f")
+    var cardTextValueFormat = d3.format(",.2f")
 
     var cardBottom = layers.append('div').attr('class', 'card-bottom-wrapper')
 

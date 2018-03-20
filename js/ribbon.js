@@ -60,7 +60,7 @@ d3.json(dataPathJSON, function(error, data) {
     window.ribbonColorPeel = ribbonColorPeel;
     window.ribbonColorClustering = ribbonColorClustering;
 
-    var cardTextValueFormat = d3.format(",.3f")
+    var cardTextValueFormat = d3.format(",.2f")
 
     var bulletTooltip = tip().attr('class', 'd3-tip smalltext-header').direction('e').offset([0, 25]).html(function (d) {
         return 'edges: <span class="tooltip-number">' + d.edges + '</span></br>'
