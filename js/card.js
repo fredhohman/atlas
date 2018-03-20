@@ -865,7 +865,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             }
 
             function toggleContour(contourLayerNum) {
-                console.log('draw contour')
+                console.log('draw contour for layer ' + contourLayerNum)
 
                 if (!(document.getElementById('position-toggle-'+ contourLayerNum).checked)) {
                     // document.getElementById('position-toggle-'+ contourLayerNum).click()
@@ -874,9 +874,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 if (d3.select('#contour-toggle-' + contourLayerNum).property('checked')) {
 
                     var selectedNodes = d3.selectAll('.node-' + contourLayerNum)
-                    data.layers.filter(function(l) { return l.peel === contourLayerNum})[0]
+                    // data.layers.filter(function(l) { return l.peel === contourLayerNum})[0]
 
-                    if (data.layers.filter(function(l) { return l.peel === contourLayerNum})[0].components > 1) {
+                    if (data.layers.filter(function(l) { return Number(l.peel) === Number(contourLayerNum) })[0].components > 1) {
                         var selectedNodesData = selectedNodes.data().filter(function(n) { return n.cmpt + 2 > Number(d3.select('#comp-slider-' + contourLayerNum).property('value')) })
                     } else {
                         var selectedNodesData = selectedNodes.data()
