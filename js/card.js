@@ -24,6 +24,10 @@ window.simulationUp = simulationUp;
 let ngraphUp = {}
 window.ngraphUp = ngraphUp;
 
+let ngraphFoundPathUp = {}
+window.ngraphFoundPathUp = ngraphFoundPathUp;
+
+
 export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
     numOfCardsUp += 1;
@@ -195,9 +199,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     cardText.append('hr')
 
-    cardText.append('div').attr('class', 'overview-header-ui-element-wrapper')
+    cardText.append('div').attr('class', 'overview-header-ui-element-wrapper').style('padding-top', '10px')
     .append('button').attr('class', 'overview-header-button shortestpath-button').attr('id', 'shortestpath-' + d.peel)
-    .html('<i class="material-icons md-24 ">timeline</i>path')
+    .html('<i class="material-icons md-24 ">timeline</i><span style="padding-left: 5px">path</span>')
 
     cardText.append('hr')
     
@@ -1076,19 +1080,24 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                 let nodePair = [];
 
-                for (const node in selectedNodeIDs) {
-                    console.log(node)
-                    console.log(node.split('-')[0])
-                    if (Number(node.split('-')[1]) === Number(peel)) {
-                        nodePair.push(Number(node.split('-')[0]))
+                if (peel in ngraphFoundPathUp) {
+                    nodePair = ngraphFoundPathUp[peel];
+                } else {
+                    for (const node in selectedNodeIDs) {
+                        // console.log(node)
+                        // console.log(node.split('-')[0])
+                        if (Number(node.split('-')[1]) === Number(peel)) {
+                            nodePair.push(Number(node.split('-')[0]))
+                        }
                     }
                 }
 
-                if (nodePair.length !== 2) {
-
+                if (nodePair.length < 2) {
+                    // less than node nodes selected, can't draw a path
                     alert('Please select only two nodes in layer ' + peel + '!')
 
-                } else {
+                } else if (!(peel in ngraphFoundPathUp)) {
+                    // two nodes selected and no path as been draw, draw normal shortest path
 
                     let fromNodeId = nodePair[0];
                     let toNodeId = nodePair[1];
@@ -1107,28 +1116,40 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         d3.select('#node' + foundPath[i].id + '-' + peel)
                             .attr('stroke', highlightColor)
                             .attr('stroke-width', 1.5)
+                            .classed('selected', true)
 
                         if (i < foundPath.length - 1) {
                             let selectedLink = d3.select('#link-' + foundPath[i].id + '-' + foundPath[i+1].id)
 
                             if (selectedLink.empty()) {
                                 selectedLink = d3.select('#link-' + foundPath[i+1].id + '-' + foundPath[i].id)
-                                selectedLink.attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
+                                selectedLink
+                                .classed('path', true)
+                                // .attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
                             } else {
-                                selectedLink.attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
+                                selectedLink
+                                .classed('path', true)
+                                // .attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
                             }
                         }
                     }
 
+                    let foundPathIds = [];
+                    foundPath.forEach(node => {
+                        foundPathIds.push(node.id)
+                    });
+
+                    ngraphFoundPathUp[peel] = foundPathIds;
+
+                    let foundPathData = d3.selectAll('.node-' + peel).data().filter(function (d) { return foundPathIds.includes(d.id) })
+
+                    foundPathData.forEach(datum => {
+                        console.log(datum)
+                        selectedNodeIDs[datum.id + '-' + peel] = "selected"
+                    });
+
                     // check if we have labels or not
                     if ('name' in graphLayerData.nodes[0]) {
-
-                        let foundPathIds = [];
-                        foundPath.forEach(node => {
-                            foundPathIds.push(node.id)
-                        });
-
-                        let foundPathData = d3.selectAll('.node-' + peel).data().filter(function (d) { return foundPathIds.includes(d.id) })
 
                         // let neighborsData = graphLayerData.nodes.filter(function (node) { return neighbors.includes(node.id) })
                         let FDLayout = d3.select('#position-toggle-' + d.peel).property('checked')
@@ -1141,7 +1162,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                             .data(foundPathData)
                             .enter()
                             .append("text")
-                            .attr('class', 'label')
+                            .attr('class', 'path-label')
                             .attr("x", function (d) {
                                 if (FDLayout) {
                                     return d.fdx + 10;
@@ -1165,8 +1186,138 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                             .style('stroke-width', 0.3)
                     }
 
+                } else {
+                    // already showing 2d path, adding extra node to path
+                    console.log('extra node to path')
+
+                    console.log('nodePair', nodePair)
+                    console.log(selectedNodeIDs)
+
+                    var newFromNodeId = []
+                    var tempSelectNodeIDsArray = []
+
+                    Object.keys(selectedNodeIDs).forEach(k => { tempSelectNodeIDsArray.push( Number(k.split('-')[0])) })
+                    console.log('tempSelectNodeIDsArray', tempSelectNodeIDsArray)
+
+                    for (var i = 1; i < tempSelectNodeIDsArray.length; i++) {
+                        if (nodePair.indexOf(tempSelectNodeIDsArray[i]) == -1) {
+                            newFromNodeId.push(tempSelectNodeIDsArray[i]);
+                        }
+                    }
+                    console.log(newFromNodeId);
+                    if (newFromNodeId.length != 1) {
+                        alert('Wrong node selection for additional path!')
+                    } else {
+                        let paths = {}
+                        let pathFinder = path.aStar(ngraphUp[peel]);
+                        let shortestPathToNodeDistance = 10000; // infinity
+                        let shortestPathToNode;
+                        let foundPath;
+                        for (let p = 0; p < nodePair.length; p++) {
+                            console.log('new path from ' + newFromNodeId + ' to ' + nodePair[p])
+                            let candidateFoundPath = pathFinder.find(newFromNodeId, nodePair[p]);
+                            // paths[nodePair[p]] = foundPath
+
+                            if (candidateFoundPath.length < shortestPathToNodeDistance) {
+                                shortestPathToNodeDistance = candidateFoundPath.length
+                                shortestPathToNode = nodePair[p]
+                                foundPath = candidateFoundPath
+                            }
+                            // console.log(foundPath, foundPath.length)
+                        }
+                        console.log('SHORTEST PATH DONE')
+                        console.log(shortestPathToNodeDistance, shortestPathToNode)
+
+                        d3.selectAll(".link-" + peel)
+                            .attr('stroke', 'rgba(221, 221, 221, 0.3)')
+                            .style('stroke-width', 1.5)
+                            .style('stroke-opacity', edgeOpacity)
+
+                        for (let i = 0; i < foundPath.length; i++) {
+
+                            d3.select('#node' + foundPath[i].id + '-' + peel)
+                                .attr('stroke', highlightColor)
+                                .attr('stroke-width', 1.5)
+                                .classed('selected', true)
+
+                            if (i < foundPath.length - 1) {
+                                let selectedLink = d3.select('#link-' + foundPath[i].id + '-' + foundPath[i + 1].id)
+
+                                if (selectedLink.empty()) {
+                                    selectedLink = d3.select('#link-' + foundPath[i + 1].id + '-' + foundPath[i].id)
+                                    selectedLink
+                                        .classed('path', true)
+                                    // .attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
+                                } else {
+                                    selectedLink
+                                        .classed('path', true)
+                                    // .attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
+                                }
+                            }
+                        }
+
+                        let foundPathIds = [];
+                        foundPath.forEach(node => {
+                            foundPathIds.push(node.id)
+                        });
+
+                        console.log(ngraphFoundPathUp[peel])
+                        foundPathIds.forEach(id => {
+                            console.log('CONSIDER', id)
+                            if (ngraphFoundPathUp[peel].indexOf(id) === -1) {
+                                console.log('IN', id)
+                                ngraphFoundPathUp[peel].push(id)
+                            }
+                        })
+
+                        let foundPathData = d3.selectAll('.node-' + peel).data().filter(function (d) { return foundPathIds.includes(d.id) })
+
+                        foundPathData.forEach(datum => {
+                            console.log(datum)
+                            selectedNodeIDs[datum.id + '-' + peel] = "selected"
+                        });
+
+                        // check if we have labels or not
+                        if ('name' in graphLayerData.nodes[0]) {
+
+                            // let neighborsData = graphLayerData.nodes.filter(function (node) { return neighbors.includes(node.id) })
+                            let FDLayout = d3.select('#position-toggle-' + d.peel).property('checked')
+                            var g = d3.select('#interactive-node-link-' + peel + '-svg').select('g')
+
+                            labelSVGs = g
+                                .append("g")
+                                .attr("class", "labels")
+                                .selectAll("text")
+                                .data(foundPathData)
+                                .enter()
+                                .append("text")
+                                .attr('class', 'path-label')
+                                .attr("x", function (d) {
+                                    if (FDLayout) {
+                                        return d.fdx + 10;
+                                    } else {
+                                        return d.x + 10;
+                                    }
+                                })
+                                .attr("y", function (d) {
+                                    if (FDLayout) {
+                                        return d.fdy;
+                                    } else {
+                                        return d.y;
+                                    }
+                                })
+                                .attr('alignment-baseline', 'middle')
+                                .text(function (d) { return d.name })
+                                .style('font-size', 12)
+                                .style('font-weight', 500)
+                                .style('stroke', '#ffffff')
+                                .style('stroke-width', 0.3)
+                        }
 
 
+
+
+                    }
                 }
             }
             d3.selectAll('.shortestpath-button').on('click', function() {
@@ -1226,6 +1377,7 @@ function closeCard(d) {
     }
 
     delete ngraphUp[d.peel]
+    delete ngraphFoundPathUp[d.peel]
 
 }
 

@@ -794,6 +794,7 @@ hr {
     border: none;
     width: 35px;
     outline: none;
+    padding-bottom: 5px;
 }
 
 /* live layout indicator */
@@ -823,4 +824,11 @@ hr {
     -webkit-animation: blinker 1s 5;
     -moz-animation: blinker 1s 5;
     animation: blinker 1s 5;
+}
+
+.path {
+    /* stroke: #FFC107 !important; */
+    stroke: #2196F3 !important;
+    stroke-width: 1.2px !important;
+    stroke-opacity: 1;
 }
