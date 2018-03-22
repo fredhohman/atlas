@@ -4,7 +4,8 @@ import * as d3ScaleChromatic from "d3-scale-chromatic";
 import tip from 'd3-tip';
 import { dataPath, dataPathJSON, dataPathLayerJSON, imagePathLayerOrg, imagePathLayerFD, imagePathLayerContour } from './index.js'
 import { colorSelectedNode, uncolorSelectedNode } from './overview.js'
-
+var createGraph = require('ngraph.graph');
+let path = require('ngraph.path');
 
 export let cardsUp = {};
 let numOfCardsUp = 0;
@@ -19,6 +20,9 @@ window.selectedNodeIDs = selectedNodeIDs;
 
 let simulationUp = {};
 window.simulationUp = simulationUp;
+
+let ngraphUp = {}
+window.ngraphUp = ngraphUp;
 
 export function addCard(d, initNode = null, zoomScale = 0.4) {
     console.log('add card', d)
@@ -188,6 +192,12 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 200).attr('value', 50).attr('id', 'contour-toggle-bandwidth-' + d.peel).attr('class', 'contour-toggle-bandwidth card-text-item-value')
     cardText.append("span").attr('class', 'smalltext-header').text("th: ");
     cardText.append('input').attr('type', 'number').attr('min', 1).attr('max', 20).attr('value', 5).attr('id', 'contour-toggle-threshold-' + d.peel).attr('class', 'contour-toggle-threshold card-text-item-value')
+
+    cardText.append('hr')
+
+    cardText.append('div').attr('class', 'overview-header-ui-element-wrapper')
+    .append('button').attr('class', 'overview-header-button shortestpath-button').attr('id', 'shortestpath-' + d.peel)
+    .html('<i class="material-icons md-24 ">timeline</i>path')
 
     cardText.append('hr')
     
@@ -685,14 +695,13 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             nodeSVGs.on('click', function (d) {
                 console.log('clicked')
                 let selectedOrNot = d3.select(this).classed("selected");
+                var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1]
                 d3.select(this).classed('selected', function() {
                     if (d3.select(this).classed('selected')) {
-                        var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1]
                         delete selectedNodeIDs[d3.select(this).data()[0].id + '-' + peel]
                         uncolorSelectedNode(d3.select(this).data()[0].id + '-' + peel);
                         return false
-                    } else{
-                        var peel = d3.select(this).attr('class').split(' ')[0].split('-')[1]
+                    } else {
                         selectedNodeIDs[d3.select(this).data()[0].id + '-' + peel] = 'selected'
                         colorSelectedNode(d3.select(this).data()[0].id + '-' + peel);
                         return true
@@ -1023,22 +1032,22 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     }
                 }
 
-                  var simulation = d3.forceSimulation()
+                var simulation = d3.forceSimulation()
                     .force("link", d3.forceLink().id(function(d) {
                           return d.id;
                         }))
                     .force("charge", d3.forceManyBody())
                     // .force("center", d3.forceCenter(0, 0));
 
-                  simulation.nodes(fdNodes).on("tick", function() { updateNodePositionsTick(layerNum) });
-                  simulation.force("link").links(fdLinks);
-                  simulationUp[layerNum] = simulation;
+                simulation.nodes(fdNodes).on("tick", function() { updateNodePositionsTick(layerNum) });
+                simulation.force("link").links(fdLinks);
+                simulationUp[layerNum] = simulation;
 
-                  d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
+                d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
 
-                  if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
-                      removeLayerGraphContour(layerNum);
-                  }
+                if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
+                    removeLayerGraphContour(layerNum);
+                }
 
                 } else {
                     simulationUp[layerNum].stop();
@@ -1051,14 +1060,60 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             }
             d3.selectAll('.fd-toggle').on('click', fd)
 
+            function createNGraph(peel) {
+                console.log('create ngraph for layer ' + peel)
+                var ngraph = createGraph();
+                for (let link = 0; link < graphLayerData.links.length; link++) {
+                    ngraph.addLink(graphLayerData.links[link].source.id, graphLayerData.links[link].target.id)
+                }
+                ngraphUp[peel] = ngraph;
+            }
+            createNGraph(d.peel);
+
+            function shortestPath(peel) {
+                console.log('shortest path in layer ', peel)
+
+                let nodePair = [];
+
+                for (const node in selectedNodeIDs) {
+                    console.log(node)
+                    console.log(node.split('-')[0])
+                    if (Number(node.split('-')[1]) === Number(peel)) {
+                        nodePair.push(Number(node.split('-')[0]))
+                    }
+                }
+
+                console.log('nodePair', nodePair)
+
+                if (nodePair.length !== 2) {
+
+                    alert('Please select only two nodes in layer ' + peel + '!')
+
+                } else {
+
+                    let fromNodeId = nodePair[0];
+                    let toNodeId = nodePair[1];
+
+                    let pathFinder = path.aStar(ngraphUp[peel]);
+                    let foundPath = pathFinder.find(fromNodeId, toNodeId);
+                    console.log(fromNodeId, toNodeId)
+                    console.log(foundPath, foundPath.length)
+
+                }
+            }
+            d3.selectAll('.shortestpath-button').on('click', function() {
+                var layerNum = Number(d3.select(this).property('id').split('-')[1])
+                shortestPath(layerNum)
+            } )
+
         })
     }
     drawLayerGraph(d);
 
-    function removeLayerGraph(peel) {
-        console.log('remove interactive node link for layer ' + peel)
-        d3.select("#interactive-node-link-" + peel + '-svg').remove()
-    }
+    // function removeLayerGraph(peel) {
+    //     console.log('remove interactive node link for layer ' + peel)
+    //     d3.select("#interactive-node-link-" + peel + '-svg').remove()
+    // }
 
     function removeLayerGraphContour(peel) {
         console.log('remove interactive contour for layer ' + peel)
@@ -1101,6 +1156,9 @@ function closeCard(d) {
     if (d.peel in simulationUp) {
         simulationUp[d.peel].stop();
     }
+
+    delete ngraphUp[d.peel]
+
 }
 
 function cardMessage() {
