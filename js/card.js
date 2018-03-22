@@ -199,9 +199,13 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
     cardText.append('hr')
 
-    cardText.append('div').attr('class', 'overview-header-ui-element-wrapper').style('padding-top', '10px')
+    var shortestPath = cardText.append('div').attr('class', 'overview-header-ui-element-wrapper').style('padding-top', '10px')
+    shortestPath
     .append('button').attr('class', 'overview-header-button shortestpath-button').attr('id', 'shortestpath-' + d.peel)
     .html('<i class="material-icons md-24 ">timeline</i><span style="padding-left: 5px">path</span>')
+    shortestPath
+    .append('button').attr('class', 'overview-header-button clear-shortestpath-button').attr('id', 'clear-shortestpath-' + d.peel).style('margin-left', '10px')
+    .html('<i class="material-icons md-24 ">close</i>')
 
     cardText.append('hr')
     
@@ -1329,8 +1333,30 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             d3.selectAll('.shortestpath-button').on('click', function() {
                 var layerNum = Number(d3.select(this).property('id').split('-')[1])
                 shortestPath(layerNum)
-            } )
+            })
 
+            function clearShortestPath(peel) {
+                console.log('clear shortest path ' + peel)
+                delete ngraphFoundPathUp[peel]
+
+                d3.selectAll(".node-" + peel).classed('selected', false).attr('stroke', '#ffffff').attr('stroke-width', 1);
+                for (const selectedNode in selectedNodeIDs) {
+                    if (Number(selectedNode.split('-')[1]) === Number(peel)) {
+                        delete selectedNodeIDs[selectedNode]
+                    }
+                }
+                
+                d3.selectAll(".link-" + peel).classed('path', false).attr('stroke', edgeColor).style('stroke-opacity', edgeOpacity).style("stroke-width", 0.6);
+                d3.selectAll('.path-label').remove();
+                
+                if ('name' in graphLayerData.nodes[0]) {
+                    d3.selectAll('.label').remove();
+                }
+            }
+            d3.selectAll('.clear-shortestpath-button').on('click', function () {
+                var layerNum = Number(d3.select(this).property('id').split('-')[2])
+                clearShortestPath(layerNum)
+            })
         })
     }
     drawLayerGraph(d);
