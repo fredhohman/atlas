@@ -297,6 +297,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
               .enter()
               .append("line")
               .attr("class", "link-" + d.peel)
+              .attr('id', function(d) { return 'link-' + d.source.id + '-' + d.target.id })
               .classed('visible', true)
               .attr("x1", function(d) {
                 return d.source.x;
@@ -1083,8 +1084,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     }
                 }
 
-                console.log('nodePair', nodePair)
-
                 if (nodePair.length !== 2) {
 
                     alert('Please select only two nodes in layer ' + peel + '!')
@@ -1099,6 +1098,29 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     console.log(fromNodeId, toNodeId)
                     console.log(foundPath, foundPath.length)
 
+                    d3.selectAll(".link-" + peel)
+                        .attr('stroke', 'rgba(221, 221, 221, 0.3)')
+                        .style('stroke-width', 1.5)
+                        .style('stroke-opacity', edgeOpacity)
+
+                    for (let i = 0; i < foundPath.length; i++) {
+                        console.log(foundPath[i])
+
+                        d3.select('#node' + foundPath[i].id + '-' + peel)
+                            .attr('stroke', highlightColor)
+                            .attr('stroke-width', 1.5)
+
+                        if (i < foundPath.length - 1) {
+                            let selectedLink = d3.select('#link-' + foundPath[i].id + '-' + foundPath[i+1].id)
+
+                            if (selectedLink.empty()) {
+                                selectedLink = d3.select('#link-' + foundPath[i+1].id + '-' + foundPath[i].id)
+                                selectedLink.attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
+                            } else {
+                                selectedLink.attr('stroke', highlightColor).style('stroke-width', 1.2).style('stroke-opacity', 1)
+                            }
+                        }
+                    }
                 }
             }
             d3.selectAll('.shortestpath-button').on('click', function() {
