@@ -1092,9 +1092,13 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     }
                 }
 
-                if (nodePair.length < 2) {
+                if ((nodePair.length < 2) && !(peel in ngraphFoundPathUp)) {
                     // less than node nodes selected, can't draw a path
-                    alert('Please select only two nodes in layer ' + peel + '!')
+                    alert('Please select two vertices in layer ' + peel + '!')
+
+                } else if ((nodePair.length > 2) && !(peel in ngraphFoundPathUp)) {
+                    // first path to be drawn, but there are more than two nodes, can't draw a path
+                    alert('Please select two vertices in layer ' + peel + '!')
 
                 } else if (!(peel in ngraphFoundPathUp)) {
                     // two nodes selected and no path as been draw, draw normal shortest path
@@ -1196,7 +1200,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     var newFromNodeId = []
                     var tempSelectNodeIDsArray = []
 
-                    Object.keys(selectedNodeIDs).forEach(k => { tempSelectNodeIDsArray.push( Number(k.split('-')[0])) })
+                    Object.keys(selectedNodeIDs).forEach(k => { if (Number(k.split('-')[1]) === peel) {tempSelectNodeIDsArray.push( Number(k.split('-')[0])) } })
                     console.log('tempSelectNodeIDsArray', tempSelectNodeIDsArray)
 
                     for (var i = 1; i < tempSelectNodeIDsArray.length; i++) {
@@ -1206,7 +1210,9 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     }
                     console.log(newFromNodeId);
                     if (newFromNodeId.length != 1) {
-                        alert('Wrong node selection for additional path!')
+                        // added more than one node to existing path
+                        alert('Please select only one additional vertex for an additional path!')
+
                     } else {
                         let paths = {}
                         let pathFinder = path.aStar(ngraphUp[peel]);
