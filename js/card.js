@@ -591,13 +591,13 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .data(neighborsData)
                         .enter()
                         .append("text")
+                        .attr('class', 'label')
                         .attr("x", function(d) {
                             if (FDLayout) {
                                 return d.fdx + 10;
                             } else {
                                 return d.x + 10;
                             }
-
                         })
                         .attr("y", function(d) {
                             if (FDLayout) {
@@ -688,7 +688,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 nodeSVGs.attr('stroke', '#ffffff').attr('stroke-width', 1);
                 linkSVGs.attr('stroke', edgeColor).style('stroke-opacity', edgeOpacity).style("stroke-width", 0.6);
                 if ('name' in graphLayerData.nodes[0]) {
-                    labelSVGs.remove();
+                    d3.selectAll('.label').remove();
                 }
                 // cloneTooltip.hide();
             })
@@ -1095,7 +1095,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
 
                     let pathFinder = path.aStar(ngraphUp[peel]);
                     let foundPath = pathFinder.find(fromNodeId, toNodeId);
-                    console.log(fromNodeId, toNodeId)
                     console.log(foundPath, foundPath.length)
 
                     d3.selectAll(".link-" + peel)
@@ -1104,7 +1103,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         .style('stroke-opacity', edgeOpacity)
 
                     for (let i = 0; i < foundPath.length; i++) {
-                        console.log(foundPath[i])
 
                         d3.select('#node' + foundPath[i].id + '-' + peel)
                             .attr('stroke', highlightColor)
@@ -1121,6 +1119,54 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                             }
                         }
                     }
+
+                    // check if we have labels or not
+                    if ('name' in graphLayerData.nodes[0]) {
+
+                        let foundPathIds = [];
+                        foundPath.forEach(node => {
+                            foundPathIds.push(node.id)
+                        });
+
+                        let foundPathData = d3.selectAll('.node-' + peel).data().filter(function (d) { return foundPathIds.includes(d.id) })
+
+                        // let neighborsData = graphLayerData.nodes.filter(function (node) { return neighbors.includes(node.id) })
+                        let FDLayout = d3.select('#position-toggle-' + d.peel).property('checked')
+                        var g = d3.select('#interactive-node-link-' + peel + '-svg').select('g')
+
+                        labelSVGs = g
+                            .append("g")
+                            .attr("class", "labels")
+                            .selectAll("text")
+                            .data(foundPathData)
+                            .enter()
+                            .append("text")
+                            .attr('class', 'label')
+                            .attr("x", function (d) {
+                                if (FDLayout) {
+                                    return d.fdx + 10;
+                                } else {
+                                    return d.x + 10;
+                                }
+
+                            })
+                            .attr("y", function (d) {
+                                if (FDLayout) {
+                                    return d.fdy;
+                                } else {
+                                    return d.y;
+                                }
+                            })
+                            .attr('alignment-baseline', 'middle')
+                            .text(function (d) { return d.name })
+                            .style('font-size', 12)
+                            .style('font-weight', 500)
+                            .style('stroke', '#ffffff')
+                            .style('stroke-width', 0.3)
+                    }
+
+
+
                 }
             }
             d3.selectAll('.shortestpath-button').on('click', function() {
