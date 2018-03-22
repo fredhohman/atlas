@@ -3,7 +3,7 @@ import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import tip from 'd3-tip';
 import { addCard, cardsUp } from './card.js';
 import { dataPath, dataPathJSON, imagePathLayerOrg, imagePathOverview2DBackground, ribbonColorPeel } from './index.js'
-import { drawLayer3DPoints, layersUp3D, hideLayerPoints, showLayerPoints } from './overview.js'
+import { drawLayer3DPoints, layersUp3D, hideLayerPoints, showLayerPoints, removeLayerInOverview } from './overview.js'
 
 // draggable ribbon 
 console.log('draggable-ribbon')
@@ -206,11 +206,13 @@ d3.json(dataPathJSON, function(error, data) {
       })
       .style("fill", "#444444")
       .on("click", function(d) {
-        if (!(d.peel in layersUp3D)) {
-          return drawLayer3DPoints(d.peel);
-        } else {
-          alert("Layer " + d.peel + " is already being shown!");
-        }
+        console.log(d)
+        // removeLayerInOverview(d.peel);
+        // if (!(d.peel in layersUp3D)) {
+        //   drawLayer3DPoints(d.peel);
+        // } else {
+        //   alert("Layer " + d.peel + " is already being shown!");
+        // }
       })
       .style("visibility", "hidden");
 
@@ -237,11 +239,11 @@ d3.json(dataPathJSON, function(error, data) {
       })
       .style("fill", "#444444")
       .on("click", function(d) {
-        if (!(d.peel in cardsUp)) {
-          return addCard(d);
-        } else {
-          alert("Layer " + d.peel + " is already being shown!");
-        }
+        // if (!(d.peel in cardsUp)) {
+        //   return addCard(d);
+        // } else {
+        //   alert("Layer " + d.peel + " is already being shown!");
+        // }
       })
       .style("visibility", "hidden");
 
