@@ -393,7 +393,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
     
             // add zoom 
             var zoomHandler = d3.zoom()
-                .scaleExtent([0.25, 15])
+                .scaleExtent([0.25, 30])
                 // .translateExtent([[-2000, -0.8*2000], [2000, 0.8*2000]])
                 .on("zoom", zoomActions);
             graphLayerSVG.call(zoomHandler)
@@ -703,14 +703,26 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             function toggleEdges() {
                 var layerNum = Number(d3.select(this).property('id').split('-')[2])
                 var selectedLinks = d3.selectAll('.link-' + layerNum)
-                var currentComponentValue = d3.select('#comp-slider-' + layerNum).property('value')
 
-                if (d3.select(this).property('checked')) {
-                    selectedLinks.classed("hidden", function(l) { return l.source.cmpt < currentComponentValue - 1 ? true : false });
-                    selectedLinks.classed("visible", function(l) { return l.source.cmpt >= currentComponentValue - 1 ? true : false })   ;
+                if (data.layers.filter(function (layer) { return layer.peel === layerNum })[0].components === 1) {
+                    if (d3.select(this).property('checked')) {
+                        selectedLinks.classed("hidden", false)
+                        selectedLinks.classed("visible", true)
+                    } else {
+                        selectedLinks.classed('hidden', true);
+                        selectedLinks.classed("visible", false);
+                    } 
+
                 } else {
-                    selectedLinks.classed('hidden', true);
-                    selectedLinks.classed("visible", false);
+                    var currentComponentValue = d3.select('#comp-slider-' + layerNum).property('value')
+
+                    if (d3.select(this).property('checked')) {
+                        selectedLinks.classed("hidden", function(l) { return l.source.cmpt < currentComponentValue - 1 ? true : false });
+                        selectedLinks.classed("visible", function(l) { return l.source.cmpt >= currentComponentValue - 1 ? true : false })   ;
+                    } else {
+                        selectedLinks.classed('hidden', true);
+                        selectedLinks.classed("visible", false);
+                    }
                 }
             }
             d3.selectAll('.edges-toggle').on('click', toggleEdges)
@@ -718,14 +730,26 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
             function toggleNodes() {
                 var layerNum = Number(d3.select(this).property('id').split('-')[2])
                 var selectedNodes = d3.selectAll('.node-' + layerNum)
-                var currentComponentValue = d3.select('#comp-slider-' + layerNum).property('value')
 
-                if (d3.select(this).property('checked')) {
-                    selectedNodes.classed("hidden", function(n) { return n.cmpt < currentComponentValue - 1 ? true : false });
-                    selectedNodes.classed("visible", function(n) { return n.cmpt >= currentComponentValue - 1 ? true : false });
+                if (data.layers.filter(function (layer) { return layer.peel === layerNum })[0].components === 1) {
+                    if (d3.select(this).property('checked')) {
+                        selectedNodes.classed("hidden", false)
+                        selectedNodes.classed("visible", true)
+                    } else {
+                        selectedNodes.classed('hidden', true);
+                        selectedNodes.classed("visible", false);
+                    }    
+
                 } else {
-                    selectedNodes.classed('hidden', true);
-                    selectedNodes.classed("visible", false);
+                    var currentComponentValue = d3.select('#comp-slider-' + layerNum).property('value')
+
+                    if (d3.select(this).property('checked')) {
+                        selectedNodes.classed("hidden", function (n) { return n.cmpt < currentComponentValue - 1 ? true : false });
+                        selectedNodes.classed("visible", function (n) { return n.cmpt >= currentComponentValue - 1 ? true : false });
+                    } else {
+                        selectedNodes.classed('hidden', true);
+                        selectedNodes.classed("visible", false);
+                    }
                 }
             }
             d3.selectAll('.nodes-toggle').on('click', toggleNodes)
