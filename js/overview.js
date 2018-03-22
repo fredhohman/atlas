@@ -3,7 +3,7 @@ var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
 // var Projector = require('three.js-projector');
 import { dataPathJSON, dataPathLayerJSON } from './index.js'
-import { GUI } from 'dat.gui/build/dat.gui.js'
+// import { GUI } from 'dat.gui/build/dat.gui.js'
 import { selectedNodeIDs } from './card.js'
 // import * as $ from 'jquery';
 
@@ -50,7 +50,7 @@ var controls = new TrackballControls(camera, renderer.domElement);
 controls.rotateSpeed = 4;
 controls.dampingFactor = 0.1;
 
-var geometry = new THREE.CircleBufferGeometry(2, 20);
+var geometry = new THREE.CircleBufferGeometry(2, 12);
 
 var circles = [];
 var lines = [];
@@ -64,7 +64,10 @@ var lines = [];
 var xCordScale, yCordScale, zCordScale;
 
 var lineMaterial = new THREE.LineBasicMaterial({
-    color: 0xcccccc
+    color: 0x333333,
+    transparent: true,
+    opacity: 0.03
+    // linewidth: 0.2
 });
 
 export function drawLayer3DPoints(layerNum) {
@@ -119,7 +122,7 @@ export function drawLayer3DPoints(layerNum) {
                 circle.position.y = -1 * node.y * d3.select('#overview-slider-spread').property('value')
                 zCordHeight = d3.select('#overview-slider-height').property('value')
                 zCordScale.range([-zCordHeight, zCordHeight])
-                circle.position.z = zCordScale(data.peels[layerNumIndex])
+                circle.position.z = zCordScale(data.peels[layerNumIndex]);
                 
                 let clusterColor = d3.select("#bullet-" + data.peels[layerNumIndex]).style('fill');
                 if (node.id + '-' + layerNum in selectedNodeIDs) {
@@ -324,6 +327,25 @@ function removeAll3DPoints() {
     circles = [];
     lines = [];
     window.layersUp3D = layersUp3D;
+}
+
+export function removeLayerInOverview(peel) {
+    console.log('removing layer ' + peel)
+    for (let c = 0; c < circles.length; c++) {
+        if (circles[c].userData['peel'] == peel) {
+            scene.remove(circles[c])
+        }
+    }
+    console.log(lines[0])
+    for (let l = 0; l < lines.length; l++) {
+        for (let v = lines[l].geometry.vertices.length; v > 0; v--) {
+            console.log(v)
+            console.log(lines[l].geometry.vertices[v-1])
+            if (lines[l].geometry.vertices[v-1].peel === peel) {
+                lines[l].geometry.vertices[v-1].splice(v-1, 1)
+            }
+        }
+    }
 }
 
 export function hideLayerPoints(peel) {
