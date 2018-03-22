@@ -246,22 +246,19 @@ d3.select("#overview-slider-spread")
 
 d3.select('#reset-camera-button')
 .on('click', resetOverviewCamera)
-.html('<i class="material-icons md-24 ">videocam</i> top view')
-// .html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px;">Reset</span>')
+.html('<i class="material-icons md-24 ">videocam</i><span style="padding-left: 5px">top view</span>')
 
 d3.select('#add-all-3d-layers')
 .on('click', drawAll3DPointsWithLayers)
-.html('<i class="material-icons md-24 ">add</i>show all')
-// .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Add All</span>')  
+.html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px">show all</span>')
 
 d3.select('#remove-all-3d-layers')
 .on('click', removeAll3DPoints)
-.html('<i class="material-icons md-24 ">remove</i>hide all')
-// .html('<i class="material-icons md-24 ">add</i><span style="padding-left: 5px;">Remove All</span>')  
+.html('<i class="material-icons md-24 ">remove</i><span style="padding-left: 5px">hide all</span>')
 
 d3.select('#animate-graph')
 .on('click', animateGraph)
-.html('<i class="material-icons md-24 ">play_arrow</i>animate')
+.html('<i class="material-icons md-24 ">play_arrow</i><span style="padding-left: 5px">animate</span>')
 
 d3.select('#toggle-3d-edges')
 .on('click', toggle3DEdges)
