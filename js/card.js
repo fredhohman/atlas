@@ -1025,39 +1025,55 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                 
                 var fdChecked = d3.select(this).property('checked')
                 var layerNum = Number(d3.select(this).property('id').split('-')[2])
-                console.log("fd", layerNum);
+                console.log("fd ", layerNum);
+
 
                 if (fdChecked) {
-                  var fdNodes = d3.selectAll(".node-" + layerNum + '.visible').data();
-                  var fdLinks = d3.selectAll(".link-" + layerNum + '.visible').data();
-                //   console.log(fdNodes);
-                //   console.log(fdLinks);
+                    if (layerNum in simulationUp) {
+                        simulationUp[layerNum].restart();
+                        d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
+                        
+                    } else{
+                        var fdNodes = d3.selectAll(".node-" + layerNum + '.visible').data();
+                        var fdLinks = d3.selectAll(".link-" + layerNum + '.visible').data();
+                        //   console.log(fdNodes);
+                        //   console.log(fdLinks);
 
-                if (d3.select('#position-toggle-' + layerNum).property('checked')) {
-                    for (let i = 0; i < fdNodes.length; i++) {
-                        const element = fdNodes[i];
-                        element.x = element.fdx;
-                        element.y = element.fdy;
+                        // if (d3.select('#position-toggle-' + layerNum).property('checked')) {
+                        //     for (let i = 0; i < fdNodes.length; i++) {
+                        //         const element = fdNodes[i];
+                        //         element.x = element.fdx;
+                        //         element.y = element.fdy;
+                        //     }
+                        // }
+
+                        if (d3.select('#position-toggle-' + layerNum).property('checked')) {
+                            let positionToggleString = 'position-toggle-' + layerNum
+                            document.getElementById(positionToggleString).click()
+                        }
+                        setTimeout(function () {
+                            
+
+                            var simulation = d3.forceSimulation()
+                                .force("link", d3.forceLink().id(function (d) {
+                                    return d.id;
+                                }))
+                                .force("charge", d3.forceManyBody())
+                            // .force("center", d3.forceCenter(0, 0));
+
+                            simulation.nodes(fdNodes).on("tick", function () { updateNodePositionsTick(layerNum) });
+                            simulation.force("link").links(fdLinks);
+                            simulationUp[layerNum] = simulation;
+
+                            d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
+
+                            if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
+                                removeLayerGraphContour(layerNum);
+                            }
+
+                            
+                        }, 2000);
                     }
-                }
-
-                var simulation = d3.forceSimulation()
-                    .force("link", d3.forceLink().id(function(d) {
-                          return d.id;
-                        }))
-                    .force("charge", d3.forceManyBody())
-                    // .force("center", d3.forceCenter(0, 0));
-
-                simulation.nodes(fdNodes).on("tick", function() { updateNodePositionsTick(layerNum) });
-                simulation.force("link").links(fdLinks);
-                simulationUp[layerNum] = simulation;
-
-                d3.select("#fd-live-light-" + layerNum).style('visibility', 'visible').classed('blink', true)
-
-                if (d3.select('#contour-toggle-' + layerNum).property('checked')) {
-                    removeLayerGraphContour(layerNum);
-                }
-
                 } else {
                     simulationUp[layerNum].stop();
                     d3.select("#fd-live-light-" + layerNum).style('visibility', 'hidden').classed('blink', false)
@@ -1152,7 +1168,7 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                     let foundPathData = d3.selectAll('.node-' + peel).data().filter(function (d) { return foundPathIds.includes(d.id) })
 
                     foundPathData.forEach(datum => {
-                        console.log(datum)
+                        // console.log(datum)
                         selectedNodeIDs[datum.id + '-' + peel] = "selected"
                     });
 

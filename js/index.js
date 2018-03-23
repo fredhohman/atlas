@@ -3,7 +3,7 @@ import * as d3 from "d3";
 // global data and image paths
 
 // small
-// const dataDirName = 'lesmis' // good
+const dataDirName = 'lesmis' // good
 // const dataDirName = 'sec-sale' // good, labels
 // const dataDirName = 'sec-purchase' // good, labels
 // const dataDirName = 'moreno_names' // good
@@ -14,7 +14,7 @@ import * as d3 from "d3";
 // const dataDirName = "yelp-k6d8"
 // const dataDirName = "yelp-k9d8"
 
-const dataDirName = "yelp-k3d6";
+// const dataDirName = "yelp-k3d6";
 // const dataDirName = "yelp-k3d7";
 // const dataDirName = "yelp-k3d8";
 // const dataDirName = "yelp-k3d9";
@@ -31,14 +31,14 @@ const dataDirName = "yelp-k3d6";
 
 // medium
 // const dataDirName = "astroph"; // good
-// const dataDirName = 'word2vec' // good, labels
-// const dataDirName = 'com-amazon' // bad
-// const dataDirName = 'stackexchange' // bad
+// const dataDirName = 'glove' // good, labels
+// const dataDirName = 'com-amazon' // b
+// const dataDirName = 'stackexchange' // b
 // const dataDirName = 'word2vec-twitter' // kinda good, labels
 
 // large
 // const dataDirName = 'google-movie' // average, labels
-// const dataDirName = 'dblp' // bad
+// const dataDirName = 'dblp' // b
 // const dataDirName = 'patentcite' // good
 
 
