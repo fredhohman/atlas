@@ -1053,7 +1053,6 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
                         }
                         setTimeout(function () {
                             
-
                             var simulation = d3.forceSimulation()
                                 .force("link", d3.forceLink().id(function (d) {
                                     return d.id;

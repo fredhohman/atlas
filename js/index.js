@@ -3,7 +3,7 @@ import * as d3 from "d3";
 // global data and image paths
 
 // small
-const dataDirName = 'lesmis' // good
+// const dataDirName = 'lesmis' // good
 // const dataDirName = 'sec-sale' // good, labels
 // const dataDirName = 'sec-purchase' // good, labels
 // const dataDirName = 'moreno_names' // good
@@ -31,7 +31,7 @@ const dataDirName = 'lesmis' // good
 
 // medium
 // const dataDirName = "astroph"; // good
-// const dataDirName = 'glove' // good, labels
+const dataDirName = 'glove' // good, labels
 // const dataDirName = 'com-amazon' // b
 // const dataDirName = 'stackexchange' // b
 // const dataDirName = 'word2vec-twitter' // kinda good, labels
