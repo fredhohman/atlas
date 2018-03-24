@@ -1,5 +1,5 @@
 {
-  "name": "atlas",
+  "name": "graph-playground",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fredhohman/atlas.git"
+    "url": "git+https://github.com/fredhohman/graph-playground.git"
   },
   "author": "Fred Hohman",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fredhohman/atlas/issues"
+    "url": "https://github.com/fredhohman/graph-playground/issues"
   },
-  "homepage": "https://github.com/fredhohman/atlas#readme",
+  "homepage": "https://github.com/fredhohman/graph-playground#readme",
   "dependencies": {
     "d3": "^4.12.2",
     "d3-contour": "^1.2.0",
