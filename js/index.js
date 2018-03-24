@@ -84,4 +84,4 @@ d3.json(dataPathJSON, function(error, data) {
 });
 
 d3.select("#header-icon-link")
-  .attr("href", "https://github.com/fredhohman/atlas");
+  .attr("href", "https://github.com/fredhohman/graph-playground");
