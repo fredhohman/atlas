@@ -157,7 +157,7 @@ html, body {
 }
 
 #header-title {
-    width: 40px;
+    width: 150px;
     /* enforces cursor changes only on title */
     cursor: pointer;
 }
