@@ -31,7 +31,7 @@ import * as d3 from "d3";
 
 // medium
 // const dataDirName = "astroph"; // good
-const dataDirName = 'glove' // good, labels
+// const dataDirName = 'glove' // good, labels
 // const dataDirName = 'com-amazon' // b
 // const dataDirName = 'stackexchange' // b
 // const dataDirName = 'word2vec-twitter' // kinda good, labels
@@ -40,6 +40,7 @@ const dataDirName = 'glove' // good, labels
 // const dataDirName = 'google-movie' // average, labels
 // const dataDirName = 'dblp' // b
 // const dataDirName = 'patentcite' // good
+const dataDirName = 'wikipedia-de' // good
 
 
 export const dataPath = "data/" + dataDirName + "/";
@@ -84,4 +85,4 @@ d3.json(dataPathJSON, function(error, data) {
 });
 
 d3.select("#header-icon-link")
-  .attr("href", "https://github.com/fredhohman/graph-playground");
+  .attr("href", "https://github.com/fredhohman/atlas");
