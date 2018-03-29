@@ -54,8 +54,8 @@ export function addCard(d, initNode = null, zoomScale = 0.4) {
         // size for single card or multiple
         if (Object.keys(cardsUp).length > 1) {
           d3.select('.card-border-wrapper').style('border-bottom', '1px solid var(--ui-border-color)')
-          d3.selectAll(".card").style("height", "400px");
-          d3.selectAll(".interactive-node-link").attr("height", "400px");
+          d3.selectAll(".card").style("height", "600px");
+          d3.selectAll(".interactive-node-link").attr("height", "600px");
 
         //   test to translate the zoom of the shorten card to the center
         //   console.log(zoomHandlerUp)
