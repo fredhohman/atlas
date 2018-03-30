@@ -56,7 +56,7 @@ MIT License. See [`LICENSE.md`](LICENSE.md).
 For questions and support contact [Fred Hohman][fred].
 
 
-[atlas-algorithn]: https://github.com/fredhohman/atlas-algorithm
+[atlas-algorithm]: https://github.com/fredhohman/atlas-algorithm
 [npm]: https://www.npmjs.com
 [video]: http://www.fredhohman.com 
 [fred]: http://www.fredhohman.com
