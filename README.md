@@ -15,7 +15,7 @@ For the Atlas edge decomposition algorithm, go to [github.com/fredhohman/atlas-a
 
 ## Installation
 
-First, clone this repository:
+Download or clone this repository:
 
 ```bash
 git clone https://github.com/fredhohman/atlas.git
@@ -47,9 +47,11 @@ Atlas requires [npm][npm] to run
 Atlas uses a fast, scalable edge decomposition to split graphs into graph layers for visualizaion.
 For the edge decomposition algorithm, go to [github.com/fredhohman/atlas-algorithm][atlas-algorithm].
 
+
 ## License
 
 MIT License. See [`LICENSE.md`](LICENSE.md).
+
 
 ## Credits 
 
