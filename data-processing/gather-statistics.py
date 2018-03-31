@@ -103,19 +103,10 @@ if __name__ == '__main__':
             for j, n in enumerate(cl):
                 cl[j] = g_layer.vs[n]['id']
 
-        # for i, cmpt in enumerate(components2):
-        #     for j, n in enumerate(cmpt):
-        #         cmpt[j] = g_layer.vs[n]['id']
-
         for node in graph_layer['nodes']:
             for i, cmpt in enumerate(comp_list):
-                
-                # for j, n in enumerate(cmpt):
-                #     cmpt[j] = g_layer.vs[n]['id']
-
                 if int(node['id']) in cmpt:
                     node['cmpt'] = i
-                    # print('found')
                     break
 
         # define layer data
@@ -135,6 +126,7 @@ if __name__ == '__main__':
         data['peels'].append(peel)
 
         # save data as json
+        print('saving layer data with component ids')
         with open(graph_layer_data_path, 'w') as outfile:
             json.dump(graph_layer, outfile)
     

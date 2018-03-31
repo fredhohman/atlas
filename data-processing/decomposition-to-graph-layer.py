@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     boundary = 500
 
-    # load vertices and positions
+    # # load vertices and positions
     print('loading positions')
     positions = pd.io.parsers.read_csv(
         '../data/' + args['-data'] + '/' + args['-data'] + '-positions.csv',
@@ -109,6 +109,5 @@ if __name__ == '__main__':
 
         # save graph as json
         print('saving graph layer')
-        # num_of_leading_zeros = len(str(np.max(peels)))
         with open('../data/' + args['-data'] + '/'  + args['-data'] + '-layer-' + str(peel) + '.json', 'w') as outfile:
             json.dump(graph, outfile)
