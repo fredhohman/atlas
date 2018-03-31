@@ -12,13 +12,12 @@ Inside of `data/myGraph` place the following files:
 * `myGraph-decomposition-info.json` (to get this file, see [github.com/fredhohman/atlas-algorithm][atlas-algorithm])
 * `myGraph-positions.csv`
 
-`myGraph-positions.csv` contain x and y coordinates for each vertex in your graph. The file should have three columns: the vertex ID, x coordinate, and the y coordinate. You can obtain coordinates from any graph layout of your choosing (for large graphs, we use a [GPU layout]). The file should look like this:
+`myGraph-positions.csv` contain x and y coordinates for each vertex in your graph. The file should have three columns: the vertex ID, x coordinate, and the y coordinate. You can obtain coordinates from any graph layout of your choosing (for large graphs, we use a [GPU layout][gpu-layout]). If your graph had only three vertices, then your file would look like this:
 
 ```csv
 1,811.958,-217.099
 2,737.26,-173.93
 3,559.598,-165.009
-...
 ```
 
 With these three files, change directories to `data-processing`:
@@ -35,9 +34,9 @@ Now run
 
 `data-processing.sh` is a bash script that simply calls Python scripts to generate `.json` files to be read by Atlas.
 
-Once `data-processing.sh` is finished, you should now have one file called `myGraph.json` with metadata about your graph, and one `.json` file for each layer from its decomposition. These files will be named `myGraph-layer-X.json` where `X` is the layer number from the decomposition.
+Once `data-processing.sh` is finished, you should now have one file called `myGraph.json` with metadata about your graph, and one `.json` file for each layer from the decomposition. These files will be named `myGraph-layer-X.json` where `X` is the layer number from the decomposition.
 
-All that is left to do is point Atlas at this directory. To do so, open the `js.index.js`, uncomment the current graph being used, and add yours:
+All that is left to do is point Atlas at this directory. To do so, open `js/index.js`, uncomment the current graph being used, and add yours:
 
 ```javascript
 // comment out old graph
@@ -62,7 +61,7 @@ Bonus: if you have vertex labels associated with your graph, include a file call
 }
 ```
 
-Once you have run `data-process.sh`, run the following command to add the labels to your `.json` data:
+Once you have run `data-process.sh` from above, run the following command to add the labels to your `.json` data:
 
 ```bash
 python add-vertex-labels.py -data myGraph
@@ -82,3 +81,4 @@ For questions and support contact [Fred Hohman][fred].
 [atlas]: https://github.com/fredhohman/atlas
 [atlas-algorithm]: https://github.com/fredhohman/atlas-algorithm
 [gpu-layout]: https://github.com/govertb/GPUGraphLayout
+[fred]: http://www.fredhohman.com
