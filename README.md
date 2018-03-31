@@ -6,9 +6,10 @@ Atlas is an interactive graph exploration system that wields a fast and scalable
 
 For the Atlas edge decomposition algorithm, go to [github.com/fredhohman/atlas-algorithm][atlas-algorithm].
 
-***
+![UI](ui.png)
 
-<!-- ![UI](images/github-ui-fig.png) -->
+
+***
 
 
 ## Installation
