@@ -1,0 +1,87 @@
+{
+  "name": "lesmis",
+  "description": "",
+  "vertices": 77,
+  "edges": 254,
+  "peels": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    9
+  ],
+  "layers": [
+    {
+      "peel": 1,
+      "edges": 25,
+      "vertices": 34,
+      "clones": 15,
+      "components": 9,
+      "clustering": 0.0,
+      "largest-component-edges": 7,
+      "largest-component-vertices": 8
+    },
+    {
+      "peel": 2,
+      "edges": 41,
+      "vertices": 28,
+      "clones": 18,
+      "components": 1,
+      "clustering": 0.12,
+      "largest-component-edges": 41,
+      "largest-component-vertices": 28
+    },
+    {
+      "peel": 3,
+      "edges": 13,
+      "vertices": 8,
+      "clones": 4,
+      "components": 1,
+      "clustering": 0.5806451612903226,
+      "largest-component-edges": 13,
+      "largest-component-vertices": 8
+    },
+    {
+      "peel": 4,
+      "edges": 14,
+      "vertices": 6,
+      "clones": 5,
+      "components": 1,
+      "clustering": 0.9230769230769231,
+      "largest-component-edges": 14,
+      "largest-component-vertices": 6
+    },
+    {
+      "peel": 6,
+      "edges": 21,
+      "vertices": 7,
+      "clones": 2,
+      "components": 1,
+      "clustering": 1.0,
+      "largest-component-edges": 21,
+      "largest-component-vertices": 7
+    },
+    {
+      "peel": 7,
+      "edges": 78,
+      "vertices": 19,
+      "clones": 9,
+      "components": 1,
+      "clustering": 0.8247422680412371,
+      "largest-component-edges": 78,
+      "largest-component-vertices": 19
+    },
+    {
+      "peel": 9,
+      "edges": 62,
+      "vertices": 12,
+      "clones": 9,
+      "components": 1,
+      "clustering": 0.9452054794520548,
+      "largest-component-edges": 62,
+      "largest-component-vertices": 12
+    }
+  ]
+}
