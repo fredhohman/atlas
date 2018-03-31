@@ -10,3 +10,4 @@ wrangle/
 .vscode/
 bundle.js.map
 js/sprite.png
+.DS_Store
