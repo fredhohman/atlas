@@ -58,10 +58,11 @@ MIT License. See [`LICENSE.md`](LICENSE.md).
 
 ## Contact
 
-For questions and support contact [Fred Hohman][fred].
+For questions or support [open an issue][issues] or contact [Fred Hohman][fred].
 
 
 [atlas-algorithm]: https://github.com/fredhohman/atlas-algorithm
 [npm]: https://www.npmjs.com
 [fred]: http://www.fredhohman.com
 [own-data]: data/README.md
+[issues]: https://github.com/fredhohman/atlas/issues
