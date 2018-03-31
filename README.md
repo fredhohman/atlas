@@ -4,8 +4,6 @@
 
 Atlas is an interactive graph exploration system that wields a fast and scalable edge decomposition algorithm, based on iterative vertex-edge peeling, that decomposes million-edge graphs in seconds, scaling to graphs with up to hundreds of millions of edges. Atlas introduces a new approach for exploring large graphs that simultaneously reveals (1) peculiar subgraph structure discovered through the decomposition’s layers, (e.g., quasi-cliques), and (2) possible vertex roles in linking such subgraph patterns across layers.
 
-[Watch the demo video][video].
-
 For the Atlas edge decomposition algorithm, go to [github.com/fredhohman/atlas-algorithm][atlas-algorithm].
 
 ***
@@ -36,10 +34,14 @@ To run Atlas:
 npm run start
 ```
 
+## Using Your Own Graph Data
+
+To load your own graph data into Atlas, [see the instructions here][own-data].
+
 
 ### Requirements
 
-Atlas requires [npm][npm] to run
+Atlas requires [npm][npm] to run.
 
 
 ## Atlas Edge Decomposition Algorithm
@@ -53,12 +55,12 @@ For the edge decomposition algorithm, go to [github.com/fredhohman/atlas-algorit
 MIT License. See [`LICENSE.md`](LICENSE.md).
 
 
-## Credits 
+## Contact
 
 For questions and support contact [Fred Hohman][fred].
 
 
 [atlas-algorithm]: https://github.com/fredhohman/atlas-algorithm
 [npm]: https://www.npmjs.com
-[video]: http://www.fredhohman.com 
 [fred]: http://www.fredhohman.com
+[own-data]: data/README.md
