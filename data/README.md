@@ -75,10 +75,11 @@ We've included a complete example of a graph to be visualized in Atlas as an exa
 
 ## Contact
 
-For questions and support contact [Fred Hohman][fred].
+For questions or support [open and issue][issues] or contact [Fred Hohman][fred].
 
 
 [atlas]: https://github.com/fredhohman/atlas
 [atlas-algorithm]: https://github.com/fredhohman/atlas-algorithm
 [gpu-layout]: https://github.com/govertb/GPUGraphLayout
 [fred]: http://www.fredhohman.com
+[issues]: https://github.com/fredhohman/atlas/issues
