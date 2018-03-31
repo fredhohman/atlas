@@ -5,6 +5,8 @@ data/
 notes.md
 data-processing/.ipynb_checkpoints/
 data-processing/debugging.ipynb
+data-processing/addlist-to-edgelist.ipynb
 wrangle/
 .vscode/
 bundle.js.map
+js/sprite.png
