@@ -3,9 +3,7 @@ var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
 // var Projector = require('three.js-projector');
 import { dataPathJSON, dataPathLayerJSON } from './index.js'
-// import { GUI } from 'dat.gui/build/dat.gui.js'
 import { selectedNodeIDs } from './card.js'
-// import * as $ from 'jquery';
 
 export var layersUp3D = {};
 window.layersUp3D = layersUp3D;
@@ -66,7 +64,7 @@ var xCordScale, yCordScale, zCordScale;
 var lineMaterial = new THREE.LineBasicMaterial({
     color: 0x333333,
     transparent: true,
-    opacity: 0.03
+    opacity: 0.1 //0.03
     // linewidth: 0.2
 });
 
