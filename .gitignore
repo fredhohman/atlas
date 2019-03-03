@@ -11,3 +11,4 @@ wrangle/
 bundle.js.map
 js/sprite.png
 .DS_Store
+package-lock.json
