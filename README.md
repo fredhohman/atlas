@@ -53,7 +53,7 @@ For the edge decomposition algorithm, go to [github.com/fredhohman/atlas-algorit
 
 ## Citation
 
-**Atlas: Local Graph Exploration in a Global Context**  
+**[Atlas: Local Graph Exploration in a Global Context](https://fredhohman.com/papers/atlas)**  
 James Abello\*, Fred Hohman\*, Varun Bezzam, Duen Horng (Polo) Chau  
 *ACM Conference on Intelligent User Interfaces (IUI). Los Angeles, CA, USA, 2019.*  
 \* Authors contributed equally.
