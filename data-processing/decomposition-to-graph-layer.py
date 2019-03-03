@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     boundary = 500
 
-    # # load vertices and positions
+    # load vertices and positions
     print('loading positions')
     positions = pd.io.parsers.read_csv(
         '../data/' + args['-data'] + '/' + args['-data'] + '-positions.csv',
