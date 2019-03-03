@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# takes one command lien argument, the graph data name, to be passed into the python scripts
+# takes one command line argument, the graph data name, to be passed into the python scripts
 
 echo 'decomposition-to-graph-layer.py'
 python decomposition-to-graph-layer.py -data $1
