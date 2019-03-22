@@ -40,7 +40,7 @@ npm run start
 To load your own graph data into Atlas, [see the instructions here][own-data].
 
 
-### Requirements
+## Requirements
 
 Atlas requires [npm][npm] to run.
 
